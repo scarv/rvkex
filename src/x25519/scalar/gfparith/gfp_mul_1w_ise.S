@@ -1,0 +1,177 @@
+// void gfp_mul_1w_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// radix-51
+
+
+#include "ise.h"
+
+
+// meaningful names for registers and constants
+
+// result "r"
+#define R0 a3 
+#define R1 a4
+#define R2 a5
+#define R3 a6
+#define R4 a7
+#define R5 s0
+
+// operand "b" 
+#define B0 t0 
+#define B1 t1 
+#define B2 t2 
+#define B3 t3
+#define B4 t4
+
+// operand "a"
+#define A_ t5 
+
+// constants and masks
+#define M0 t6
+#define M1 t5
+
+
+// prologue + epilogue 
+
+.macro PROLOGUE 
+  addi  sp, sp, -8
+  sd    s0,  0(sp)
+  li    M0, 19
+.endm
+
+.macro EPILOGUE 
+  ld    s0,  0(sp)
+  addi  sp, sp, 8
+  ret 
+.endm
+
+// load operand + store result 
+
+.macro LOAD_B
+  ld    B0,  0(a2)
+  ld    B1,  8(a2)
+  ld    B2, 16(a2)
+  ld    B3, 24(a2)
+  ld    B4, 32(a2)
+.endm 
+
+.macro STORE_R 
+  sd    B0,  0(a0)
+  sd    B1,  8(a0)
+  sd    B2, 16(a0)
+  sd    B3, 24(a0)
+  sd    B4, 32(a0)
+.endm
+
+// interleaved multiplication and reduction (based on operand-scanning)
+
+.macro MULTIPLY_A0
+  ld        A_,  0(a1)
+  macc51lo  R0, A_, B0, x0
+  macc51hi  R1, A_, B0, x0
+  macc51lo  R1, A_, B1, R1
+  macc51hi  R2, A_, B1, x0
+  macc51lo  R2, A_, B2, R2
+  macc51hi  R3, A_, B2, x0
+  macc51lo  R3, A_, B3, R3
+  macc51hi  R4, A_, B3, x0
+  macc51lo  R4, A_, B4, R4
+  macc51hi  R5, A_, B4, x0 
+.endm
+
+.macro MULTIPLY_A1
+  ld        A_,  8(a1)
+  mul       B4, B4, M0
+  macc51lo  R1, A_, B0, R1
+  macc51hi  R2, A_, B0, R2
+  macc51lo  R2, A_, B1, R2
+  macc51hi  R3, A_, B1, R3
+  macc51lo  R3, A_, B2, R3
+  macc51hi  R4, A_, B2, R4
+  macc51lo  R4, A_, B3, R4
+  macc51hi  R5, A_, B3, R5
+  macc51lo  R0, A_, B4, R0
+  macc51hi  R1, A_, B4, R1
+.endm 
+
+.macro MULTIPLY_A2
+  ld        A_, 16(a1)
+  mul       B3, B3, M0
+  macc51lo  R2, A_, B0, R2
+  macc51hi  R3, A_, B0, R3
+  macc51lo  R3, A_, B1, R3
+  macc51hi  R4, A_, B1, R4
+  macc51lo  R4, A_, B2, R4
+  macc51hi  R5, A_, B2, R5
+  macc51lo  R0, A_, B3, R0
+  macc51hi  R1, A_, B3, R1
+  macc51lo  R1, A_, B4, R1
+  macc51hi  R2, A_, B4, R2
+.endm
+
+.macro MULTIPLY_A3
+  ld        A_, 24(a1)
+  mul       B2, B2, M0
+  macc51lo  R3, A_, B0, R3
+  macc51hi  R4, A_, B0, R4
+  macc51lo  R4, A_, B1, R4
+  macc51hi  R5, A_, B1, R5
+  macc51lo  R0, A_, B2, R0
+  macc51hi  R1, A_, B2, R1
+  macc51lo  R1, A_, B3, R1
+  macc51hi  R2, A_, B3, R2
+  macc51lo  R2, A_, B4, R2
+  macc51hi  R3, A_, B4, R3
+.endm
+
+.macro MULTIPLY_A4
+  ld        A_, 32(a1)
+  mul       B1, B1, M0
+  macc51lo  R4, A_, B0, R4
+  macc51hi  R5, A_, B0, R5
+  macc51lo  R0, A_, B1, R0
+  macc51hi  R1, A_, B1, R1
+  macc51lo  R1, A_, B2, R1
+  macc51hi  R2, A_, B2, R2
+  macc51lo  R2, A_, B3, R2
+  macc51hi  R3, A_, B3, R3
+  macc51lo  R3, A_, B4, R3
+  macc51hi  R4, A_, B4, R4
+.endm
+
+// carry propagation 
+
+.macro CARRY_PROPAGATION
+  li        M1, 0x7FFFFFFFFFFFFULL
+  mul       R5, R5, M0
+  add       R0, R0, R5
+  srladd    R1, R1, R0, 51
+  and       B0, R0, M1
+  srladd    R2, R2, R1, 51
+  and       B1, R1, M1 
+  srladd    R3, R3, R2, 51
+  and       B2, R2, M1
+  srladd    R4, R4, R3, 51
+  and       B3, R3, M1
+  srl       R5, R4,     51
+  and       B4, R4, M1
+  macc51lo  B0, R5, M0, B0
+.endm 
+
+
+// 1-way field multiplication using ISE
+
+.section .text
+
+.global gfp_mul_1w_v0_ise
+
+gfp_mul_1w_v0_ise:
+  PROLOGUE
+  LOAD_B
+  MULTIPLY_A0
+  MULTIPLY_A1
+  MULTIPLY_A2 
+  MULTIPLY_A3
+  MULTIPLY_A4
+  CARRY_PROPAGATION
+  STORE_R 
+  EPILOGUE 

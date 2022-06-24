@@ -1,0 +1,68 @@
++=====================+======================+============+=====================+=========+=============+
+| class               | instruction          | format     | f7 (LSB -> `vm`)    | f3      | custom      |
++=====================+======================+============+=====================+=========+=============+
+|                     |                      |            |                     |         |             |
+| X25519_RVV_TYPE2    | vmacc51lo.vv         | 2R  +R->1R | 000000 : 0          | 2 = 010 | 1 = 0101011 |
+| X25519_RVV_TYPE2    | vmacc51hi.vv         | 2R  +R->1R | 000001 : 0          | 2 = 010 | 1 = 0101011 |
+| X25519_RVV_TYPE2    | vmul51lo.vv          | 2R  +R->1R | 000010 : 0          | 2 = 010 | 1 = 0101011 |
+| X25519_RVV_TYPE2    | vmul51hi.vv          | 2R  +R->1R | 000011 : 0          | 2 = 010 | 1 = 0101011 |
+|                     |                      |            |                     |         |             |
+| X25519_RVV_TYPE2    | vsrl51add.vv         | 2R    ->1R | 000000 : 0          | 1 = 001 | 1 = 0101011 |
+|                     |                      |            |                     |         |             |
+| X25519_RVV_TYPE2    | vpermute.vv          | 2R    ->1R | 000000 : 0          | 0 = 000 | 1 = 0101011 |
+| X25519_RVV_TYPE2    | vmvidx1.s.x          | 2R    ->1R | 000001 : 0          | 0 = 000 | 1 = 0101011 |
+|                     |                      |            |                     |         |             |
++=====================+======================+============+=====================+=========+=============+
+
+// for integer multiplication
+.macro vmacc51lo.vv         vd, vs1, vs2              //                      => 0000 000r rrrr rrrr r010 rrrr r010 1011
+.insn r CUSTOM_1, 2, (   0* 2), \vd, \vs1, \vs2       //                      => #define MATCH_VMACC51LO_VV 0x0000202B
+.endm                                                 //                      => #define  MASK_VMACC51LO_VV 0xFE00707F
+.macro vmacc51hi.vv         vd, vs1, vs2              //                      => 0000 010r rrrr rrrr r010 rrrr r010 1011
+.insn r CUSTOM_1, 2, (   1* 2), \vd, \vs1, \vs2       //                      => #define MATCH_VMACC51HI_VV 0x0400202B
+.endm                                                 //                      => #define  MASK_VMACC51HI_VV 0xFE00707F
+.macro vmul51lo.vv          vd, vs1, vs2              //                      => 0000 100r rrrr rrrr r010 rrrr r010 1011
+.insn r CUSTOM_1, 2, (   2* 2), \vd, \vs1, \vs2       //                      => #define MATCH_VMUL51LO_VV  0x0800202B
+.endm                                                 //                      => #define  MASK_VMUL51LO_VV  0xFE00707F
+.macro vmul51hi.vv          vd, vs1, vs2              //                      => 0000 110r rrrr rrrr r010 rrrr r010 1011
+.insn r CUSTOM_1, 2, (   3* 2), \vd, \vs1, \vs2       //                      => #define MATCH_VMUL51HI_VV  0x0C00202B
+.endm                                                 //                      => #define  MASK_VMUL51HI_VV  0xFE00707F  
+
+// for carry propagation
+.macro vsrl51add.vv         vd, vs1, vs2              //                      => 0000 000r rrrr rrrr r001 rrrr r010 1011
+.insn r CUSTOM_1, 1, (   0* 2), \vd, \vs1, \vs2       //                      => #define MATCH_VSRL51ADD_VV 0x0000102B
+.endm                                                 //                      => #define  MASK_VSRL51ADD_VV 0xFE00707F
+
+// for permuting elements 
+.macro vpermute.vv          vd, vs1, vs2              //                      => 0000 000r rrrr rrrr r000 rrrr r010 1011
+.insn r CUSTOM_1, 0, (   0* 2), \vd, \vs1, \vs2       //                      => #define MATCH_VPERMUTE_VV  0x0000002B
+.endm                                                 //                      => #define  MASK_VPERMUTE_VV  0xFE00707F
+.macro vmvidx1.s.x          vd, rs1                   //                      => 0000 010r rrrr rrrr r000 rrrr r010 1011
+.insn r CUSTOM_1, 0, (   1* 2), \vd, \rs1, x0         //                      => #define MATCH_VMVIDX1_S_X  0x0400002B
+.endm                                                 //                      => #define  MASK_VMVIDX1_S_X  0xFE00707F
+
+
++=====================+======================+============+=====================+=========+=============+
+| class               | instruction          | format     | f7 (LSB -> `vm`)    | f3      | custom      |
++=====================+======================+============+=====================+=========+=============+
+|                     |                      |            |                     |         |             |
+| X25519_RVV_TYPE3    | vmacclo.vvi          | 2R+I+R->1R |   imm6 : 0          | 2 = 010 | 0 = 0001011 |
+| X25519_RVV_TYPE3    | vmacchi.vvi          | 2R+I+R->1R |   imm6 : 0          | 3 = 011 | 0 = 0001011 |
+| X25519_RVV_TYPE3    | vmullo.vvi           | 2R+I+R->1R |   imm6 : 0          | 4 = 100 | 0 = 0001011 |
+| X25519_RVV_TYPE3    | vmulhi.vvi           | 2R+I+R->1R |   imm6 : 0          | 5 = 101 | 0 = 0001011 |
+|                     |                      |            |                     |         |             |
++=====================+======================+============+=====================+=========+=============+
+
+// for integer multiplication
+.macro vmacclo.vvi          vd, vs1, vs2, imm         //                      => iiii ii0r rrrr rrrr r010 rrrr r000 1011
+.insn r CUSTOM_0, 2, (\imm* 2), \vd, \vs1, \vs2       //                      => #define MATCH_VMACCLO_VVI 0x0000200B
+.endm                                                 //                      => #define  MASK_VMACCLO_VVI 0x0200707F
+.macro vmacchi.vvi          vd, vs1, vs2, imm         //                      => iiii ii0r rrrr rrrr r011 rrrr r000 1011
+.insn r CUSTOM_0, 3, (\imm* 2), \vd, \vs1, \vs2       //                      => #define MATCH_VMACCHI_VVI 0x0000300B
+.endm                                                 //                      => #define  MASK_VMACCHI_VVI 0x0200707F
+.macro vmullo.vvi           vd, vs1, vs2, imm         //                      => iiii ii0r rrrr rrrr r100 rrrr r000 1011
+.insn r CUSTOM_0, 4, (\imm* 2), \vd, \vs1, \vs2       //                      => #define MATCH_VMULLO_VVI  0x0000400B
+.endm                                                 //                      => #define  MASK_VMULLO_VVI  0x0200707F
+.macro vmulhi.vvi           vd, vs1, vs2, imm         //                      => iiii ii0r rrrr rrrr r101 rrrr r000 1011
+.insn r CUSTOM_0, 5, (\imm* 2), \vd, \vs1, \vs2       //                      => #define MATCH_VMULHI_VVI  0x0000500B
+.endm                                                 //                      => #define  MASK_VMULHI_VVI  0x0200707F

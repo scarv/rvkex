@@ -23,40 +23,44 @@ Example for a conventional SIMD:
 
 ## Parallelisms in RVV
 There are **two-level parallelisms** provided by RVV, namely 
-  - `element-wise`: e.g., a 128-bit vector using 32-bit elements (i.e., SEW = 32-bit), namely 4 parallel elements in a single vector register $\bm{a}$ = {$a_0, a_1, a_2, a_3$}; this is similar to NEON, AVX, and etc. A vector multiplication is shown below:
+  - `element-wise`: e.g., a 128-bit vector using 32-bit elements (i.e., SEW = 32-bit), namely 4 parallel elements in a single vector register $\pmb{a} = < a^{(0)}, a^{(1)}, a^{(2)}, a^{(3)} > $, this is similar to NEON, AVX, and etc. A vector multiplication is shown below:
+  
     $$
-    \bm{r}  = \bm{a} \times \bm{b}               
-            = < a_0 \times b_0, 
-                a_1 \times b_1, 
-                a_2 \times b_2, 
-                a_3 \times b_3  >
+    \pmb{r}  = \pmb{a} \times \pmb{b}               
+            = < a^{(0)} \times b^{(0)}, 
+                a^{(1)} \times b^{(1)}, 
+                a^{(2)} \times b^{(2)}, 
+                a^{(3)} \times b^{(3)}  >
     $$
-  - `vector-wise`, aka. `register group`: e.g., a vector register group composed of 4 vector registers $\bm{A}$ = {$\bm{a_0}, \bm{a_1}, \bm{a_2}, \bm{a_3}$}. A vector-register-group multiplication is shown below: 
+    
+  - `vector-wise`, aka. `register group`: e.g., a vector register group composed of 4 vector registers $\pmb{A} = \{ \pmb{a_0}, \pmb{a_1}, \pmb{a_2}, \pmb{a_3} \} $. A vector-register-group multiplication is shown below: 
+  
     $$
     \begin{align*}
-    \bm{R}  = & \bm{A} \times \bm{B}              \\ 
-            = & \bm{a^{(0)}} \times \bm{b^{(0)}}, 
-                \bm{a^{(1)}} \times \bm{b^{(1)}}, 
-                \bm{a^{(2)}} \times \bm{b^{(2)}}, 
-                \bm{a^{(3)}} \times \bm{b^{(3)}}, \\
+    \pmb{R}  = & \pmb{A} \times \pmb{B}              \\ 
+            = & \pmb{a_0} \times \pmb{b_0}, 
+                \pmb{a_1} \times \pmb{b_1}, 
+                \pmb{a_2} \times \pmb{b_2}, 
+                \pmb{a_3} \times \pmb{b_3}, \\
             = & < a^{(0)}_0 \times b^{(0)}_0, 
-                  a^{(0)}_1 \times b^{(0)}_1, 
-                  a^{(0)}_2 \times b^{(0)}_2, 
-                  a^{(0)}_3 \times b^{(0)}_3  >,  \\
-              & < a^{(1)}_0 \times b^{(1)}_0, 
+                  a^{(1)}_0 \times b^{(1)}_0, 
+                  a^{(2)}_0 \times b^{(2)}_0, 
+                  a^{(3)}_0 \times b^{(3)}_0  >,  \\
+              & < a^{(0)}_1 \times b^{(0)}_1, 
                   a^{(1)}_1 \times b^{(1)}_1, 
-                  a^{(1)}_2 \times b^{(1)}_2, 
-                  a^{(1)}_3 \times b^{(1)}_3  >,  \\
-              & < a^{(2)}_0 \times b^{(2)}_0, 
                   a^{(2)}_1 \times b^{(2)}_1, 
+                  a^{(3)}_1 \times b^{(3)}_1  >,  \\
+              & < a^{(0)}_2 \times b^{(0)}_2, 
+                  a^{(1)}_2 \times b^{(1)}_2, 
                   a^{(2)}_2 \times b^{(2)}_2, 
-                  a^{(2)}_3 \times b^{(2)}_3  >,  \\ 
-              & < a^{(3)}_0 \times b^{(3)}_0, 
-                  a^{(3)}_1 \times b^{(3)}_1, 
-                  a^{(3)}_2 \times b^{(3)}_2, 
+                  a^{(3)}_2 \times b^{(3)}_2  >,  \\
+              & < a^{(0)}_3 \times b^{(0)}_3, 
+                  a^{(1)}_3 \times b^{(1)}_3, 
+                  a^{(2)}_3 \times b^{(2)}_3, 
                   a^{(3)}_3 \times b^{(3)}_3  >
     \end{align*}
     $$
+    
     **4 vector-wise multiplications (16 element-wise multiplications)** can be therefore performed by **only 1 instruction !** (this is of course faster than using 4 vector mul instructions, because it just needs to fetch and decode the instruction once). **BUT there are some restrictions** to use register group such as **alignment**; concretely speaking, the index of `rd`, `rs1` and `rs2` must be the multiple of `LMUL`; the index of `rd` must be the multiple of `2*LMUL` when using widening instructions. The developer therefore needs to carefully arrange the register space; e.g., 
     ```
       vsetvli   t0,  t1, e32, m2        ; SEW = 32, EEW = 64, LMUL = 2 

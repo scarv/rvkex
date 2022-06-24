@@ -18,8 +18,8 @@ Note: $(1 \times 4 \times 1)$-way can be used for `zve64*` but $(1 \times 2 \tim
 ### $(4 \times 1)$-way field arithmetic implementation 
 - [x] field multiplication
   - formula
-  $$
-  \begin{align*}
+  
+  $$\begin{align*}
   r_0 &=& a_0b_0 &+& 38a_1b_9 &+& 19a_2b_8 &+& 38a_3b_7 &+& 19a_4b_6 &+& 38a_5b_5 &+& 19a_6b_4 &+& 38a_7b_3 &+& 19a_8b_2 &+& 38a_9b_1 \\
   r_1 &=& a_0b_1 &+&   a_1b_0 &+& 19a_2b_9 &+& 19a_3b_8 &+& 19a_4b_7 &+& 19a_5b_6 &+& 19a_6b_5 &+& 19a_7b_4 &+& 19a_8b_3 &+& 19a_9b_2 \\
   r_2 &=& a_0b_2 &+&  2a_1b_1 &+&   a_2b_0 &+& 38a_3b_9 &+& 19a_4b_8 &+& 38a_5b_7 &+& 19a_6b_6 &+& 38a_7b_5 &+& 19a_8b_4 &+& 38a_9b_3 \\
@@ -30,8 +30,8 @@ Note: $(1 \times 4 \times 1)$-way can be used for `zve64*` but $(1 \times 2 \tim
   r_7 &=& a_0b_7 &+&   a_1b_6 &+&   a_2b_5 &+&   a_3b_4 &+&   a_4b_3 &+&   a_5b_2 &+&   a_6b_1 &+&   a_7b_0 &+& 19a_8b_9 &+& 19a_9b_8 \\
   r_8 &=& a_0b_8 &+&  2a_1b_7 &+&   a_2b_6 &+&  2a_3b_5 &+&   a_4b_4 &+&  2a_5b_3 &+&   a_6b_2 &+&  2a_7b_1 &+&   a_8b_0 &+& 38a_9b_9 \\
   r_9 &=& a_0b_9 &+&   a_1b_8 &+&   a_2b_7 &+&   a_3b_6 &+&   a_4b_5 &+&   a_5b_4 &+&   a_6b_3 &+&   a_7b_2 &+&   a_8b_1 &+&   a_9b_0 \\
-  \end{align*}
-  $$
+  \end{align*}$$
+  
   - ranges 
     - inputs:
       - $a_0, a_2, a_4, a_6, a_8$: 28 bits 
@@ -42,7 +42,8 @@ Note: $(1 \times 4 \times 1)$-way can be used for `zve64*` but $(1 \times 2 \tim
   - implementation 
     - see details in [1] and codes in [2].
 - [x] field squaring 
-  - formula 
+  - formula
+   
   $$
   \begin{align*}
   r_0 &=&   a_0a_0 &+& 76a_1a_9 &+& 38a_2a_8 &+& 76a_3a_7 &+& 38a_4a_6 &+& 38a_5a_5                                                   \\
@@ -57,6 +58,7 @@ Note: $(1 \times 4 \times 1)$-way can be used for `zve64*` but $(1 \times 2 \tim
   r_9 &=&  2a_0a_9 &+&  2a_1a_8 &+&  2a_2a_7 &+&  2a_3a_6 &+& 2a_4a_5                                                                 \\
   \end{align*}
   $$
+  
   - implementation
     - developed from scratch (maybe somebody has already used the same formula, but anyways)
     - faster than the method in [1]
@@ -85,6 +87,7 @@ Note: $(1 \times 4 \times 1)$-way can be used for `zve64*` but $(1 \times 2 \tim
 ### $(2 \times 1)$-way field arithmetic implementation 
 - [x] field multiplication
   - formula
+  
   $$
   \begin{align*}
   r_0 &=& a_0b_0 &+& 19a_1b_4 &+& 19a_2b_3 &+& 19a_3b_2 &+& 19a_4b_1  \\
@@ -94,13 +97,15 @@ Note: $(1 \times 4 \times 1)$-way can be used for `zve64*` but $(1 \times 2 \tim
   r_4 &=& a_0b_4 &+&   a_1b_3 &+&   a_2b_2 &+&   a_3b_1 &+&   a_4b_0  
   \end{align*}
   $$
+  
   - ranges 
     - inputs:
       - $a_0, a_1, a_2, a_3, a_4$: 53 bits 
   - implementation 
     - conventional operand-scanning
 - [x] field squaring 
-  - formula 
+  - formula
+   
   $$
   \begin{align*}
   r_0 &=&  a_0a_0 &+& 38a_1a_4 &+& 38a_2a_3 & &          & &           \\
@@ -140,11 +145,18 @@ Note: $(1 \times 4 \times 1)$-way can be used for `zve64*` but $(1 \times 2 \tim
 ---
 
 ## References 
+
 [1] A. Faz-Hernández, J. López, and R. Dahab. *High-performance Implementation of Elliptic Curve Cryptography Using Vector Instructions*, in ACM Transactions on Mathematical Software (TOMS) 2019.
+
 [2] https://github.com/armfazh/fld-ecc-vec/blob/master/src/eltfp25519_4w_redradix.c
-[3] H. Hisil, B. Egrice, and M. Yassi. *Fast 4 way vectorized ladder for the complete set of Montgomery curves*, in ePrint 2020/388. 
-[4] H. Hisil, K. Wong, G. Carter, and E. Dawson. *Twisted Edwards Curves Revisited*, in ASIACRYPT 2008. 
+
+[3] H. Hisil, B. Egrice, and M. Yassi. *Fast 4 way vectorized ladder for the complete set of Montgomery curves*, in ePrint 2020/388.
+
+[4] H. Hisil, K. Wong, G. Carter, and E. Dawson. *Twisted Edwards Curves Revisited*, in ASIACRYPT 2008.
+
 [5] https://www.hyperelliptic.org/EFD/g1p/auto-twisted-extended-1.html 
+
 [6] D. Hankerson, A. Menezes, and S.Vanstone. *Guide to Elliptic Curve Cryptography*, Springer Verlag, 2004.
+
 [7] A. Faz-Hernández and J. López. *Fast Implementation of Curve25519 Using AVX2*, in LatinCrypt 2015.
 

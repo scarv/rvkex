@@ -9,6 +9,7 @@
   - D      (double-precision floating-point)
   - C      (compressed)
   - **V    (vector)**
+
   are available by default.
 
 - The project `rvkex` primarily targets `V` vector extension which is the standard vector extension for **application processor profiles** (see [1] for details), i.e., `Zvl128b` with a max `EEW = 64`, based on the following consideration (also partly explains why we target `rv64` not `rv32`): 
@@ -29,7 +30,6 @@
   - vector pure-software
   - vector ISE-supported 
 
----
 
 ## Organization
 
@@ -47,7 +47,6 @@
 └── work                - working directory for build
 ```
 
----
 
 ## Usage 
 
@@ -60,7 +59,7 @@
 - Clone the repository and setup environment
 
   ```sh
-  git clone XXX/rvkex.git 
+  git clone https://github.com/scarv/rvkex.git
   cd ./rvkex
   git submodule update --init --recursive
   source bin/conf.sh
@@ -86,12 +85,10 @@
   - enable debug mode `#define DEBUG 1` 
   - use ISE `#define ISE 1` 
 
----
 
 ## TODO
   - Move the constants and masks for the vector asm functions into the asm files. 
 
----
 
 ## References and links
 [1] https://github.com/riscv/riscv-v-spec/blob/master/v-spec.adoc#v-vector-extension-for-application-processors

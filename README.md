@@ -91,10 +91,17 @@
 
 
 ## References and links
+
 [1] https://github.com/riscv/riscv-v-spec/blob/master/v-spec.adoc#v-vector-extension-for-application-processors
+
 [2] https://www.sifive.com/cores/performance-p270
+
 [3] https://www.sifive.com/cores/intelligence-x280 
+
 [4] https://www.cnx-software.com/2020/08/25/more-details-about-alibaba-xt910-64-bit-risc-v-core/
+
 [5] https://github.com/riscv/riscv-v-spec/blob/master/v-spec.adoc#182-zve-vector-extensions-for-embedded-processors
+
 [6] D. J. Bernstein. *Curve25519: new Diffie-Hellman speed records.*, in PKC'2006.
+
 [7] https://sike.org/files/SIDH-spec.pdf

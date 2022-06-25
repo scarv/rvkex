@@ -388,7 +388,10 @@
 .endm
 
 .macro COMPUTE_R15
-  sd    ZH,120(a0)
+  srli  ZL, ZL, 56
+  slli  R_, ZH,  8
+  xor   R_, ZL, R_
+  sd    R_,120(a0)
 .endm
 
 

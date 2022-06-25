@@ -88,6 +88,7 @@
 
 ## TODO
   - Move the constants and masks for the vector asm functions into the asm files. 
+  - Optimize vector load/store to maybe save the permutation and blending operations.
 
 
 ## References and links

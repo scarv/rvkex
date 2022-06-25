@@ -1,5 +1,5 @@
-// void mp_mul_1w_v1(uint64_t *r, const uint64_t *a, const uint64_t *b);
-// radix-51, 1-level Karatsuba
+// void mp_mul_1w_v2(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// radix-51, 2-level Karatsuba
 // no carry propagation since it will be done in Montgomery reduction
 
 
@@ -20,7 +20,7 @@
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi  sp,  sp, -104
+  addi  sp,  sp, -112
   sd    s0,   0(sp)
   sd    s1,   8(sp)
   sd    s2,  16(sp)
@@ -49,7 +49,7 @@
   ld    s9,  72(sp)
   ld    s10, 80(sp)
   ld    s11, 88(sp)
-  addi  sp,  sp, 104 
+  addi  sp,  sp, 112 
   ret 
 .endm
 
@@ -66,9 +66,8 @@
   ld    \A7, 56(\addr)
 .endm 
 
-
-// 4 limbs * 4 limbs multiplication based on product-scanning
-// R0-R7 = A0-A3 * B0-B3
+// 2 limbs * 2 limbs multiplication based on product-scanning
+// R0-R3 = A0-A1 * B0-B1
 
 .macro _PROPAGATE_CARRY
   srli  ZL, ZL, 56
@@ -84,6 +83,33 @@
   add   ZH, ZH, TL
 .endm
 
+.macro MUL_2X2_PS R0, R1, R2, R3, A0, A1, B0, B1
+  // compute R0
+  mul    ZL, \A0, \B0
+  mulhu  ZH, \A0, \B0
+  and   \R0,  ZL,  M0
+  _PROPAGATE_CARRY
+  // compute R1 
+  mul    TL, \A0, \B1
+  mulhu  TH, \A0, \B1
+  _ACCUMULATE_AIBJ
+  mul    TL, \A1, \B0
+  mulhu  TH, \A1, \B0
+  _ACCUMULATE_AIBJ
+  and   \R1,  ZL,  M0
+  _PROPAGATE_CARRY
+  // compute R2
+  mul    TL, \A1, \B1
+  mulhu  TH, \A1, \B1
+  _ACCUMULATE_AIBJ
+  and   \R2,  ZL,  M0
+  // compute R3
+  srli   ZL,  ZL,  56
+  slli   TL,  ZH,   8
+  xor   \R3,  ZL,  TL
+.endm
+
+////
 .macro MUL_4X4_PS R0, R1, R2, R3, R4, R5, R6, R7, A0, A1, A2, A3, B0, B1, B2, B3
   // compute R0 
   mul    ZL, \A0, \B0
@@ -157,17 +183,57 @@
   slli   TL,  ZH,   8
   xor   \R7,  ZL,  TL
 .endm
+////
+
+// 4 limbs * 4 limbs multiplication based on Karatsuba
+// R0-R7 = A0-A3 * B0-B3
+// note: A0, A1 are used as temp registers
+
+.macro MUL_4X4_KA_V0 R0, R1, R2, R3, R4, R5, R6, R7, A0, A1, A2, A3, B0, B1, B2, B3
+
+  // R0-R1 <- AH + AL
+  add   \R0, \A0, \A2
+  add   \R1, \A1, \A3
+  // R6-R7 <- BH + BL
+  add   \R6, \B0, \B2 
+  add   \R7, \B1, \B3
+  // R2-R5 <- (AH+AL) * (BH+BL)
+  MUL_2X2_PS \R2, \R3, \R4, \R5, \R0, \R1, \R6, \R7 
+
+  // R0-R1, R6-R7 <- AL * BL
+  MUL_2X2_PS \R0, \R1, \R6, \R7, \A0, \A1, \B0, \B1
+  // (AH+AL) * (BH+BL) - AL * BL
+  sub   \R2, \R2, \R0
+  sub   \R3, \R3, \R1
+  sub   \R4, \R4, \R6
+  sub   \R5, \R5, \R7
+  // [(AH+AL) * (BH+BL) - AL * BL] + (AL * BL)'
+  add   \R2, \R2, \R6
+  add   \R3, \R3, \R7
+
+  // A0, A1, R6-R7 <- AH * BH
+  MUL_2X2_PS \A0, \A1, \R6, \R7, \A2, \A3, \B2, \B3
+  // [(AH+AL) * (BH+BL) - AL * BL - AH * BH] + (AL * BL)'
+  sub   \R2, \R2, \A0
+  sub   \R3, \R3, \A1
+  // [(AH+AL) * (BH+BL) - AL * BL - AH * BH]'
+  sub   \R4, \R4, \R6   
+  sub   \R5, \R5, \R7
+  // [(AH+AL) * (BH+BL) - AL * BL - AH * BH]' + (AH * BH)
+  add   \R4, \R4, \A0
+  add   \R5, \R5, \A1
+.endm
 
 
 // 1-way integer multiplication 
 
 .section .text 
 
-// v1: 1-level Karatsuba 
+// v2: 2-level Karatsuba 
 
-.global mp_mul_1w_v1 
+.global mp_mul_1w_v2 
 
-mp_mul_1w_v1:
+mp_mul_1w_v2:
   PROLOGUE
 
   // t0-t3  <- AH + AL
@@ -183,7 +249,7 @@ mp_mul_1w_v1:
   add   s10, s2, s6
   add   s11, s3, s7
   // s0-s7 <- (AH+AL) * (BH+BL)
-  MUL_4X4_PS s0, s1, s2, s3, s4, s5, s6, s7, t0, t1, t2, t3, s8, s9, s10, s11 
+  MUL_4X4_KA_V0 s0, s1, s2, s3, s4, s5, s6, s7, t0, t1, t2, t3, s8, s9, s10, s11 
 
   // t0-t3  <- AL
   ld    t0,   0(a1)
@@ -265,4 +331,3 @@ mp_mul_1w_v1:
   sd    t3, 120(a0)
 
   EPILOGUE
-

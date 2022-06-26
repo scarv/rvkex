@@ -31,7 +31,7 @@ gfp_sub_1w_v0:
 
 .section .data 
 
-.align 8 
+.balign 8 
 
 MODULUS_2P:
 .dword 0xFFFFFFFFFFFDA

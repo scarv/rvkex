@@ -62,7 +62,7 @@ void test_fp()
                       0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
                       0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
                       0x0003CDEF01234567ULL };
-  uint64_t a56[NLMB56], b56[NLMB56], z56[NLMB56*2], z64[NLMB56*2];
+  uint64_t a56[NLMB56], b56[NLMB56], z56[NLMB56*2], z64[NLMB56*2], r56[NLMB56], r64[NLMB56];
 
   mpi_conv_64to56(a56, a64);
   mpi_conv_64to56(b56, b64);
@@ -148,6 +148,28 @@ void test_fp()
   mpi_conv_56to64_(z64, z56, NLMB56*2, NLMB56*2);
   mpi64_print("  r  = 0x", z64, 7*2);
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
+#endif 
+
+  puts("");
+
+  // ---------------------------------------------------------------------------
+
+  printf("- rdc mont 1w v0:");
+
+  mp_mul_1w_v2(z56, a56, b56);
+
+  LOAD_CACHE(rdc_mont_1w_v0(r56, z56), 100);
+  MEASURE_CYCLES(rdc_mont_1w_v0(r56, z56), 1000);
+  printf("     #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x147173547FF63D0B52AB864DF1D570AF09061B91AC6FE5B8A6CCE68DD6D2D6BFF0C770842C494\
+          08C8AF46BF03037800688DADCB8D60EF;
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
   puts("**************************************************************************\n");

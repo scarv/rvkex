@@ -1,5 +1,5 @@
 // void mp_mul_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
-// radix-51, product-scanning
+// radix-56, product-scanning
 // no carry propagation since it will be done in Montgomery reduction
 
 

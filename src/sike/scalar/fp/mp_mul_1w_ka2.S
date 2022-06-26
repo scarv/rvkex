@@ -1,5 +1,5 @@
 // void mp_mul_1w_v2(uint64_t *r, const uint64_t *a, const uint64_t *b);
-// radix-51, 2-level Karatsuba
+// radix-56, 2-level Karatsuba
 // no carry propagation since it will be done in Montgomery reduction
 
 
@@ -20,7 +20,7 @@
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi  sp,  sp, -112
+  addi  sp,  sp, -104
   sd    s0,   0(sp)
   sd    s1,   8(sp)
   sd    s2,  16(sp)
@@ -49,7 +49,7 @@
   ld    s9,  72(sp)
   ld    s10, 80(sp)
   ld    s11, 88(sp)
-  addi  sp,  sp, 112 
+  addi  sp,  sp, 104 
   ret 
 .endm
 
@@ -66,8 +66,8 @@
   ld    \A7, 56(\addr)
 .endm 
 
-// 2 limbs * 2 limbs multiplication based on product-scanning
-// R0-R3 = A0-A1 * B0-B1
+// 4 limbs * 4 limbs multiplication based on product-scanning
+// R0-R7 = A0-A3 * B0-B3
 
 .macro _PROPAGATE_CARRY
   srli  ZL, ZL, 56
@@ -83,33 +83,6 @@
   add   ZH, ZH, TL
 .endm
 
-.macro MUL_2X2_PS R0, R1, R2, R3, A0, A1, B0, B1
-  // compute R0
-  mul    ZL, \A0, \B0
-  mulhu  ZH, \A0, \B0
-  and   \R0,  ZL,  M0
-  _PROPAGATE_CARRY
-  // compute R1 
-  mul    TL, \A0, \B1
-  mulhu  TH, \A0, \B1
-  _ACCUMULATE_AIBJ
-  mul    TL, \A1, \B0
-  mulhu  TH, \A1, \B0
-  _ACCUMULATE_AIBJ
-  and   \R1,  ZL,  M0
-  _PROPAGATE_CARRY
-  // compute R2
-  mul    TL, \A1, \B1
-  mulhu  TH, \A1, \B1
-  _ACCUMULATE_AIBJ
-  and   \R2,  ZL,  M0
-  // compute R3
-  srli   ZL,  ZL,  56
-  slli   TL,  ZH,   8
-  xor   \R3,  ZL,  TL
-.endm
-
-////
 .macro MUL_4X4_PS R0, R1, R2, R3, R4, R5, R6, R7, A0, A1, A2, A3, B0, B1, B2, B3
   // compute R0 
   mul    ZL, \A0, \B0
@@ -183,7 +156,35 @@
   slli   TL,  ZH,   8
   xor   \R7,  ZL,  TL
 .endm
-////
+
+// 2 limbs * 2 limbs multiplication based on product-scanning
+// R0-R3 = A0-A1 * B0-B1
+
+.macro MUL_2X2_PS R0, R1, R2, R3, A0, A1, B0, B1
+  // compute R0
+  mul    ZL, \A0, \B0
+  mulhu  ZH, \A0, \B0
+  and   \R0,  ZL,  M0
+  _PROPAGATE_CARRY
+  // compute R1 
+  mul    TL, \A0, \B1
+  mulhu  TH, \A0, \B1
+  _ACCUMULATE_AIBJ
+  mul    TL, \A1, \B0
+  mulhu  TH, \A1, \B0
+  _ACCUMULATE_AIBJ
+  and   \R1,  ZL,  M0
+  _PROPAGATE_CARRY
+  // compute R2
+  mul    TL, \A1, \B1
+  mulhu  TH, \A1, \B1
+  _ACCUMULATE_AIBJ
+  and   \R2,  ZL,  M0
+  // compute R3
+  srli   ZL,  ZL,  56
+  slli   TL,  ZH,   8
+  xor   \R3,  ZL,  TL
+.endm
 
 // 4 limbs * 4 limbs multiplication based on Karatsuba
 // R0-R7 = A0-A3 * B0-B3

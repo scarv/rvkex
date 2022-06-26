@@ -2,19 +2,19 @@
 | class               | instruction          | format   | f7                  | f3      | custom      |
 +=====================+======================+==========+=====================+=========+=============+
 |                     |                      |          |                     |         |             |
-| X25519_RVS_TYPE2    | macc51lo             | 3R  ->1R | rs3 : 00            | 0 = 000 | 2 = 1011011 |
-| X25519_RVS_TYPE2    | macc51hi             | 3R  ->1R | rs3 : 01            | 0 = 000 | 2 = 1011011 |
+| SIKE_RVS_TYPE2      | macc56lo             | 3R  ->1R | rs3 : 10            | 0 = 000 | 2 = 1011011 |
+| SIKE_RVS_TYPE2      | macc56hi             | 3R  ->1R | rs3 : 11            | 0 = 000 | 2 = 1011011 |
 |                     |                      |          |                     |         |             |
-| X25519_RVS_TYPE2    | srladd               | 2R+I->1R | 0 : imm6            | 1 = 001 | 2 = 1011011 |
+| SIKE_RVS_TYPE2      | srladd               | 2R+I->1R | 0 : imm6            | 1 = 001 | 2 = 1011011 |
 |                     |                      |          |                     |         |             |
 +=====================+======================+==========+=====================+=========+=============+
 
 // multiply-add
-.macro macc51lo              rd, rs1, rs2, rs3            //                  => rrrr r00r rrrr rrrr r000 rrrr r101 1011
-.insn r4 CUSTOM_2, 0,      ( 0* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MACC51LO 0x0000005B
+.macro macc56lo              rd, rs1, rs2, rs3            //                  => rrrr r10r rrrr rrrr r000 rrrr r101 1011
+.insn r4 CUSTOM_2, 0,      ( 2* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MACC51LO 0x0400005B
 .endm                                                     //                  => #define  MASK_MACC51LO 0x0600707F
-.macro macc51hi              rd, rs1, rs2, rs3            //                  => rrrr r01r rrrr rrrr r000 rrrr r101 1011
-.insn r4 CUSTOM_2, 0,      ( 1* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MACC51HI 0x0200005B
+.macro macc56hi              rd, rs1, rs2, rs3            //                  => rrrr r11r rrrr rrrr r000 rrrr r101 1011
+.insn r4 CUSTOM_2, 0,      ( 3* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MACC51HI 0x0600005B
 .endm                                                     //                  => #define  MASK_MACC51HI 0x0600707F
 
 // carry propagation 

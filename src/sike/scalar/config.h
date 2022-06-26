@@ -2,5 +2,6 @@
 #define _CONFIG_H
 
 #define DEBUG 1                         // enable debug mode or not
+#define ISE 1                           // use ISE or not 
 
 #endif

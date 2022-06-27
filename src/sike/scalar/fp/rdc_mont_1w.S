@@ -197,8 +197,8 @@
 // second loop of Montgomery reduction (based on product-scanning) 
 
 .macro COMPUTE_R0
-  ld    TL, 64(a1)
-  _ACCUMULATE_A TL
+  ld    R_, 64(a1)
+  _ACCUMULATE_A R_
   mul   TL, A1, P7
   mulhu TH, A1, P7
   _ACCUMULATE_AIPJ
@@ -220,8 +220,8 @@
 .endm
 
 .macro COMPUTE_R1
-  ld    TL, 72(a1)
-  _ACCUMULATE_A TL
+  ld    R_, 72(a1)
+  _ACCUMULATE_A R_
   mul   TL, A2, P7
   mulhu TH, A2, P7
   _ACCUMULATE_AIPJ
@@ -243,8 +243,8 @@
 .endm
 
 .macro COMPUTE_R2
-  ld    TL, 80(a1)
-  _ACCUMULATE_A TL
+  ld    R_, 80(a1)
+  _ACCUMULATE_A R_
   mul   TL, A3, P7
   mulhu TH, A3, P7
   _ACCUMULATE_AIPJ
@@ -266,8 +266,8 @@
 .endm
 
 .macro COMPUTE_R3
-  ld    TL, 88(a1)
-  _ACCUMULATE_A TL
+  ld    R_, 88(a1)
+  _ACCUMULATE_A R_
   mul   TL, A4, P7
   mulhu TH, A4, P7
   _ACCUMULATE_AIPJ
@@ -286,8 +286,8 @@
 .endm
 
 .macro COMPUTE_R4
-  ld    TL, 96(a1)
-  _ACCUMULATE_A TL
+  ld    R_, 96(a1)
+  _ACCUMULATE_A R_
   mul   TL, A5, P7
   mulhu TH, A5, P7
   _ACCUMULATE_AIPJ
@@ -303,8 +303,8 @@
 .endm
 
 .macro COMPUTE_R5
-  ld    TL,104(a1)
-  _ACCUMULATE_A TL
+  ld    R_,104(a1)
+  _ACCUMULATE_A R_
   mul   TL, A6, P7
   mulhu TH, A6, P7
   _ACCUMULATE_AIPJ
@@ -317,8 +317,8 @@
 .endm
 
 .macro COMPUTE_R6
-  ld    TL,112(a1)
-  _ACCUMULATE_A TL
+  ld    R_,112(a1)
+  _ACCUMULATE_A R_
   mul   TL, A7, P7
   mulhu TH, A7, P7
   _ACCUMULATE_AIPJ
@@ -328,8 +328,8 @@
 .endm
 
 .macro COMPUTE_R7
-  ld    TL,120(a1)
-  _ACCUMULATE_A TL
+  ld    R_,120(a1)
+  _ACCUMULATE_A R_
   sd    ZL, 56(a0)
 .endm
 

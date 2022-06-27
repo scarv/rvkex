@@ -172,6 +172,24 @@ void test_fp()
   memset(r56, 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
+  printf("- rdc mont 1w v0 ise:");
+
+  mp_mul_1w_v2(z56, a56, b56);
+
+  LOAD_CACHE(rdc_mont_1w_v0_ise(r56, z56), 100);
+  MEASURE_CYCLES(rdc_mont_1w_v0_ise(r56, z56), 1000);
+  printf(" #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x147173547FF63D0B52AB864DF1D570AF09061B91AC6FE5B8A6CCE68DD6D2D6BFF0C770842C494\
+          08C8AF46BF03037800688DADCB8D60EF;
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
   puts("**************************************************************************\n");
 }
 

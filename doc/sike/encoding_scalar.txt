@@ -5,7 +5,7 @@
 | SIKE_RVS_TYPE2      | macc56lo             | 3R  ->1R | rs3 : 10            | 0 = 000 | 2 = 1011011 |
 | SIKE_RVS_TYPE2      | macc56hi             | 3R  ->1R | rs3 : 11            | 0 = 000 | 2 = 1011011 |
 |                     |                      |          |                     |         |             |
-| SIKE_RVS_TYPE2      | srladd               | 2R+I->1R | 0 : imm6            | 1 = 001 | 2 = 1011011 |
+| SIKE_RVS_TYPE2      | sraadd               | 2R+I->1R | 1 : imm6            | 1 = 001 | 2 = 1011011 |
 |                     |                      |          |                     |         |             |
 +=====================+======================+==========+=====================+=========+=============+
 
@@ -18,6 +18,6 @@
 .endm                                                     //                  => #define  MASK_MACC51HI 0x0600707F
 
 // carry propagation 
-.macro srladd                rd, rs1, rs2, imm            //                  => 0iii iiir rrrr rrrr r001 rrrr r101 1011
-.insn r  CUSTOM_2, 1, \imm+( 0*64), \rd, \rs1, \rs2       //                  => #define MATCH_SRLADD   0x0000105B
+.macro sraadd                rd, rs1, rs2, imm            //                  => 1iii iiir rrrr rrrr r001 rrrr r101 1011
+.insn r  CUSTOM_2, 1, \imm+( 1*64), \rd, \rs1, \rs2       //                  => #define MATCH_SRLADD   0x8000105B
 .endm                                                     //                  => #define  MASK_SRLADD   0x8000707F

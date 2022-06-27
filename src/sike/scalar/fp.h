@@ -12,5 +12,7 @@ void rdc_mont_1w_v0(uint64_t *r, const uint64_t *a);
 
 void mp_mul_1w_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_mul_1w_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
+void rdc_mont_1w_v0_ise(uint64_t *r, const uint64_t *a);
+
 
 #endif

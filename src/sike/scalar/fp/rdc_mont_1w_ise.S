@@ -22,14 +22,11 @@
 #define A0 s0
 #define A1 s1
 #define A2 s2
-#define A3 s3
-#define A4 t2
+#define A3 t2
+#define A4 a4
 #define A5 a5
 #define A6 a2
 #define A7 a3
-
-// temp "t"
-#define T_ a4
 
 // constants and masks
 #define M0 a6
@@ -38,11 +35,10 @@
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi  sp, sp, -32
+  addi  sp, sp, -24
   sd    s0,  0(sp)
   sd    s1,  8(sp)
   sd    s2, 16(sp)
-  sd    s3, 24(sp)
   li    M0, 0xFFFFFFFFFFFFFFULL
 .endm
 
@@ -50,8 +46,7 @@
   ld    s0,  0(sp)
   ld    s1,  8(sp)
   ld    s2, 16(sp)
-  ld    s3, 24(sp)
-  addi  sp, sp, 32 
+  addi  sp, sp, 24 
   ret 
 .endm
 
@@ -80,9 +75,6 @@
 // first loop of Montgomery reduction (based on product-scanning)
 
 .macro _PROPAGATE_CARRY A, B 
-  // srai + add -> ISE
-  # srai  T_, \A, 56
-  # add   \B, \B, T_
   sraadd \B, \B, \A, 56
   and    \A, \A, M0
 .endm

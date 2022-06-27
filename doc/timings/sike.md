@@ -1,4 +1,6 @@
-## Timing results of SIKE implementation 
+# Timing results of SIKE implementation 
+
+## Scalar implementation
 
 ### $\mathbb{F}_p$ arithmetic
 
@@ -11,4 +13,4 @@
 | integer multiplication  | ISE + product-scanning  |      **177** |        |
 | integer multiplication  | ISE + 1-level Karatsuba |        211   |        |
 | Montgomery reduction    | SW  + product-scanning  |      **424** |        |
-| Montgomery reduction    | ISE + product-scanning  |      **160** |        |
+| Montgomery reduction    | ISE + product-scanning  |      **158** |        |

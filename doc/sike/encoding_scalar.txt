@@ -19,5 +19,5 @@
 
 // carry propagation 
 .macro sraadd                rd, rs1, rs2, imm            //                  => 1iii iiir rrrr rrrr r001 rrrr r101 1011
-.insn r  CUSTOM_2, 1, \imm+( 1*64), \rd, \rs1, \rs2       //                  => #define MATCH_SRLADD   0x8000105B
-.endm                                                     //                  => #define  MASK_SRLADD   0x8000707F
+.insn r  CUSTOM_2, 1, \imm+( 1*64), \rd, \rs1, \rs2       //                  => #define MATCH_SRAADD   0x8000105B
+.endm                                                     //                  => #define  MASK_SRAADD   0x8000707F

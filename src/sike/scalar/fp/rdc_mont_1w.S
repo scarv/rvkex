@@ -112,6 +112,11 @@
   add   ZH, ZH, TL
 .endm
 
+// NOTE: "A" can < 0. When "A" >= 0, then TH = 0; if there is a carry overflow, 
+// TL = 1, the carry bit is 0+1 = 1; if there is not a carry overflow, TL = 0, 
+// the carry bit is 0+0 = 0. When "A" <= 0, then TH = -1; if there is a borrwow
+// overflow, TL = 0, the carry bit is 0-1 = -1; if there is not a borrow 
+// overflow, TL = 1, the carry bit is 1-1 = 0. 
 .macro _ACCUMULATE_A A
   add   ZL, ZL, \A
   srai  TH, \A, 63

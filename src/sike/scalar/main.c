@@ -174,7 +174,7 @@ void test_fp()
 
   printf("- rdc mont 1w v0 ise:");
 
-  mp_mul_1w_v2(z56, a56, b56);
+  mp_mul_1w_v0_ise(z56, a56, b56);
 
   LOAD_CACHE(rdc_mont_1w_v0_ise(r56, z56), 100);
   MEASURE_CYCLES(rdc_mont_1w_v0_ise(r56, z56), 1000);

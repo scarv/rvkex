@@ -64,12 +64,12 @@
 .endm 
 
 .macro LOAD_P
-  la    a4, P434P1
-  ld    P3,  0(a4)
-  ld    P4,  8(a4)
-  ld    P5, 16(a4)
-  ld    P6, 24(a4)
-  ld    P7, 32(a4)
+  la    t0, P434P1
+  ld    P3,  0(t0)
+  ld    P4,  8(t0)
+  ld    P5, 16(t0)
+  ld    P6, 24(t0)
+  ld    P7, 32(t0)
 .endm
 
 // first loop of Montgomery reduction (based on product-scanning)

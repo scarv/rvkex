@@ -70,11 +70,11 @@ void test_fp()
   puts("\n**************************************************************************");
   puts("SCALAR FP ARITH 1w:\n");
 
-  printf("- gfp mul 1w v0:");
+  printf("- fp mul 1w v0:");
 
   LOAD_CACHE(mp_mul_1w_v0(z56, a56, b56), 100);
   MEASURE_CYCLES(mp_mul_1w_v0(z56, a56, b56), 1000);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("       #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0xC71D855A44CD3BEDA4E7F8313B9FA5AA82B26B0832720F67607CDDDF294479243E4750B62016E\
@@ -86,11 +86,11 @@ void test_fp()
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
 #endif 
 
-  printf("- gfp mul 1w v1:");
+  printf("- fp mul 1w v1:");
 
   LOAD_CACHE(mp_mul_1w_v1(z56, a56, b56), 100);
   MEASURE_CYCLES(mp_mul_1w_v1(z56, a56, b56), 1000);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("       #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0xC71D855A44CD3BEDA4E7F8313B9FA5AA82B26B0832720F67607CDDDF294479243E4750B62016E\
@@ -102,11 +102,11 @@ void test_fp()
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
 #endif 
 
-  printf("- gfp mul 1w v2:");
+  printf("- fp mul 1w v2:");
 
   LOAD_CACHE(mp_mul_1w_v2(z56, a56, b56), 100);
   MEASURE_CYCLES(mp_mul_1w_v2(z56, a56, b56), 1000);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("       #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0xC71D855A44CD3BEDA4E7F8313B9FA5AA82B26B0832720F67607CDDDF294479243E4750B62016E\
@@ -118,11 +118,11 @@ void test_fp()
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
 #endif 
 
-  printf("- gfp mul 1w v0 ise:");
+  printf("- fp mul 1w v0 ise:");
 
   LOAD_CACHE(mp_mul_1w_v0_ise(z56, a56, b56), 100);
   MEASURE_CYCLES(mp_mul_1w_v0_ise(z56, a56, b56), 1000);
-  printf("  #inst = %lld\n", diff_cycles);
+  printf("   #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0xC71D855A44CD3BEDA4E7F8313B9FA5AA82B26B0832720F67607CDDDF294479243E4750B62016E\
@@ -134,11 +134,11 @@ void test_fp()
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
 #endif 
 
-  printf("- gfp mul 1w v1 ise:");
+  printf("- fp mul 1w v1 ise:");
 
   LOAD_CACHE(mp_mul_1w_v1_ise(z56, a56, b56), 100);
   MEASURE_CYCLES(mp_mul_1w_v1_ise(z56, a56, b56), 1000);
-  printf("  #inst = %lld\n", diff_cycles);
+  printf("   #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0xC71D855A44CD3BEDA4E7F8313B9FA5AA82B26B0832720F67607CDDDF294479243E4750B62016E\
@@ -189,6 +189,186 @@ void test_fp()
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);
 #endif 
+
+  puts("");
+
+  // ---------------------------------------------------------------------------
+
+  printf("- fp add 1w v0:");
+
+  LOAD_CACHE(fpadd_1w_v0(r56, a56, b56), 100);
+  MEASURE_CYCLES(fpadd_1w_v0(r56, a56, b56), 1000);
+  printf("       #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x2AB183CA02CCDB0D653A98744D2A993425A66281DB60E8F4C2660C4CF13568ACF13568ACF1356\
+          8ACF13568ACF13568ACF13568ACF1358
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56);
+  // r := 0x3456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF\
+          0123456789ABCDEF0123456789ABCDEF
+  fpadd_1w_v0(r56, a56, r56);
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56);  
+#endif 
+
+  printf("- fp add 1w v0 ise:");
+
+  LOAD_CACHE(fpadd_1w_v0_ise(r56, a56, b56), 100);
+  MEASURE_CYCLES(fpadd_1w_v0_ise(r56, a56, b56), 1000);
+  printf("   #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x2AB183CA02CCDB0D653A98744D2A993425A66281DB60E8F4C2660C4CF13568ACF13568ACF1356\
+          8ACF13568ACF13568ACF13568ACF1358
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56);
+  // r := 0x3456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF\
+          0123456789ABCDEF0123456789ABCDEF
+  fpadd_1w_v0_ise(r56, a56, r56);
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56);  
+#endif 
+
+  puts("");
+
+  // ---------------------------------------------------------------------------
+
+  printf("- mp sub p2 1w v0:");
+
+  LOAD_CACHE(mp_sub_p2_1w_v0(r56, a56, b56), 100);
+  MEASURE_CYCLES(mp_sub_p2_1w_v0(r56, a56, b56), 1000);
+  printf("    #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x3DFB6D6B76F10517037258C12C9346F043068EB39E5CF72FA646E4E8888877777777888888887\
+          77777778888888877777777888888886
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+
+  printf("- mp sub p2 1w v0 ise:");
+
+  LOAD_CACHE(mp_sub_p2_1w_v0_ise(r56, a56, b56), 100);
+  MEASURE_CYCLES(mp_sub_p2_1w_v0_ise(r56, a56, b56), 1000);
+  printf("#inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x3DFB6D6B76F10517037258C12C9346F043068EB39E5CF72FA646E4E8888877777777888888887\
+          77777778888888877777777888888886
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+
+  printf("- mp sub p4 1w v0:");
+
+  LOAD_CACHE(mp_sub_p4_1w_v0(r56, a56, b56), 100);
+  MEASURE_CYCLES(mp_sub_p4_1w_v0(r56, a56, b56), 1000);
+  printf("    #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x847F524E655992B68F6D28F9D09E16690E9594DEB43176E7D5164148888877777777888888887\
+          77777778888888877777777888888884
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+
+  printf("- mp sub p4 1w v0 ise:");
+
+  LOAD_CACHE(mp_sub_p4_1w_v0_ise(r56, a56, b56), 100);
+  MEASURE_CYCLES(mp_sub_p4_1w_v0_ise(r56, a56, b56), 1000);
+  printf("#inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x847F524E655992B68F6D28F9D09E16690E9594DEB43176E7D5164148888877777777888888887\
+          77777778888888877777777888888884
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+
+  printf("- fp sub 1w v0:");
+
+  LOAD_CACHE(fpsub_1w_v0(r56, a56, b56), 100);
+  MEASURE_CYCLES(fpsub_1w_v0(r56, a56, b56), 1000);
+  printf("       #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x3DFB6D6B76F10517037258C12C9346F043068EB39E5CF72FA646E4E8888877777777888888887\
+          77777778888888877777777888888886
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
+  printf("- fp sub 1w v0 ise:");
+
+  LOAD_CACHE(fpsub_1w_v0_ise(r56, a56, b56), 100);
+  MEASURE_CYCLES(fpsub_1w_v0_ise(r56, a56, b56), 1000);
+  printf("   #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x3DFB6D6B76F10517037258C12C9346F043068EB39E5CF72FA646E4E8888877777777888888887\
+          77777778888888877777777888888886
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif 
+
+  puts("");
+
+  // ---------------------------------------------------------------------------
+
+  printf("- fp crt 1w v0:");
+
+  memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
+
+  LOAD_CACHE(fpcorrection_1w_v0(r56), 100);
+  MEASURE_CYCLES(fpcorrection_1w_v0(r56), 1000);
+  printf("       #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x1114862945AAA9426E59107E6AD98855CE8EF58531F4B0361CEECA6ABCDEF0123456789ABCDEF\
+          0123456789ABCDEF0123456789ABCDF0
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+
+  printf("- fp crt 1w v0 ise:");
+
+  memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
+
+  LOAD_CACHE(fpcorrection_1w_v0_ise(r56), 100);
+  MEASURE_CYCLES(fpcorrection_1w_v0_ise(r56), 1000);
+  printf("   #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x1114862945AAA9426E59107E6AD98855CE8EF58531F4B0361CEECA6ABCDEF0123456789ABCDEF\
+          0123456789ABCDEF0123456789ABCDF0
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
 
   puts("**************************************************************************\n");
 }

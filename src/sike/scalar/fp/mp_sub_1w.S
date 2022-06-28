@@ -1,6 +1,7 @@
 // void mp_sub_p2_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // void mp_sub_p4_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // void fpneg_1w_v0(uint64_t *r);
+// void mp_dblsub_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // radix-56
 
 
@@ -91,6 +92,7 @@
   _PROPAGATE_CARRY R6, R7
 .endm
 
+
 // 1-way integer subtraction
 
 .section .text
@@ -147,6 +149,24 @@ fpneg_1w_v0:
   CARRY_PROPAGATION
   STORE_R
   EPILOGUE
+
+
+// 1-way integer double subtraction
+
+.global mp_dblsub_1w_v0:
+
+mp_dblsub_1w_v0:
+  .set imm, 0
+  .rept 16
+  ld   t0, imm(a0)
+  ld   t1, imm(a1)
+  ld   t2, imm(a2)
+  sub  t0, t0, t1
+  sub  t0, t0, t2 
+  sd   t0, imm(a0)
+  .set imm, imm + 8
+  .endr 
+  ret
 
 
 .section .data 

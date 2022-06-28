@@ -370,6 +370,80 @@ void test_fp()
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
 
+  puts("");
+
+  // ---------------------------------------------------------------------------
+
+  printf("- fp neg 1w v0:");
+
+  LOAD_CACHE(fpneg_1w_v0(r56), 100);
+  MEASURE_CYCLES(fpneg_1w_v0(r56), 1000);
+  printf("       #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x122D6C4831899D8D57A4579DE72BDF6697388D9058F58FA5FA78E3C543210FEDCBA9876543210\
+          FEDCBA9876543210FEDCBA987654320F
+  memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
+  fpneg_1w_v0(r56);
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+
+  printf("- fp neg 1w v0 ise:");
+
+  memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
+
+  LOAD_CACHE(fpneg_1w_v0_ise(r56), 100);
+  MEASURE_CYCLES(fpneg_1w_v0_ise(r56), 1000);
+  printf("   #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x122D6C4831899D8D57A4579DE72BDF6697388D9058F58FA5FA78E3C543210FEDCBA9876543210\
+          FEDCBA9876543210FEDCBA987654320F
+  memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
+  fpneg_1w_v0_ise(r56);
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+
+  puts("");
+
+  // ---------------------------------------------------------------------------
+
+  printf("- fp div2 1w v0:");
+
+  LOAD_CACHE(fpdiv2_1w_v0(r56, a56), 100);
+  MEASURE_CYCLES(fpdiv2_1w_v0(r56, a56), 1000);
+  printf("      #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x2BCC35861A099B70FD29F05B87722BE74D0EFDD823E497F725DF13655E6F78091A2B3C4D5E6F7\
+          8091A2B3C4D5E6F78091A2B3C4D5E6F7
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+
+  printf("- fp div2 1w v0 ise:");
+
+  LOAD_CACHE(fpdiv2_1w_v0_ise(r56, a56), 100);
+  MEASURE_CYCLES(fpdiv2_1w_v0_ise(r56, a56), 1000);
+  printf("  #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x2BCC35861A099B70FD29F05B87722BE74D0EFDD823E497F725DF13655E6F78091A2B3C4D5E6F7\
+          8091A2B3C4D5E6F78091A2B3C4D5E6F7
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+
   puts("**************************************************************************\n");
 }
 

@@ -22,3 +22,7 @@
 | $\mathbb{F}_p$ subtraction | ISE                     |        100   |        |
 | $\mathbb{F}_p$ correction  | SW                      |        104   |        |
 | $\mathbb{F}_p$ correction  | ISE                     |         90   |        |
+| $\mathbb{F}_p$ negation    | SW                      |         63   |        |
+| $\mathbb{F}_p$ negation    | ISE                     |         56   |        |
+| $\mathbb{F}_p$ division 2  | SW                      |        103   |        |
+| $\mathbb{F}_p$ division 2  | ISE                     |         96   |        |

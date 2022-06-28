@@ -87,6 +87,8 @@
 
 
 ## TODO
+  - Study the novel Montogmery reduction in [8], and see if it is useful for this work.
+  - I'm sure SIKE can be optimized by using some additions/subtractions which don't have carry propagation, e.g., new `mp_add`, new `mp_sub_2p` and `mp_sub_4p`, but the limb range needs to be carefully checked when using them.  
   - Move the constants and masks for the vector asm functions into the asm files. 
   - Optimize vector load/store to maybe save the permutation and blending operations.
 
@@ -103,6 +105,8 @@
 
 [5] https://github.com/riscv/riscv-v-spec/blob/master/v-spec.adoc#182-zve-vector-extensions-for-embedded-processors
 
-[6] D. J. Bernstein. *Curve25519: new Diffie-Hellman speed records.*, in PKC'2006.
+[6] D. J. Bernstein. *Curve25519: new Diffie-Hellman speed records*, in PKC'2006.
 
 [7] https://sike.org/files/SIDH-spec.pdf
+
+[8] https://eprint.iacr.org/2017/1015

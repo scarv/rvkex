@@ -12,7 +12,9 @@ void fpadd_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_sub_p2_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_sub_p4_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void fpsub_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
-void fpcorrection_1w_v0(uint64_t *a);
+void fpcorrection_1w_v0(uint64_t *r);
+void fpneg_1w_v0(uint64_t *r);
+void fpdiv2_1w_v0(uint64_t *r, const uint64_t *a);
 
 void mp_mul_1w_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_mul_1w_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
@@ -21,7 +23,8 @@ void fpadd_1w_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_sub_p2_1w_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_sub_p4_1w_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void fpsub_1w_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
-void fpcorrection_1w_v0_ise(uint64_t *a);
-
+void fpcorrection_1w_v0_ise(uint64_t *r);
+void fpneg_1w_v0_ise(uint64_t *r);
+void fpdiv2_1w_v0_ise(uint64_t *r, const uint64_t *a);
 
 #endif

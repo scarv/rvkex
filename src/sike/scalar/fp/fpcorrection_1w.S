@@ -1,4 +1,4 @@
-// void fpcorrection_1w_v0(uint64_t *a);
+// void fpcorrection_1w_v0(uint64_t *r);
 // radix-56
 
 

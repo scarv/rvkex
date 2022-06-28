@@ -1,5 +1,6 @@
 // void mp_sub_p2_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // void mp_sub_p4_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void fpneg_1w_v0(uint64_t *r);
 // radix-56
 
 
@@ -113,6 +114,36 @@ mp_sub_p4_1w_v0:
   PROLOGUE
   la a3, P434X4
   COMPUTE_R
+  CARRY_PROPAGATION
+  STORE_R
+  EPILOGUE
+
+
+// 1-way modular negation
+
+.macro _SUBTRACT R, imm
+  ld    A_, 8*\imm(a0)
+  ld    P_, 8*\imm(a3)
+  sub   \R, P_, A_
+.endm
+
+.macro SUBTRACTION
+  _SUBTRACT R0, 0
+  _SUBTRACT R1, 1
+  _SUBTRACT R2, 2
+  _SUBTRACT R3, 3
+  _SUBTRACT R4, 4
+  _SUBTRACT R5, 5
+  _SUBTRACT R6, 6
+  _SUBTRACT R7, 7
+.endm
+
+.global fpneg_1w_v0
+
+fpneg_1w_v0:
+  PROLOGUE
+  la a3, P434X2
+  SUBTRACTION
   CARRY_PROPAGATION
   STORE_R
   EPILOGUE

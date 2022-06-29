@@ -22,6 +22,9 @@
 // operand "b"
 #define B_ a5
 
+// temp "t"
+#define T_ a4
+
 // constants and masks
 #define M0 a6
 
@@ -70,8 +73,8 @@
 // carry propagation
 
 .macro _PROPAGATE_CARRY A, B 
-  srai  P_, \A, 56
-  add   \B, \B, P_
+  srai  T_, \A, 56
+  add   \B, \B, T_
   and   \A, \A, M0
 .endm
 

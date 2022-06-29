@@ -153,7 +153,7 @@ fpneg_1w_v0:
 
 // 1-way integer double subtraction
 
-.global mp_dblsub_1w_v0:
+.global mp_dblsub_1w_v0
 
 mp_dblsub_1w_v0:
   .set imm, 0

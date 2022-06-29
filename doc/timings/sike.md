@@ -4,7 +4,6 @@
 
 ### $\mathbb{F}_p$ arithmetic
 
-
 | Operation                  | Type                    | #Instruction | #Cycle |
 | :------------------------- | :---------------------- | ------------:| ------:|
 | integer multiplication     | SW  + product-scanning  |        514   |        |
@@ -26,3 +25,10 @@
 | $\mathbb{F}_p$ negation    | ISE                     |         56   |        |
 | $\mathbb{F}_p$ division 2  | SW                      |        103   |        |
 | $\mathbb{F}_p$ division 2  | ISE                     |         96   |        |
+
+### $\mathbb{F}_{p^2}$ arithmetic
+
+| Operation                             | Type                    | #Instruction | #Cycle |
+| :------------------------------------ | :---------------------- | ------------:| ------:|
+| $\mathbb{F}_{p^2}$ multiplication     | SW  + 2-level Karatsuba |       2688   |        |
+| $\mathbb{F}_{p^2}$ multiplication     | ISE + product-scanning  |       1194   |        |

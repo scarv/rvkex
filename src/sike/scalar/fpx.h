@@ -7,7 +7,6 @@ typedef uint64_t felm_t[NLMB56];
 typedef uint64_t dfelm_t[NLMB56*2];
 typedef felm_t   f2elm_t[2];
 
-
-
+void fp2mul_mont(f2elm_t r, const f2elm_t a, const f2elm_t b);
 
 #endif

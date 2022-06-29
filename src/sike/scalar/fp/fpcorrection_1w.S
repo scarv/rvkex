@@ -184,11 +184,11 @@ fpcorrection_1w_v0:
 .balign 8
 
 P434:
-.dword 0xFFFFFFFFFFFFFF 
-.dword 0xFFFFFFFFFFFFFF
-.dword 0xFFFFFFFFFFFFFF
-.dword 0xE2FFFFFFFFFFFF
-.dword 0x58AEA3FDC1767A
-.dword 0x20567BC65C7831
-.dword 0x446CFC5FD681C5
-.dword 0x0002341F271773
+.dword 0xFFFFFFFFFFFFFF                 // P0 
+.dword 0xFFFFFFFFFFFFFF                 // P1
+.dword 0xFFFFFFFFFFFFFF                 // P2
+.dword 0xE2FFFFFFFFFFFF                 // P3
+.dword 0x58AEA3FDC1767A                 // P4
+.dword 0x20567BC65C7831                 // P5
+.dword 0x446CFC5FD681C5                 // P6
+.dword 0x0002341F271773                 // P7

@@ -2,6 +2,7 @@
 #include "config.h"
 #include "rdtsc.h"
 #include "fp.h"
+#include "fpx.h"
 
 
 // macros for measuring CPU cycles
@@ -447,9 +448,58 @@ void test_fp()
   puts("**************************************************************************\n");
 }
 
+void test_fpx()
+{
+  uint64_t start_cycles, end_cycles, diff_cycles;
+  int i;
+
+  // a := 0x0003456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF;
+  uint64_t a64[7] = { 0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL,
+                      0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL, 
+                      0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL, 
+                      0x0003456789ABCDEFULL };
+  // b := 0x0003CDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF01234567;
+  uint64_t b64[7] = { 0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL,
+                      0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
+                      0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
+                      0x0003CDEF01234567ULL };
+  uint64_t r56[NLMB56], r64[NLMB56];
+  f2elm_t  r, a; 
+
+  mpi_conv_64to56(a[0], a64);
+  mpi_conv_64to56(a[1], b64);
+
+  puts("\n**************************************************************************");
+  puts("SCALAR FP2 ARITH 1w:\n");
+
+  printf("- fp2 mul 1w v0:");
+
+  LOAD_CACHE(fp2mul_mont(r, a, a), 10);
+  MEASURE_CYCLES(fp2mul_mont(r, a, a), 100);
+  printf("      #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+// r0 = 0x3306B70C7878F4FC445701989C949D34730CD77D27EB6133F6DB088FED9FA1E7A18F5515\
+        74C4BD908049D3BCE94A63695F8ADFBECDA8E
+// r1 = 0x5A0F43788B83346DF59A47F91A579A1AC44B40DCDF58B9536321EEBADA5AD7FE18EE1085\
+        892811915E8D7E0606F000D11B5B971AC1DF
+  mpi56_carry_prop(r[0]);
+  mpi_conv_56to64(r64, r[0]);
+  mpi64_print("  r0 = 0x", r64, 7);
+  memset(r[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(r[1]);
+  mpi_conv_56to64(r64, r[1]);
+  mpi64_print("  r1 = 0x", r64, 7);
+  memset(r[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
+puts("**************************************************************************\n");
+}
+
 int main()
 {
-  test_fp();
+  // test_fp();
+  test_fpx();
 
   return 0;
 }

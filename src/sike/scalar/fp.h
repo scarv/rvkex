@@ -37,11 +37,13 @@ void mp_subadd_1w_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 #define rdc_mont   rdc_mont_1w_v0_ise
 #define mp_add     mp_add_1w_v0_ise
 #define mp_subadd  mp_subadd_1w_v0_ise
+#define mp_sub_p4  mp_sub_p4_1w_v0_ise
 #else
 #define mp_mul     mp_mul_1w_v2
 #define rdc_mont   rdc_mont_1w_v0
 #define mp_add     mp_add_1w_v0
 #define mp_subadd  mp_subadd_1w_v0
+#define mp_sub_p4  mp_sub_p4_1w_v0
 #endif  
 #define mp_dblsub  mp_dblsub_1w_v0
 

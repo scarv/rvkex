@@ -32,3 +32,5 @@
 | :------------------------------------ | :---------------------- | ------------:| ------:|
 | $\mathbb{F}_{p^2}$ multiplication     | SW  + 2-level Karatsuba |       2688   |        |
 | $\mathbb{F}_{p^2}$ multiplication     | ISE + product-scanning  |       1194   |        |
+| $\mathbb{F}_{p^2}$ squaring           | SW  + 2-level Karatsuba |       2129   |        |
+| $\mathbb{F}_{p^2}$ squaring           | ISE + product-scanning  |        954   |        |

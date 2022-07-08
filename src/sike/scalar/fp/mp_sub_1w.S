@@ -1,5 +1,6 @@
 // void mp_sub_p2_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // void mp_sub_p4_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void mp_sub_p4_1w_v1(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // void fpneg_1w_v0(uint64_t *r);
 // void mp_dblsub_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // radix-56
@@ -117,6 +118,18 @@ mp_sub_p4_1w_v0:
   la a3, P434X4
   COMPUTE_R
   CARRY_PROPAGATION
+  STORE_R
+  EPILOGUE
+
+
+// v1: no carry propagation
+
+.global mp_sub_p4_1w_v1
+
+mp_sub_p4_1w_v1:
+  PROLOGUE
+  la a3, P434X4
+  COMPUTE_R
   STORE_R
   EPILOGUE
 

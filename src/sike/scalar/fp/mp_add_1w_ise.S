@@ -1,7 +1,7 @@
 // void mp_add_1w_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void mp_add_1w_v1(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // radix-56
-// no reduction
-// TODO: a variant without carry propgation might be useful
+// no reduction, (no carry propagation)
 
 
 #include "ise.h"
@@ -103,4 +103,3 @@ mp_add_1w_v0_ise:
   CARRY_PROPAGATION
   STORE_R
   EPILOGUE
-

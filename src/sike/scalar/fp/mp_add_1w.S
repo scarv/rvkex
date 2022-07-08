@@ -1,7 +1,7 @@
 // void mp_add_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void mp_add_1w_v1(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // radix-56
-// no reduction
-// TODO: a variant without carry propgation might be useful
+// no reduction, (no carry propagation)
 
 
 // meaningful names for registers
@@ -105,3 +105,13 @@ mp_add_1w_v0:
   STORE_R
   EPILOGUE
 
+
+// v1: no carry propagation 
+
+.global mp_add_1w_v1
+
+mp_add_1w_v1:
+  PROLOGUE
+  ADDITION
+  STORE_R
+  EPILOGUE

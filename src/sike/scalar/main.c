@@ -493,6 +493,27 @@ void test_fpx()
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
+  printf("- fp2 mul 1w v1:");
+
+  LOAD_CACHE(fp2mul_mont_v1(r, a, a), 10);
+  MEASURE_CYCLES(fp2mul_mont_v1(r, a, a), 100);
+  printf("      #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r0 = 0x3306B70C7878F4FC445701989C949D34730CD77D27EB6133F6DB088FED9FA1E7A18F5515\
+          74C4BD908049D3BCE94A63695F8ADFBECDA8E
+  // r1 = 0x5A0F43788B83346DF59A47F91A579A1AC44B40DCDF58B9536321EEBADA5AD7FE18EE1085\
+          892811915E8D7E0606F000D11B5B971AC1DF
+  mpi56_carry_prop(r[0]);
+  mpi_conv_56to64(r64, r[0]);
+  mpi64_print("  r0 = 0x", r64, 7);
+  memset(r[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(r[1]);
+  mpi_conv_56to64(r64, r[1]);
+  mpi64_print("  r1 = 0x", r64, 7);
+  memset(r[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
   puts("");
 
   // ---------------------------------------------------------------------------
@@ -517,6 +538,77 @@ void test_fpx()
   mpi64_print("  r1 = 0x", r64, 7);
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
+
+  printf("- fp2 sqr 1w v1:");
+
+  LOAD_CACHE(fp2sqr_mont_v1(r, a), 10);
+  MEASURE_CYCLES(fp2sqr_mont_v1(r, a), 100);
+  printf("      #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r0 = 0xFC4C49B0144AE2C7E59997C4A8F35780D4554679D012157DF735A5FED9FA1E7A18F55157\
+          4C4BD908049D3BCE94A63695F8ADFBECDA8F
+  // r1 = 0x5A0F43788B83346DF59A47F91A579A1AC44B40DCDF58B9536321EEBADA5AD7FE18EE1085\
+          892811915E8D7E0606F000D11B5B971AC1DF
+  mpi56_carry_prop(r[0]);
+  mpi_conv_56to64(r64, r[0]);
+  mpi64_print("  r0 = 0x", r64, 7);
+  memset(r[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(r[1]);
+  mpi_conv_56to64(r64, r[1]);
+  mpi64_print("  r1 = 0x", r64, 7);
+  memset(r[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
+  puts("");
+
+// ---------------------------------------------------------------------------
+
+  printf("- fp2 add 1w v0:");
+
+  LOAD_CACHE(fp2add_v0(r, a, a), 10);
+  MEASURE_CYCLES(fp2add_v0(r, a, a), 100);
+  printf("      #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r0 = 0x22290C528B555284DCB220FCD5B310AB9D1DEB0A63E9606C39DD94D579BDE02468ACF13579BDE\
+          02468ACF13579BDE02468ACF13579BE0;
+  // r1 = 0x3339FB417A446395EDC30FEBC4A221BCAE2ED9F952D8717D4AEE83C468ACF13579BDE02468ACF\
+          13579BDE02468ACF13579BDE02468AD0;
+  mpi56_carry_prop(r[0]);
+  mpi_conv_56to64(r64, r[0]);
+  mpi64_print("  r0 = 0x", r64, 7);
+  memset(r[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(r[1]);
+  mpi_conv_56to64(r64, r[1]);
+  mpi64_print("  r1 = 0x", r64, 7);
+  memset(r[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
+  puts("");
+
+  // ---------------------------------------------------------------------------
+
+  printf("- fp2 sub 1w v0:");
+
+  LOAD_CACHE(fp2sub_v0(r, a, a), 10);
+  MEASURE_CYCLES(fp2sub_v0(r, a, a), 100);
+  printf("      #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r0 = 0;
+  // r1 = 0;
+  mpi56_carry_prop(r[0]);
+  mpi_conv_56to64(r64, r[0]);
+  mpi64_print("  r0 = 0x", r64, 7);
+  memset(r[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(r[1]);
+  mpi_conv_56to64(r64, r[1]);
+  mpi64_print("  r1 = 0x", r64, 7);
+  memset(r[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
+  puts("");
 
 puts("**************************************************************************\n");
 }

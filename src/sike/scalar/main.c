@@ -3,6 +3,8 @@
 #include "rdtsc.h"
 #include "fp.h"
 #include "fpx.h"
+#include "curve.h"
+#include "sidh.h"
 
 
 // macros for measuring CPU cycles
@@ -46,7 +48,6 @@ void mpi56_carry_prop_(int64_t *a)
     a[i]   &= MASK56;
   }
 } 
-
 
 void test_fp()
 {
@@ -613,10 +614,114 @@ void test_fpx()
 puts("**************************************************************************\n");
 }
 
+void test_curve()
+{
+  uint64_t start_cycles, end_cycles, diff_cycles;
+  int i;
+
+  point_proj P, Q, PQ;
+  f2elm_t A24plus, C24;
+  const felm_t mont_R4 = {
+    0x0000000001D0B1, 0x00000000000000, 0x00000000000000, 0x0D000000000000, 
+    0x2604AEE67E5999, 0xE3DCE440377525, 0x2737CCF17AFC17, 0x00017F9B77DD48, };
+  uint64_t r64[NLMB56];
+
+  // initialization
+  memcpy(&P.X[0], &A_gen[       0], sizeof(uint64_t)*NLMB56); // XPA0
+  memcpy(&P.X[1], &A_gen[  NLMB56], sizeof(uint64_t)*NLMB56); // XPA1
+  memcpy(&P.Z[0], &A_gen[2*NLMB56], sizeof(uint64_t)*NLMB56); // XQA0
+  memcpy(&P.Z[1], &A_gen[3*NLMB56], sizeof(uint64_t)*NLMB56); // XQA1
+  memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);                //    0
+  memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);                //    0
+  memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);                //    0
+  memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);                //    0
+  memcpy(&A24plus[0], mont_R, sizeof(uint64_t)*NLMB56);       //    1
+  memset(&A24plus[1],      0, sizeof(uint64_t)*NLMB56);       //    0
+  memcpy(&C24[0], mont_R4, sizeof(uint64_t)*NLMB56);          //    4
+  memset(&C24[1],       0, sizeof(uint64_t)*NLMB56);          //    0  
+
+  puts("\n**************************************************************************");
+  puts("SCALAR MONTGOMERY CURVE ARITH 1w:\n");
+
+  printf("- xDBL v0:");
+
+  LOAD_CACHE(xDBL_v0(&P, &Q, A24plus, C24), 10);
+  MEASURE_CYCLES(xDBL_v0(&P, &Q, A24plus, C24), 100);
+  printf("            #inst = %lld\n", diff_cycles);
+
+
+#if DEBUG
+  // XQ0 = 0x1DF58B543C8AD438BF85AFB581109D9A9A5F01854AC9BC0324C1D8623B473C0CF70800C3714AF\
+           A9DF28B8AE9546CB4FD62C8E1B5FF22E;
+  // XQ1 = 0xE56C71A84A54EAF641A72686AB83725977AACC4D24EFACC0598AFEAE9F3EBB17730A35B41A7F0\
+           50761A79882454EA580CE67658F4B61;
+  // ZQ0 = 0x60C56C36E22FCE059EC41DEC606922EFAFA1C13BA531244E4404398994B97EB0EE4A05AA7B387\
+           6811DB6F03946DC86BCD8A3E972DAAC;
+  // ZQ1 = 0x33ABAE3BFC4173F7FAC7FAE7D499E8EC26BEE972CD79FB924748EC81AAA227BD067C16ED727DC\
+           B9AF66D3AB670F1F012487D48C602BA;
+  mpi56_carry_prop(Q.X[0]);
+  mpi_conv_56to64(r64, Q.X[0]);
+  mpi64_print("  XQ0 = 0x", r64, 7);
+  memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.X[1]);
+  mpi_conv_56to64(r64, Q.X[1]);
+  mpi64_print("  XQ1 = 0x", r64, 7);
+  memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[0]);
+  mpi_conv_56to64(r64, Q.Z[0]);
+  mpi64_print("  ZQ0 = 0x", r64, 7);
+  memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[1]);
+  mpi_conv_56to64(r64, Q.Z[1]);
+  mpi64_print("  ZQ1 = 0x", r64, 7);
+  memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
+  printf("- xDBL v1:");
+
+  LOAD_CACHE(xDBL_v1(&P, &Q, A24plus, C24), 10);
+  MEASURE_CYCLES(xDBL_v1(&P, &Q, A24plus, C24), 100);
+  printf("            #inst = %lld\n", diff_cycles);
+
+
+#if DEBUG
+  // XQ0 = 0x1DF58B543C8AD438BF85AFB581109D9A9A5F01854AC9BC0324C1D8623B473C0CF70800C3714AF\
+           A9DF28B8AE9546CB4FD62C8E1B5FF22E;
+  // XQ1 = 0xE56C71A84A54EAF641A72686AB83725977AACC4D24EFACC0598AFEAE9F3EBB17730A35B41A7F0\
+           50761A79882454EA580CE67658F4B61;
+  // ZQ0 = 0x60C56C36E22FCE059EC41DEC606922EFAFA1C13BA531244E4404398994B97EB0EE4A05AA7B387\
+           6811DB6F03946DC86BCD8A3E972DAAC;
+  // ZQ1 = 0x33ABAE3BFC4173F7FAC7FAE7D499E8EC26BEE972CD79FB924748EC81AAA227BD067C16ED727DC\
+           B9AF66D3AB670F1F012487D48C602BA;
+  mpi56_carry_prop(Q.X[0]);
+  mpi_conv_56to64(r64, Q.X[0]);
+  mpi64_print("  XQ0 = 0x", r64, 7);
+  memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.X[1]);
+  mpi_conv_56to64(r64, Q.X[1]);
+  mpi64_print("  XQ1 = 0x", r64, 7);
+  memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[0]);
+  mpi_conv_56to64(r64, Q.Z[0]);
+  mpi64_print("  ZQ0 = 0x", r64, 7);
+  memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[1]);
+  mpi_conv_56to64(r64, Q.Z[1]);
+  mpi64_print("  ZQ1 = 0x", r64, 7);
+  memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
+  puts("");
+
+puts("**************************************************************************\n");
+
+}
+
 int main()
 {
   // test_fp();
   test_fpx();
+  test_curve();
 
   return 0;
 }

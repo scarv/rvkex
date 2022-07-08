@@ -54,3 +54,12 @@
 | $\mathbb{F}_{p^2}$ addition           | ISE                            |        228   |        |
 | $\mathbb{F}_{p^2}$ subtraction        | SW                             |        240   |        |
 | $\mathbb{F}_{p^2}$ subtraction        | ISE                            |        212   |        |
+
+### Montgomery curve arithmetic
+
+| Operation                             | Type                           | #Instruction | #Cycle |
+| :------------------------------------ | :----------------------------- | ------------:| ------:|
+| point doubling (xDBL)                 | SW  + CP                       |      15642   |        |
+| point doubling (xDBL)                 | SW  + NP                       |      15258   |        |
+| point doubling (xDBL)                 | ISE + CP                       |       7260   |        |
+| point doubling (xDBL)                 | ISE + NP                       |       6988   |        |

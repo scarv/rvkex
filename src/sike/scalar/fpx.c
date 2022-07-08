@@ -1,5 +1,6 @@
 #include "fpx.h"
 
+
 // v0: there are carry propagations in two integer additions. 
 void fp2mul_mont_v0(f2elm_t r, const f2elm_t a, const f2elm_t b)
 {
@@ -55,26 +56,26 @@ void fpsqr_mont_v0(felm_t r, const felm_t a)
   rdc_mont(r, temp);
 }
 
-// v0: there are carry propagations in first three additions/subtraction.
+// v0: there are carry propagations in first two additions.
 void fp2sqr_mont_v0(f2elm_t r, const f2elm_t a)
 {
   felm_t t1, t2, t3;
   
   mp_add_v0(t1, a[0], a[1]);            // t1 = a0 + a1
-  mp_sub_p4_v0(t2, a[0], a[1]);         // t2 = a0 - a1
   mp_add_v0(t3, a[0], a[0]);            // t3 = 2 * a0
+  mp_sub_p4(t2, a[0], a[1]);            // t2 = a0 - a1 + 4p
   fpmul_mont_v0(r[0], t1, t2);          // r0 = (a0+a1) * (a0-a1) mod 2p
   fpmul_mont_v0(r[1], t3, a[1]);        // r1 = 2a0 * a1 mod 2p
 }
 
-// v1: there are NOT carry propagations in first three additions/subtraction.
+// v1: there are NOT carry propagations in first two additions.
 void fp2sqr_mont_v1(f2elm_t r, const f2elm_t a)
 {
   felm_t t1, t2, t3;
 
   mp_add_v1(t1, a[0], a[1]);            // t1 = a0 + a1
-  mp_sub_p4_v1(t2, a[0], a[1]);         // t2 = a0 - a1
   mp_add_v1(t3, a[0], a[0]);            // t3 = 2 * a0
+  mp_sub_p4(t2, a[0], a[1]);            // t2 = a0 - a1 + 4p
   fpmul_mont_v0(r[0], t1, t2);          // r0 = (a0+a1) * (a0-a1) mod 2p
   fpmul_mont_v0(r[1], t3, a[1]);        // r1 = 2a0 * a1 mod 2p
 }
@@ -123,18 +124,10 @@ void mp2_add_v1(f2elm_t r, const f2elm_t a, const f2elm_t b)
   mp_add_v1(r[1], a[1], b[1]);
 }
 
-// v0: there are carry propagations in integer subtractions. 
-void mp2_sub_p2_v0(f2elm_t r, const f2elm_t a, const f2elm_t b)
+void mp2_sub_p2(f2elm_t r, const f2elm_t a, const f2elm_t b)
 {
-  mp_sub_p2_v0(r[0], a[0], b[0]);
-  mp_sub_p2_v0(r[1], a[1], b[1]);
-}
-
-// v1: there are NOT carry propagations in integer subtrations. 
-void mp2_sub_p2_v1(f2elm_t r, const f2elm_t a, const f2elm_t b)
-{
-  mp_sub_p2_v1(r[0], a[0], b[0]);
-  mp_sub_p2_v1(r[1], a[1], b[1]);
+  mp_sub_p2(r[0], a[0], b[0]);
+  mp_sub_p2(r[1], a[1], b[1]);
 }
 
 void to_mont(felm_t r, const felm_t a)
@@ -188,106 +181,83 @@ void fp2zero(f2elm_t r)
   fpzero(r[1]);
 }
 
-static void fpinv_chain_mont(felm_t r)
+void fpinv_chain_mont(felm_t r)
 {
-  felm_t t[15], tt;
+  felm_t t[31], tt;
   int i, j;
 
   // Precomputed table
   fpsqr_mont(tt, r);
-  fpmul_mont(t[0], r, tt);
-  for (i = 0; i <= 13; i++) fpmul_mont(t[i+1], t[i], tt);
-
+  fpmul_mont(t[0], r, tt);    
+  for (i = 0; i <= 29; i++) fpmul_mont(t[i+1], t[i], tt);
   fpcopy(tt, r);
-  for (i = 0; i < 8; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, r, tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[8], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[6], tt);
-  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[9], tt);
   for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[0], tt);
-  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, r, tt);
-  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[6], tt);
-  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[2], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[8], tt);
-  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, r, tt);
-  for (i = 0; i < 8; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[10], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[0], tt);
-  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[10], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[10], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
   fpmul_mont(tt, t[5], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[2], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[6], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
+  for (i = 0; i < 10; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[14], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
   fpmul_mont(tt, t[3], tt);
   for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[5], tt);
-  for (i = 0; i < 12; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[12], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[8], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[6], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[12], tt);
+  fpmul_mont(tt, t[23], tt);
   for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[11], tt);
-  for (i = 0; i < 8; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[6], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[5], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[14], tt);
-  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[14], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[5], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[6], tt);
-  for (i = 0; i < 8; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[8], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, r, tt);
-  for (i = 0; i < 8; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[4], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[6], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[5], tt);
-  for (i = 0; i < 8; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[7], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, r, tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[0], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-  fpmul_mont(tt, t[11], tt);
-  for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
   fpmul_mont(tt, t[13], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[24], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[7], tt);  
+  for (i = 0; i < 8; i++) fpsqr_mont(tt, tt); 
+  fpmul_mont(tt, t[12], tt);
   for (i = 0; i < 8; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[30], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
   fpmul_mont(tt, t[1], tt);
   for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[30], tt);    
+  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[21], tt);  
+  for (i = 0; i < 9; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[2], tt);
+  for (i = 0; i < 9; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[19], tt);
+  for (i = 0; i < 9; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[1], tt);
+  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[24], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[26], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[16], tt);    
+  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
   fpmul_mont(tt, t[10], tt);
-  for (j = 0; j < 49; j++) {
-    for (i = 0; i < 5; i++) fpsqr_mont(tt, tt);
-      fpmul_mont(tt, t[14], tt);
-    }
-    fpcopy(r, tt);
+  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[6], tt);
+  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[0], tt);
+  for (i = 0; i < 9; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[20], tt);
+  for (i = 0; i < 8; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[9], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[25], tt);
+  for (i = 0; i < 9; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[30], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[26], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, r, tt);
+  for (i = 0; i < 7; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[28], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[6], tt);
+  for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[10], tt);
+  for (i = 0; i < 9; i++) fpsqr_mont(tt, tt);
+  fpmul_mont(tt, t[22], tt);
+  for (j = 0; j < 35; j++) {
+    for (i = 0; i < 6; i++) fpsqr_mont(tt, tt);
+    fpmul_mont(tt, t[30], tt);
+  }
+  fpcopy(r, tt); 
 }
 
 void fpinv_mont(felm_t r)

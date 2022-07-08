@@ -1,4 +1,5 @@
 // void mp_sub_p2_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void mp_sub_p2_1w_v1(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // void mp_sub_p4_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // void mp_sub_p4_1w_v1(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // void fpneg_1w_v0(uint64_t *r);
@@ -123,6 +124,16 @@ mp_sub_p4_1w_v0:
 
 
 // v1: no carry propagation
+
+.global mp_sub_p2_1w_v1
+
+mp_sub_p2_1w_v1:
+  PROLOGUE
+  la a3, P434X2
+  COMPUTE_R
+  STORE_R
+  EPILOGUE
+
 
 .global mp_sub_p4_1w_v1
 

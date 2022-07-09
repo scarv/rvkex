@@ -12,7 +12,7 @@ void fpadd_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_sub_p2_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_sub_p2_1w_v1(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_sub_p4_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
-void mp_sub_p4_1w_v1(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void mp_sub_p4_1w_v1(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void fpsub_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void fpcorrection_1w_v0(uint64_t *r);
 void fpneg_1w_v0(uint64_t *r);
@@ -45,11 +45,12 @@ void mp_subadd_1w_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 #define fpneg         fpneg_1w_v0_ise
 #define fpdiv2        fpdiv2_1w_v0_ise
 #define fpcorrection  fpcorrection_1w_v0_ise
-#define mp_sub_p2     mp_sub_p2_1w_v0_ise
 #define mp_sub_p4     mp_sub_p4_1w_v0_ise
 // multi-version operations
 #define mp_add_v0     mp_add_1w_v0_ise
 #define mp_add_v1     mp_add_1w_v1
+#define mp_sub_p2_v0  mp_sub_p2_1w_v0_ise
+#define mp_sub_p2_v1  mp_sub_p2_1w_v1
 #else
 // single-version operations
 #define mp_mul        mp_mul_1w_v2
@@ -60,11 +61,12 @@ void mp_subadd_1w_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 #define fpneg         fpneg_1w_v0
 #define fpdiv2        fpdiv2_1w_v0
 #define fpcorrection  fpcorrection_1w_v0
-#define mp_sub_p2     mp_sub_p2_1w_v0
 #define mp_sub_p4     mp_sub_p4_1w_v0
 // multi-version operations
 #define mp_add_v0     mp_add_1w_v0
 #define mp_add_v1     mp_add_1w_v1
+#define mp_sub_p2_v0  mp_sub_p2_1w_v0
+#define mp_sub_p2_v1  mp_sub_p2_1w_v1
 #endif  
 #define mp_dblsub     mp_dblsub_1w_v0
 

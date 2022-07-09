@@ -124,10 +124,16 @@ void mp2_add_v1(f2elm_t r, const f2elm_t a, const f2elm_t b)
   mp_add_v1(r[1], a[1], b[1]);
 }
 
-void mp2_sub_p2(f2elm_t r, const f2elm_t a, const f2elm_t b)
+void mp2_sub_p2_v0(f2elm_t r, const f2elm_t a, const f2elm_t b)
 {
-  mp_sub_p2(r[0], a[0], b[0]);
-  mp_sub_p2(r[1], a[1], b[1]);
+  mp_sub_p2_v0(r[0], a[0], b[0]);
+  mp_sub_p2_v0(r[1], a[1], b[1]);
+}
+
+void mp2_sub_p2_v1(f2elm_t r, const f2elm_t a, const f2elm_t b)
+{
+  mp_sub_p2_v1(r[0], a[0], b[0]);
+  mp_sub_p2_v1(r[1], a[1], b[1]);
 }
 
 void to_mont(felm_t r, const felm_t a)

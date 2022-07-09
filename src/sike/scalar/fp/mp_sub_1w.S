@@ -1,4 +1,5 @@
 // void mp_sub_p2_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void mp_sub_p2_1w_v1(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // void mp_sub_p4_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // void fpneg_1w_v0(uint64_t *r);
 // void mp_dblsub_1w_v0(uint64_t *r, const uint64_t *a, const uint64_t *b);
@@ -121,6 +122,43 @@ mp_sub_p4_1w_v0:
   EPILOGUE
 
 
+// v1: no carry propagation
+
+.macro _COMPUTE_R_ R, imm 
+  ld    A_, 8*\imm(a1)
+  ld    B_, 8*\imm(a2)
+  add   \R, A_, a7
+  sub   \R, \R, B_
+.endm 
+
+.macro _COMPUTE_RT R, imm 
+  ld    A_, 8*\imm(a1)
+  ld    B_, 8*\imm(a2)
+  ld    P_, 8*\imm-24(a3)
+  add   \R, A_, a7
+  add   \R, \R, P_
+  sub   \R, \R, B_
+.endm 
+
+.global mp_sub_p2_1w_v1
+
+mp_sub_p2_1w_v1:
+  PROLOGUE
+  la a3, P434X2T
+  li a7, 0x1FFFFFFFFFFFFFEULL
+  _COMPUTE_R_ R0, 0
+  _COMPUTE_R_ R1, 1
+  _COMPUTE_R_ R2, 2
+  _COMPUTE_RT R3, 3
+  _COMPUTE_RT R4, 4
+  _COMPUTE_RT R5, 5
+  _COMPUTE_RT R6, 6
+  li a7, 0x3FFFFFFFFFEULL 
+  _COMPUTE_RT R7, 7
+  STORE_R
+  EPILOGUE
+
+
 // 1-way modular negation
 
 .macro _SUBTRACT R, imm
@@ -191,3 +229,11 @@ P434X4:
 .dword 0x8159EF1971E0C5                 // P5
 .dword 0x11B3F17F5A0714                 // P6
 .dword 0x0008D07C9C5DCD                 // P7
+
+// T = 2*(P434 - (2^433-1))
+P434X2T:
+.dword 0xC6000000000000                 // T3
+.dword 0xB15D47FB82ECF5                 // T4
+.dword 0x40ACF78CB8F062                 // T5
+.dword 0x88D9F8BFAD038A                 // T6
+.dword 0x0000683E4E2EE6                 // T7

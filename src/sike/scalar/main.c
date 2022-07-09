@@ -259,6 +259,21 @@ void test_fp()
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
 
+  printf("- mp sub p2 1w v1:");
+
+  LOAD_CACHE(mp_sub_p2_1w_v1(r56, a56, b56), 100);
+  MEASURE_CYCLES(mp_sub_p2_1w_v1(r56, a56, b56), 1000);
+  printf("    #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x3DFB6D6B76F10517037258C12C9346F043068EB39E5CF72FA646E4E8888877777777888888887\
+          77777778888888877777777888888886
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+
   printf("- mp sub p2 1w v0 ise:");
 
   LOAD_CACHE(mp_sub_p2_1w_v0_ise(r56, a56, b56), 100);
@@ -620,8 +635,8 @@ void test_curve()
   int i;
 
   point_proj P, Q, PQ;
-  f2elm_t A24plus, C24;
-  const felm_t mont_R4 = {
+  f2elm_t A24plus, C24, A24minus;
+  const felm_t mont_Rx4 = {
     0x0000000001D0B1, 0x00000000000000, 0x00000000000000, 0x0D000000000000, 
     0x2604AEE67E5999, 0xE3DCE440377525, 0x2737CCF17AFC17, 0x00017F9B77DD48, };
   uint64_t r64[NLMB56];
@@ -637,8 +652,10 @@ void test_curve()
   memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);                //    0
   memcpy(&A24plus[0], mont_R, sizeof(uint64_t)*NLMB56);       //    1
   memset(&A24plus[1],      0, sizeof(uint64_t)*NLMB56);       //    0
-  memcpy(&C24[0], mont_R4, sizeof(uint64_t)*NLMB56);          //    4
-  memset(&C24[1],       0, sizeof(uint64_t)*NLMB56);          //    0  
+  memcpy(&A24minus[0], mont_Rx4, sizeof(uint64_t)*NLMB56);    //    4
+  memset(&A24minus[1],        0, sizeof(uint64_t)*NLMB56);    //    0
+  memcpy(&C24[0], mont_Rx4, sizeof(uint64_t)*NLMB56);         //    4
+  memset(&C24[1],        0, sizeof(uint64_t)*NLMB56);         //    0
 
   puts("\n**************************************************************************");
   puts("SCALAR MONTGOMERY CURVE ARITH 1w:\n");
@@ -648,7 +665,6 @@ void test_curve()
   LOAD_CACHE(xDBL_v0(&P, &Q, A24plus, C24), 10);
   MEASURE_CYCLES(xDBL_v0(&P, &Q, A24plus, C24), 100);
   printf("            #inst = %lld\n", diff_cycles);
-
 
 #if DEBUG
   // XQ0 = 0x1DF58B543C8AD438BF85AFB581109D9A9A5F01854AC9BC0324C1D8623B473C0CF70800C3714AF\
@@ -683,6 +699,38 @@ void test_curve()
   MEASURE_CYCLES(xDBL_v1(&P, &Q, A24plus, C24), 100);
   printf("            #inst = %lld\n", diff_cycles);
 
+#if DEBUG
+  // XQ0 = 0x1DF58B543C8AD438BF85AFB581109D9A9A5F01854AC9BC0324C1D8623B473C0CF70800C3714AF\
+           A9DF28B8AE9546CB4FD62C8E1B5FF22E;
+  // XQ1 = 0xE56C71A84A54EAF641A72686AB83725977AACC4D24EFACC0598AFEAE9F3EBB17730A35B41A7F0\
+           50761A79882454EA580CE67658F4B61;
+  // ZQ0 = 0x60C56C36E22FCE059EC41DEC606922EFAFA1C13BA531244E4404398994B97EB0EE4A05AA7B387\
+           6811DB6F03946DC86BCD8A3E972DAAC;
+  // ZQ1 = 0x33ABAE3BFC4173F7FAC7FAE7D499E8EC26BEE972CD79FB924748EC81AAA227BD067C16ED727DC\
+           B9AF66D3AB670F1F012487D48C602BA;
+  mpi56_carry_prop(Q.X[0]);
+  mpi_conv_56to64(r64, Q.X[0]);
+  mpi64_print("  XQ0 = 0x", r64, 7);
+  memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.X[1]);
+  mpi_conv_56to64(r64, Q.X[1]);
+  mpi64_print("  XQ1 = 0x", r64, 7);
+  memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[0]);
+  mpi_conv_56to64(r64, Q.Z[0]);
+  mpi64_print("  ZQ0 = 0x", r64, 7);
+  memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[1]);
+  mpi_conv_56to64(r64, Q.Z[1]);
+  mpi64_print("  ZQ1 = 0x", r64, 7);
+  memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
+  printf("- xDBL v2:");
+
+  LOAD_CACHE(xDBL_v2(&P, &Q, A24plus, C24), 10);
+  MEASURE_CYCLES(xDBL_v2(&P, &Q, A24plus, C24), 100);
+  printf("            #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // XQ0 = 0x1DF58B543C8AD438BF85AFB581109D9A9A5F01854AC9BC0324C1D8623B473C0CF70800C3714AF\
@@ -713,6 +761,107 @@ void test_curve()
 
   puts("");
 
+  // ---------------------------------------------------------------------------   
+
+  printf("- xTPL v0:");
+
+  LOAD_CACHE(xTPL_v0(&P, &Q, A24minus, A24plus), 10);
+  MEASURE_CYCLES(xTPL_v0(&P, &Q, A24minus, A24plus), 100);
+  printf("            #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // XQ0 = 0x416C62092E5919D21AE4E1D0B30C117ACD21EF38B18F934708A2215C8EE7A30D59BBC6E\
+           5BDE7E27BB848662298AEF4BB91CBDD9D14F22
+  // XQ1 = 0x1E13BD3B4E9ED537CA5A87BC1E9D0AA4EF91A7526650FCF42896CECDE9F33EED82D5377\
+           0052E3FD871F4C2642E57C6B3C3288DD8B2700
+  // ZQ0 = 0x4558B5DFCACE8F27EA2A6044B8D1F8B0E8F92EF670A19B75C67DCA0C0C7C73E2E10CEDF\
+           30EC979117FEF1CDFEB18EF337E8AC0F305F7E
+  // ZQ1 = 0x6DFEE68F111FA3F5348A2B28A4E7EBF2EB6E1D1484ABD53BC3EF459FB2384247482BBB1\
+           78D414B892CCECCA18A4E0EDB837647FB82CA
+  mpi56_carry_prop(Q.X[0]);
+  mpi_conv_56to64(r64, Q.X[0]);
+  mpi64_print("  XQ0 = 0x", r64, 7);
+  memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.X[1]);
+  mpi_conv_56to64(r64, Q.X[1]);
+  mpi64_print("  XQ1 = 0x", r64, 7);
+  memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[0]);
+  mpi_conv_56to64(r64, Q.Z[0]);
+  mpi64_print("  ZQ0 = 0x", r64, 7);
+  memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[1]);
+  mpi_conv_56to64(r64, Q.Z[1]);
+  mpi64_print("  ZQ1 = 0x", r64, 7);
+  memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
+  printf("- xTPL v1:");
+
+  LOAD_CACHE(xTPL_v1(&P, &Q, A24minus, A24plus), 10);
+  MEASURE_CYCLES(xTPL_v1(&P, &Q, A24minus, A24plus), 100);
+  printf("            #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // XQ0 = 0x416C62092E5919D21AE4E1D0B30C117ACD21EF38B18F934708A2215C8EE7A30D59BBC6E\
+           5BDE7E27BB848662298AEF4BB91CBDD9D14F22
+  // XQ1 = 0x1E13BD3B4E9ED537CA5A87BC1E9D0AA4EF91A7526650FCF42896CECDE9F33EED82D5377\
+           0052E3FD871F4C2642E57C6B3C3288DD8B2700
+  // ZQ0 = 0x4558B5DFCACE8F27EA2A6044B8D1F8B0E8F92EF670A19B75C67DCA0C0C7C73E2E10CEDF\
+           30EC979117FEF1CDFEB18EF337E8AC0F305F7E
+  // ZQ1 = 0x6DFEE68F111FA3F5348A2B28A4E7EBF2EB6E1D1484ABD53BC3EF459FB2384247482BBB1\
+           78D414B892CCECCA18A4E0EDB837647FB82CA
+  mpi56_carry_prop(Q.X[0]);
+  mpi_conv_56to64(r64, Q.X[0]);
+  mpi64_print("  XQ0 = 0x", r64, 7);
+  memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.X[1]);
+  mpi_conv_56to64(r64, Q.X[1]);
+  mpi64_print("  XQ1 = 0x", r64, 7);
+  memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[0]);
+  mpi_conv_56to64(r64, Q.Z[0]);
+  mpi64_print("  ZQ0 = 0x", r64, 7);
+  memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[1]);
+  mpi_conv_56to64(r64, Q.Z[1]);
+  mpi64_print("  ZQ1 = 0x", r64, 7);
+  memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
+  printf("- xTPL v2:");
+
+  LOAD_CACHE(xTPL_v2(&P, &Q, A24minus, A24plus), 10);
+  MEASURE_CYCLES(xTPL_v2(&P, &Q, A24minus, A24plus), 100);
+  printf("            #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // XQ0 = 0x416C62092E5919D21AE4E1D0B30C117ACD21EF38B18F934708A2215C8EE7A30D59BBC6E\
+           5BDE7E27BB848662298AEF4BB91CBDD9D14F22
+  // XQ1 = 0x1E13BD3B4E9ED537CA5A87BC1E9D0AA4EF91A7526650FCF42896CECDE9F33EED82D5377\
+           0052E3FD871F4C2642E57C6B3C3288DD8B2700
+  // ZQ0 = 0x4558B5DFCACE8F27EA2A6044B8D1F8B0E8F92EF670A19B75C67DCA0C0C7C73E2E10CEDF\
+           30EC979117FEF1CDFEB18EF337E8AC0F305F7E
+  // ZQ1 = 0x6DFEE68F111FA3F5348A2B28A4E7EBF2EB6E1D1484ABD53BC3EF459FB2384247482BBB1\
+           78D414B892CCECCA18A4E0EDB837647FB82CA
+  mpi56_carry_prop(Q.X[0]);
+  mpi_conv_56to64(r64, Q.X[0]);
+  mpi64_print("  XQ0 = 0x", r64, 7);
+  memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.X[1]);
+  mpi_conv_56to64(r64, Q.X[1]);
+  mpi64_print("  XQ1 = 0x", r64, 7);
+  memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[0]);
+  mpi_conv_56to64(r64, Q.Z[0]);
+  mpi64_print("  ZQ0 = 0x", r64, 7);
+  memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(Q.Z[1]);
+  mpi_conv_56to64(r64, Q.Z[1]);
+  mpi64_print("  ZQ1 = 0x", r64, 7);
+  memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
 puts("**************************************************************************\n");
 
 }
@@ -720,7 +869,7 @@ puts("**************************************************************************
 int main()
 {
   // test_fp();
-  test_fpx();
+  // test_fpx();
   test_curve();
 
   return 0;

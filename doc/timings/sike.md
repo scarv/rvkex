@@ -28,6 +28,7 @@
 | $\mathbb{F}_p$ addition    | SW        |        122   |        |
 | $\mathbb{F}_p$ addition    | ISE       |        108   |        |
 | integer subtraction        | SW  + CP  |         81   |        |
+| integer subtraction        | SW  + NP  |         65   |        |
 | integer subtraction        | ISE + CP  |         74   |        |
 | $\mathbb{F}_p$ subtraction | SW        |        114   |        |
 | $\mathbb{F}_p$ subtraction | ISE       |        100   |        |
@@ -46,10 +47,10 @@
 | $\mathbb{F}_{p^2}$ multiplication     | SW  + KA2 (mul) + NP (add)     |     **2640** |        |
 | $\mathbb{F}_{p^2}$ multiplication     | ISE + PS  (mul) + CP (add)     |       1194   |        |
 | $\mathbb{F}_{p^2}$ multiplication     | ISE + PS  (mul) + NP (add)     |     **1160** |        |
-| $\mathbb{F}_{p^2}$ squaring           | SW  + KA2 (mul) + CP (add/sub) |       2129   |        |
-| $\mathbb{F}_{p^2}$ squaring           | SW  + KA2 (mul) + NP (add/sub) |     **2057** |        |
-| $\mathbb{F}_{p^2}$ squaring           | ISE + PS  (mul) + CP (add/sub) |        954   |        |
-| $\mathbb{F}_{p^2}$ squaring           | ISE + PS  (mul) + NP (add/sub) |     **903**  |        |
+| $\mathbb{F}_{p^2}$ squaring           | SW  + KA2 (mul) + CP (add)     |       2129   |        |
+| $\mathbb{F}_{p^2}$ squaring           | SW  + KA2 (mul) + NP (add)     |     **2057** |        |
+| $\mathbb{F}_{p^2}$ squaring           | ISE + PS  (mul) + CP (add)     |        954   |        |
+| $\mathbb{F}_{p^2}$ squaring           | ISE + PS  (mul) + NP (add)     |     **903**  |        |
 | $\mathbb{F}_{p^2}$ addition           | SW                             |        256   |        |
 | $\mathbb{F}_{p^2}$ addition           | ISE                            |        228   |        |
 | $\mathbb{F}_{p^2}$ subtraction        | SW                             |        240   |        |
@@ -59,7 +60,15 @@
 
 | Operation                             | Type                           | #Instruction | #Cycle |
 | :------------------------------------ | :----------------------------- | ------------:| ------:|
-| point doubling (xDBL)                 | SW  + CP                       |      15642   |        |
-| point doubling (xDBL)                 | SW  + NP                       |      15258   |        |
-| point doubling (xDBL)                 | ISE + CP                       |       7260   |        |
-| point doubling (xDBL)                 | ISE + NP                       |       6988   |        |
+| point doubling (xDBL)                 | SW  + CP (add/sub)             |      15642   |        |
+| point doubling (xDBL)                 | SW  + NP (add) + CP (sub)      |      15258   |        |
+| point doubling (xDBL)                 | SW  + NP (add/sub)             |      15194   |        |
+| point doubling (xDBL)                 | ISE + CP (add/sub)             |       7260   |        |
+| point doubling (xDBL)                 | ISE + NP (add) + CP (sub)      |       6988   |        |
+| point doubling (xDBL)                 | ISE + NP (add/sub)             |       6952   |        |
+| point tripling (xTPL)                 | SW  + CP (add/sub)             |      31224   |        |
+| point tripling (xTPL)                 | SW  + NP (add) + CP (sub)      |      30504   |        |
+| point tripling (xTPL)                 | SW  + NP (add/sub)             |      30408   |        |
+| point tripling (xTPL)                 | ISE + CP (add/sub)             |      14723   |        |
+| point tripling (xTPL)                 | ISE + NP (add) + CP (sub)      |      14213   |        |
+| point tripling (xTPL)                 | ISE + NP (add/sub)             |      14159   |        |

@@ -72,3 +72,11 @@
 | point tripling (xTPL)                 | ISE + CP (add/sub)             |      14723   |        |
 | point tripling (xTPL)                 | ISE + NP (add) + CP (sub)      |      14213   |        |
 | point tripling (xTPL)                 | ISE + NP (add/sub)             |      14159   |        |
+| 4-isogeny generation (get_4_isog)     | SW  + CP (add/sub)             |       9250   |        |
+| 4-isogeny generation (get_4_isog)     | SW  + NP (add) + CP (sub)      |       8914   |        |
+| 4-isogeny generation (get_4_isog)     | ISE + CP (add/sub)             |       4480   |        |
+| 4-isogeny generation (get_4_isog)     | ISE + NP (add) + CP (sub)      |       4242   |        |
+| 4-isogeny evaluation (eval_4_isog)    | SW  + CP (add/sub)             |      21313   |        |
+| 4-isogeny evaluation (eval_4_isog)    | SW  + NP (add) + CP (sub)      |      20785   |        |
+| 4-isogeny evaluation (eval_4_isog)    | ISE + CP (add/sub)             |       9915   |        |
+| 4-isogeny evaluation (eval_4_isog)    | ISE + NP (add) + CP (sub)      |       9541   |        |

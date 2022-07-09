@@ -160,3 +160,71 @@ void xTPLe(const point_proj_t P, point_proj_t Q, const f2elm_t A24minus, const f
   copy_point(Q, P);
   for (i = 0; i < e; i++) xTPL(Q, Q, A24minus, A24plus);
 }
+
+void get_4_isog_v0(const point_proj_t P, f2elm_t A24plus, f2elm_t C24, f2elm_t *coeff)
+{
+                                            //  range | limb-length | computation 
+  mp2_sub_p2_v0(coeff[1], P->X, P->Z);      // 2p->4p |  56    ->56 | coeff[1] = X4-Z4
+  mp2_add_v0(coeff[2], P->X, P->Z);         // 2p->4p |  56    ->56 | coeff[2] = X4+Z4
+  fp2sqr_mont_v0(coeff[0], P->Z);           // 2p->2p |  56->56->56 | coeff[0] = Z4^2
+  mp2_add_v0(coeff[0], coeff[0], coeff[0]); // 2p->4p |  56    ->56 | coeff[0] = 2*Z4^2
+  fp2sqr_mont_v0(C24, coeff[0]);            // 4p->2p |  56->56->56 | C24 = 4*Z4^4 
+  mp2_add_v0(coeff[0], coeff[0], coeff[0]); // 4p->8p |  56    ->56 | coeff[0] = 4*Z4^2
+  fp2sqr_mont_v0(A24plus, P->X);            // 2p->2p |  56->56->56 | A24plus = X4^2
+  mp2_add_v0(A24plus, A24plus, A24plus);    // 2p->4p |  56    ->56 | A24plus = 2*X4^2
+  fp2sqr_mont_v0(A24plus, A24plus);         // 4p->2p |  56->56->56 | A24plus = 4*X4^4 
+}
+
+void get_4_isog_v1(const point_proj_t P, f2elm_t A24plus, f2elm_t C24, f2elm_t *coeff)
+{
+                                            //  range | limb-length | computation 
+  mp2_sub_p2_v0(coeff[1], P->X, P->Z);      // 2p->4p |  56    ->56 | coeff[1] = X4-Z4
+  mp2_add_v1(coeff[2], P->X, P->Z);         // 2p->4p |  56    ->57 | coeff[2] = X4+Z4
+  fp2sqr_mont_v1(coeff[0], P->Z);           // 2p->2p |  56->57->56 | coeff[0] = Z4^2
+  mp2_add_v1(coeff[0], coeff[0], coeff[0]); // 2p->4p |  56    ->57 | coeff[0] = 2*Z4^2
+  fp2sqr_mont_v1(C24, coeff[0]);            // 4p->2p |  57->58->56 | C24 = 4*Z4^4 
+  mp2_add_v0(coeff[0], coeff[0], coeff[0]); // 4p->8p |  57    ->56 | coeff[0] = 4*Z4^2
+  fp2sqr_mont_v1(A24plus, P->X);            // 2p->2p |  56->57->56 | A24plus = X4^2
+  mp2_add_v1(A24plus, A24plus, A24plus);    // 2p->4p |  56    ->57 | A24plus = 2*X4^2
+  fp2sqr_mont_v1(A24plus, A24plus);         // 4p->2p |  57->57->56 | A24plus = 4*X4^4 
+}
+
+void eval_4_isog_v0(point_proj_t P, f2elm_t *coeff)
+{
+  f2elm_t t0, t1;
+                                        //  range | limb-length | computation 
+  mp2_add_v0(t0, P->X, P->Z);           // 2p->4p |  56    ->56 | t0 = X+Z
+  mp2_sub_p2_v0(t1, P->X, P->Z);        // 2p->4p |  56    ->56 | t1 = X-Z
+  fp2mul_mont_v0(P->X, t0, coeff[1]);   // 4p->2p |  56->56->56 | X  = (X+Z)*coeff[1]
+  fp2mul_mont_v0(P->Z, t1, coeff[2]);   // 4p->2p |  56->56->56 | Z  = (X-Z)*coeff[2]
+  fp2mul_mont_v0(t0, t0, t1);           // 4p->2p |  56->56->56 | t0 = (X+Z)*(X-Z)
+  fp2mul_mont_v0(t0, coeff[0], t0);     // 8p->2p |  56->56->56 | t0 = coeff[0]*(X+Z)*(X-Z)
+  mp2_add_v0(t1, P->X, P->Z);           // 2p->4p |  56    ->56 | t1 = (X-Z)*coeff[2] + (X+Z)*coeff[1]
+  mp2_sub_p2_v0(P->Z, P->X, P->Z);      // 2p->4p |  56    ->56 | Z  = (X-Z)*coeff[2] - (X+Z)*coeff[1]
+  fp2sqr_mont_v0(t1, t1);               // 4p->2p |  56->56->56 | t1 = [(X-Z)*coeff[2] + (X+Z)*coeff[1]]^2
+  fp2sqr_mont_v0(P->Z, P->Z);           // 4p->2p |  56->56->56 | Z = [(X-Z)*coeff[2] - (X+Z)*coeff[1]]^2
+  mp2_add_v0(P->X, t1, t0);             // 2p->4p |  56    ->56 | X = coeff[0]*(X+Z)*(X-Z) + [(X-Z)*coeff[2] + (X+Z)*coeff[1]]^2
+  mp2_sub_p2_v0(t0, P->Z, t0);          // 2p->4p |  56    ->56 | t0 = [(X-Z)*coeff[2] - (X+Z)*coeff[1]]^2 - coeff[0]*(X+Z)*(X-Z)
+  fp2mul_mont_v0(P->X, P->X, t1);       // 4p->2p |  56->56->56 | Xfinal
+  fp2mul_mont_v0(P->Z, P->Z, t0);       // 4p->2p |  56->56->56 | Zfinal
+}
+
+void eval_4_isog_v1(point_proj_t P, f2elm_t *coeff)
+{
+  f2elm_t t0, t1;
+                                        //  range | limb-length | computation 
+  mp2_add_v1(t0, P->X, P->Z);           // 2p->4p |  56    ->57 | t0 = X+Z
+  mp2_sub_p2_v0(t1, P->X, P->Z);        // 2p->4p |  56    ->56 | t1 = X-Z
+  fp2mul_mont_v1(P->X, t0, coeff[1]);   // 4p->2p |  56,57 ->56 | X  = (X+Z)*coeff[1]
+  fp2mul_mont_v1(P->Z, t1, coeff[2]);   // 4p->2p |  56,57 ->56 | Z  = (X-Z)*coeff[2]
+  fp2mul_mont_v1(t0, t0, t1);           // 4p->2p |  56,57 ->56 | t0 = (X+Z)*(X-Z)
+  fp2mul_mont_v1(t0, coeff[0], t0);     // 8p->2p |  56->57->56 | t0 = coeff[0]*(X+Z)*(X-Z)
+  mp2_add_v1(t1, P->X, P->Z);           // 2p->4p |  56    ->57 | t1 = (X-Z)*coeff[2] + (X+Z)*coeff[1]
+  mp2_sub_p2_v0(P->Z, P->X, P->Z);      // 2p->4p |  56    ->56 | Z  = (X-Z)*coeff[2] - (X+Z)*coeff[1]
+  fp2sqr_mont_v1(t1, t1);               // 4p->2p |  57->58->56 | t1 = [(X-Z)*coeff[2] + (X+Z)*coeff[1]]^2
+  fp2sqr_mont_v1(P->Z, P->Z);           // 4p->2p |  56->57->56 | Z = [(X-Z)*coeff[2] - (X+Z)*coeff[1]]^2
+  mp2_add_v1(P->X, t1, t0);             // 2p->4p |  56    ->57 | X = coeff[0]*(X+Z)*(X-Z) + [(X-Z)*coeff[2] + (X+Z)*coeff[1]]^2
+  mp2_sub_p2_v0(t0, P->Z, t0);          // 2p->4p |  56    ->56 | t0 = [(X-Z)*coeff[2] - (X+Z)*coeff[1]]^2 - coeff[0]*(X+Z)*(X-Z)
+  fp2mul_mont_v1(P->X, P->X, t1);       // 4p->2p |  56,57 ->56 | Xfinal
+  fp2mul_mont_v1(P->Z, P->Z, t0);       // 4p->2p |  56->57->56 | Zfinal
+}

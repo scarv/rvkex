@@ -1,4 +1,4 @@
-# Timing results of SIKE implementation 
+# Timing results of SIKEp434 implementation 
 
 ## Notation
 
@@ -80,3 +80,11 @@
 | 4-isogeny evaluation (eval_4_isog)    | SW  + NP (add) + CP (sub)      |      20785   |        |
 | 4-isogeny evaluation (eval_4_isog)    | ISE + CP (add/sub)             |       9915   |        |
 | 4-isogeny evaluation (eval_4_isog)    | ISE + NP (add) + CP (sub)      |       9541   |        |
+| 3-isogeny generation (get_3_isog)     | SW  + CP (add/sub)             |      13517   |        |
+| 3-isogeny generation (get_3_isog)     | SW  + NP (add) + CP (sub)      |      12989   |        |
+| 3-isogeny generation (get_3_isog)     | ISE + CP (add/sub)             |       6822   |        |
+| 3-isogeny generation (get_3_isog)     | ISE + NP (add) + CP (sub)      |       6448   |        |
+| 3-isogeny evaluation (eval_3_isog)    | SW  + CP (add/sub)             |      15633   |        |
+| 3-isogeny evaluation (eval_3_isog)    | SW  + NP (add) + CP (sub)      |      15249   |        |
+| 3-isogeny evaluation (eval_3_isog)    | ISE + CP (add/sub)             |       7251   |        |
+| 3-isogeny evaluation (eval_3_isog)    | ISE + NP (add) + CP (sub)      |       6979   |        |

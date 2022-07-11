@@ -323,3 +323,20 @@ void fp2_decode(const unsigned char *x, f2elm_t dec)
   mpi_conv_64to56(dec[1], r56);
   to_fp2mont(dec, dec);
 }
+
+int8_t ct_compare(const uint8_t *a, const uint8_t *b, unsigned int len) 
+{
+  uint8_t r = 0;
+
+  for (unsigned int i = 0; i < len; i++)
+    r |= a[i] ^ b[i];
+
+  return (-(int8_t)r) >> (8*sizeof(uint8_t)-1);
+}
+
+void ct_cmov(uint8_t *r, const uint8_t *a, unsigned int len, int8_t selector) 
+{
+  for (unsigned int i = 0; i < len; i++)
+    r[i] ^= selector & (a[i] ^ r[i]);
+}
+

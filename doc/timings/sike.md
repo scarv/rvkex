@@ -95,13 +95,24 @@
 
 ### SIDH key exchange
 
-| Operation                                     | Type                           | #Instruction | #Cycle |
-| :-------------------------------------------- | :----------------------------- | ------------:| ------:|
-| Alice keygen    (EphemeralKeyGeneration_A)    | SW                             |   32,961,200 |        |
-| Alice keygen    (EphemeralKeyGeneration_A)    | ISE                            |   15,158,127 |        |
-| Bob   keygen    (EphemeralKeyGeneration_B)    | SW                             |   36,749,214 |        |
-| Bob   keygen    (EphemeralKeyGeneration_B)    | ISE                            |   17,042,274 |        |
-| Alice sharedsec (EphemeralSecretAgreement_A)  | SW                             |   26,749,381 |        |
-| Alice sharedsec (EphemeralSecretAgreement_A)  | ISE                            |   12,275,659 |        |
-| Bob   sharedsec (EphemeralSecretAgreement_B)  | SW                             |   31,004,132 |        |
-| Bob   sharedsec (EphemeralSecretAgreement_B)  | ISE                            |   14,382,436 |        |
+| Operation                                     | Type      | #Instruction | #Cycle |
+| :-------------------------------------------- | :---------| ------------:| ------:|
+| Alice keygen    (EphemeralKeyGeneration_A)    | SW        |   32,961,200 |        |
+| Alice keygen    (EphemeralKeyGeneration_A)    | ISE       |   15,158,127 |        |
+| Bob   keygen    (EphemeralKeyGeneration_B)    | SW        |   36,749,214 |        |
+| Bob   keygen    (EphemeralKeyGeneration_B)    | ISE       |   17,042,274 |        |
+| Alice sharedsec (EphemeralSecretAgreement_A)  | SW        |   26,749,381 |        |
+| Alice sharedsec (EphemeralSecretAgreement_A)  | ISE       |   12,275,659 |        |
+| Bob   sharedsec (EphemeralSecretAgreement_B)  | SW        |   31,004,132 |        |
+| Bob   sharedsec (EphemeralSecretAgreement_B)  | ISE       |   14,382,436 |        |
+
+### SIKE key encapsulation
+
+| Operation              | Type       | #Instruction | #Cycle |
+| :----------------------| :--------- | ------------:| ------:|
+| Key Generation         | SW         |   36,826,227 |        |
+| Key Generation         | ISE        |   17,119,287 |        |
+| Encaplustaion          | SW         |   59,810,344 |        |
+| Encaplustaion          | ISE        |   27,533,549 |        |
+| Decaplustaion          | SW         |   64,029,374 |        |
+| Decaplustaion          | ISE        |   29,604,605 |        |

@@ -6,7 +6,7 @@ ISA    =rv64gcv
 PK     =${RISCV}/riscv64-unknown-elf/bin/pk
 
 VLEN  ?=128
-SRCS  = fp/*.S main.c share.c rdtsc.c fpx.c curve.c sidh.c
+SRCS  = fp/*.S main.c share.c rdtsc.c fpx.c curve.c sidh.c sike.c fips202.c
 
 RISCV_GCC_OPTS ?= -DPREALLOCATE=1 -mcmodel=medany -static -std=gnu99 -O3 -ffast-math -fno-common -fno-builtin-printf
 

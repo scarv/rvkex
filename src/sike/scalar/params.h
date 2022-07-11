@@ -9,8 +9,10 @@
 #define NBITS_FIELD             434 
 #define FP2_ENCODED_BYTES       2*((NBITS_FIELD + 7) / 8)
 
+#define MSG_BYTES               16
 #define SECRETKEY_A_BYTES       27
 #define SECRETKEY_B_BYTES       28
+#define MASK_ALICE              0xFF
 #define MASK_BOB                0x01
 
 #define MAX_INT_POINTS_ALICE    7        

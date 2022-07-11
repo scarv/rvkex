@@ -54,6 +54,8 @@ static const unsigned int strat_Bob[MAX_Bob-1] = {
   2, 1, 1, 2, 1, 1, 8, 4, 2, 1, 1, 2, 1, 1, 4, 2, 1, 
   1, 2, 1, 1 };
 
+void random_mod_order_B(unsigned char* random_digits);
+
 void EphemeralKeyGeneration_A(const unsigned char* PrivateKeyA, unsigned char* PublicKeyA);
 void EphemeralKeyGeneration_B(const unsigned char* PrivateKeyB, unsigned char* PublicKeyB);
 void EphemeralSecretAgreement_A(const unsigned char* PrivateKeyA, const unsigned char* PublicKeyB, unsigned char* SharedSecretA);

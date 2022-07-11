@@ -21,7 +21,7 @@ static const uint64_t mont_R2[NLMB56] = {
   0xDE347E175CC6AF, 0x6D9AABCD92BF2D, 0x2A69E16A61C768, 0x000025A89BCDD1, };
 
 // auxiliary functions
-void rand_bytes(void *x, int n);
+void randombytes(void *x, int n);
 void mpi64_print(const char *c, const uint64_t *a, int len);
 void mpi56_carry_prop(uint64_t *a);
 void mpi_conv_64to56(uint64_t *r, const uint64_t *a);

@@ -5,6 +5,7 @@
 #include "fpx.h"
 #include "curve.h"
 #include "sidh.h"
+#include "sike.h"
 
 
 // macros for measuring CPU cycles
@@ -1436,8 +1437,8 @@ void test_sidh()
   puts("\n**************************************************************************");
   puts("SIDH KEY EXCHANGE:\n");
 
-  rand_bytes(skA, SECRETKEY_A_BYTES);
-  rand_bytes(skB, SECRETKEY_B_BYTES);
+  randombytes(skA, SECRETKEY_A_BYTES);
+  randombytes(skB, SECRETKEY_B_BYTES);
 
   printf("- Alice key gen:");
 
@@ -1479,6 +1480,61 @@ void test_sidh()
   puts("\n");
 #endif
 
+  puts("**************************************************************************\n");
+}
+
+void test_sike()
+{
+  uint64_t start_cycles, end_cycles, diff_cycles;
+  int i, wrong = 0;
+
+  unsigned char sk[CRYPTO_SECRETKEYBYTES] = { 0 };
+  unsigned char pk[CRYPTO_PUBLICKEYBYTES] = { 0 };
+  unsigned char ct[CRYPTO_CIPHERTEXTBYTES] = { 0 };
+  unsigned char ss[CRYPTO_BYTES] = { 0 };
+  unsigned char ss_[CRYPTO_BYTES] = { 0 };
+
+  puts("\n**************************************************************************");
+  puts("SIKE KEY ENCAPSULATION:\n");
+
+  crypto_kem_keypair(pk, sk);
+  crypto_kem_enc(ct, ss, pk);
+  crypto_kem_dec(ss_, ct, sk);
+
+  wrong = memcmp(ss, ss_, CRYPTO_BYTES);
+
+  printf("- Shared secrets:");
+
+  if (wrong == 0) printf("    \x1b[32m EQUAL!\x1b[0m\n");
+  else            printf("    \x1b[31m NOT EQUAL!\x1b[0m\n");
+
+  printf("- Keygen:");
+
+  LOAD_CACHE(crypto_kem_keypair(pk, sk), 1);
+  MEASURE_CYCLES(crypto_kem_keypair(pk, sk), 1);
+  printf("             #inst = %lld\n", diff_cycles);
+
+  printf("- Encaps:");
+
+  LOAD_CACHE(crypto_kem_enc(ct, ss, pk), 1);
+  MEASURE_CYCLES(crypto_kem_enc(ct, ss, pk), 1);
+  printf("             #inst = %lld\n", diff_cycles);
+
+  printf("- Decaps:");
+
+  LOAD_CACHE(crypto_kem_dec(ss_, ct, sk), 1);
+  MEASURE_CYCLES(crypto_kem_dec(ss_, ct, sk), 1);
+  printf("             #inst = %lld\n", diff_cycles);
+
+#if DEBUG 
+  puts("\nSSA: ");
+  for (i = 0; i < CRYPTO_BYTES; i++) printf("%02X", ss[i]);
+  puts("\nSSB: ");
+  for (i = 0; i < CRYPTO_BYTES; i++) printf("%02X", ss_[i]);
+  puts("");
+#endif 
+
+  puts("**************************************************************************\n");
 }
 
 int main()
@@ -1486,7 +1542,8 @@ int main()
   // test_fp();
   // test_fpx();
   // test_curve();
-  test_sidh();
+  // test_sidh();
+  test_sike();
 
   return 0;
 }

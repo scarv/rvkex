@@ -11,11 +11,11 @@ static void init_basis(uint64_t *gen, f2elm_t XP, f2elm_t XQ, f2elm_t XR)
   fpcopy(XR[1], gen + 5*NLMB56);
 }
 
-// void random_mod_order_B(unsigned char* random_digits)
-// {
-//   randombytes(random_digits, SECRETKEY_B_BYTES);
-//   random_digits[SECRETKEY_B_BYTES-1] &= MASK_BOB;
-// }
+void random_mod_order_B(unsigned char* random_digits)
+{
+  randombytes(random_digits, SECRETKEY_B_BYTES);
+  random_digits[SECRETKEY_B_BYTES-1] &= MASK_BOB;
+}
 
 void EphemeralKeyGeneration_A(const unsigned char* PrivateKeyA, unsigned char* PublicKeyA)
 {

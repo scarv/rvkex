@@ -1,7 +1,7 @@
 #include "share.h"
 
 
-void rand_bytes(void *x, int n) 
+void randombytes(void *x, int n) 
 {
   FILE* rand_bytes_prg = NULL;
 

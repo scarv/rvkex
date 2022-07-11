@@ -289,3 +289,26 @@ void fp2inv_mont(f2elm_t r)
   fpmul_mont(r[0], r[0], t1[0]);
   fpmul_mont(r[1], r[1], t1[0]);        
 }
+
+void decode_to_digits(const unsigned char* x, uint64_t* dec, int nbytes, int ndigits)
+{
+  dec[ndigits - 1] = 0;
+  memcpy((unsigned char*)dec, x, nbytes);
+}
+
+static void encode_to_bytes(const uint64_t* x, unsigned char* enc, int nbytes)
+{ 
+  memcpy(enc, (const unsigned char*)x, nbytes);
+}
+
+void fp2_encode(const f2elm_t x, unsigned char *enc)
+{
+  f2elm_t t;
+  uint64_t t64[NLMB56];
+
+  from_fp2mont(t, x);                   // t is x in number domain
+  mpi_conv_56to64(t64, t[0]);           // convert t[0] to radix-2^64
+  encode_to_bytes(t64, enc, FP2_ENCODED_BYTES/2);
+  mpi_conv_56to64(t64, t[1]);           // convert t[1] to radix-2^64
+  encode_to_bytes(t64, enc+FP2_ENCODED_BYTES/2, FP2_ENCODED_BYTES/2); 
+}

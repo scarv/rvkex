@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include "params.h"
 
 #define NLMB56 8                        // the limb number when using radix-56
 #define MASK56 0xFFFFFFFFFFFFFFULL      // 2^56 - 1

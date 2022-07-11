@@ -1290,7 +1290,7 @@ void test_curve()
   MEASURE_CYCLES(xDBLADD_v0(&P, &Q, XPQ, ZPQ, A24), 100);
   printf("         #inst = %lld\n", diff_cycles);
 
-  #if DEBUG
+#if DEBUG
   //
   // XP0 = 0x191E5C0DCABCD87612E01FFB8946DB44D97B81EC18278EEED4E44D308ED1CF033DC2003\
            0DC52BEA77CA2E2BA551B2D3F58B2386D7FC8B
@@ -1358,7 +1358,7 @@ void test_curve()
   MEASURE_CYCLES(xDBLADD_v1(&P, &Q, XPQ, ZPQ, A24), 100);
   printf("         #inst = %lld\n", diff_cycles);
 
-  #if DEBUG
+#if DEBUG
   //
   // XP0 = 0x191E5C0DCABCD87612E01FFB8946DB44D97B81EC18278EEED4E44D308ED1CF033DC2003\
            0DC52BEA77CA2E2BA551B2D3F58B2386D7FC8B
@@ -1424,11 +1424,36 @@ puts("**************************************************************************
 
 }
 
+void test_sidh()
+{
+  uint64_t start_cycles, end_cycles, diff_cycles;
+  int i;
+
+  unsigned char skA[SECRETKEY_A_BYTES] = { 1 }, pkA[CRYPTO_PUBLICKEYBYTES];
+  unsigned char skB[SECRETKEY_B_BYTES], pkB[CRYPTO_PUBLICKEYBYTES];
+  unsigned char ssA[FP2_ENCODED_BYTES], ssB[FP2_ENCODED_BYTES];
+
+  puts("\n**************************************************************************");
+  puts("SIDH KEY EXCHANGE:\n");
+
+  printf("- Alice keypair gen:");
+
+  LOAD_CACHE(EphemeralKeyGeneration_A(skA, pkA), 1);
+  MEASURE_CYCLES(EphemeralKeyGeneration_A(skA, pkA), 1);
+  printf("  #inst = %lld\n", diff_cycles);
+
+  puts("PKA: ");
+  for (i = 0; i < CRYPTO_PUBLICKEYBYTES; i++) printf("%02X", pkA[i]);
+  puts("\n");
+
+}
+
 int main()
 {
   // test_fp();
   // test_fpx();
-  test_curve();
+  // test_curve();
+  test_sidh();
 
   return 0;
 }

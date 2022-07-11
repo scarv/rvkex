@@ -27,13 +27,21 @@ void fp2inv_mont(f2elm_t r);
 void to_fp2mont(f2elm_t r, const f2elm_t a);
 void from_fp2mont(f2elm_t r, const f2elm_t a);
 
+#define fp2div2    fp2div2_v0
+#define fp2add     fp2add_v0
+#define fp2sub     fp2sub_v0
+
 void fpmul_mont_v0(felm_t r, const felm_t a, const felm_t b);
 void fpsqr_mont_v0(felm_t r, const felm_t a);
 void fpcopy(felm_t r, const felm_t a);
+void fpzero(felm_t r);
 void to_mont(felm_t r, const felm_t a);
 void from_mont(felm_t r, const felm_t a);
 
 #define fpmul_mont fpmul_mont_v0
 #define fpsqr_mont fpsqr_mont_v0
+
+void decode_to_digits(const unsigned char* x, uint64_t* dec, int nbytes, int ndigits);
+void fp2_encode(const f2elm_t x, unsigned char *enc);
 
 #endif

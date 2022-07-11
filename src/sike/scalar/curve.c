@@ -1,4 +1,5 @@
 #include "curve.h"
+#include "params.h"
 
 
 void copy_point(point_proj_t Q, const point_proj_t P)
@@ -305,6 +306,62 @@ void eval_3_isog_v1(point_proj_t Q, const f2elm_t *coeff)
   fp2mul_mont_v1(Q->Z, Q->Z, t0);       // 2p->2p |  56->57->56 | Z3final = Z*[coeff1*(X-Z) - coeff0*(X+Z)]^2   
 }
 
+void inv_3_way_v1(f2elm_t r1, f2elm_t r2, f2elm_t r3)
+{
+  f2elm_t t0, t1, t2, t3;
+
+  fp2mul_mont_v1(t0, r1, r2);           // t0 = r1*r2
+  fp2mul_mont_v1(t1, r3, t0);           // t1 = r1*r2*r3
+  fp2inv_mont(t1);                      // t1 = 1/(r1*r2*r3)
+  fp2mul_mont_v1(t2, r3, t1);           // t2 = 1/(r1*r2) 
+  fp2mul_mont_v1(t3, t2, r2);           // t3 = 1/r1
+  fp2mul_mont_v1(r2, t2, r1);           // r2 = 1/r2
+  fp2mul_mont_v1(r3, t0, t1);           // r3 = 1/r3
+  fp2copy(r1, t3);                      // z1 = 1/z1
+}
+
+void get_A_v1(const f2elm_t xP, const f2elm_t xQ, const f2elm_t xR, f2elm_t A)
+{
+  f2elm_t t0, t1, one = { 0 };
+
+  fpcopy(one[0], mont_R);               // one = 1
+  fp2add(t1, xP, xQ);                   // t1 = xP+xQ
+  fp2mul_mont_v1(t0, xP, xQ);           // t0 = xP*xQ
+  fp2mul_mont_v1(A, xR, t1);            // A = xR*t1
+  fp2add(A, t0, A);                     // A = A+t0
+  fp2mul_mont_v1(t0, t0, xR);           // t0 = t0*xR
+  fp2sub(A, A, one);                    // A = A-1
+  fp2add(t0, t0, t0);                   // t0 = t0+t0
+  fp2add(t1, t1, xR);                   // t1 = t1+xR
+  fp2add(t0, t0, t0);                   // t0 = t0+t0
+  fp2sqr_mont_v1(A, A);                 // A = A^2
+  fp2inv_mont(t0);                      // t0 = 1/t0
+  fp2mul_mont_v1(A, A, t0);             // A = A*t0
+  fp2sub(A, A, t1);                     // Afinal = A-t1
+}
+
+void j_inv_v1(const f2elm_t A, const f2elm_t C, f2elm_t jinv)
+{
+  f2elm_t t0, t1;
+
+  fp2sqr_mont_v1(jinv, A);              // jinv = A^2        
+  fp2sqr_mont_v1(t1, C);                // t1 = C^2
+  fp2add(t0, t1, t1);                   // t0 = t1+t1
+  fp2sub(t0, jinv, t0);                 // t0 = jinv-t0
+  fp2sub(t0, t0, t1);                   // t0 = t0-t1
+  fp2sub(jinv, t0, t1);                 // jinv = t0-t1
+  fp2sqr_mont_v1(t1, t1);               // t1 = t1^2
+  fp2mul_mont_v1(jinv, jinv, t1);       // jinv = jinv*t1
+  fp2add(t0, t0, t0);                   // t0 = t0+t0
+  fp2add(t0, t0, t0);                   // t0 = t0+t0
+  fp2sqr_mont_v1(t1, t0);               // t1 = t0^2
+  fp2mul_mont_v1(t0, t0, t1);           // t0 = t0*t1
+  fp2add(t0, t0, t0);                   // t0 = t0+t0
+  fp2add(t0, t0, t0);                   // t0 = t0+t0
+  fp2inv_mont(jinv);                    // jinv = 1/jinv 
+  fp2mul_mont_v1(jinv, jinv, t0);       // jinv = t0*jinv
+}
+
 void xDBLADD_v0(point_proj_t P, point_proj_t Q, const f2elm_t XPQ, const f2elm_t ZPQ, const f2elm_t A24)
 {
   f2elm_t t0, t1, t2;
@@ -358,4 +415,63 @@ void xDBLADD_v1(point_proj_t P, point_proj_t Q, const f2elm_t XPQ, const f2elm_t
   fp2mul_mont_v1(Q->X, Q->X, ZPQ);      // 2p->2p |  56->57->56 | XQ = ZPQ*[(XP+ZP)*(XQ-ZQ)+(XP-ZP)*(XQ+ZQ)]^2 
 }
 
+static void swap_points(point_proj_t P, point_proj_t Q, const uint64_t option)
+{
+  uint64_t temp;
+  int i;
 
+  for (i = 0; i < NLMB56; i++) {
+    temp = option & (P->X[0][i] ^ Q->X[0][i]);
+    P->X[0][i] = temp ^ P->X[0][i]; 
+    Q->X[0][i] = temp ^ Q->X[0][i];  
+    temp = option & (P->X[1][i] ^ Q->X[1][i]);
+    P->X[1][i] = temp ^ P->X[1][i]; 
+    Q->X[1][i] = temp ^ Q->X[1][i];
+    temp = option & (P->Z[0][i] ^ Q->Z[0][i]);
+    P->Z[0][i] = temp ^ P->Z[0][i]; 
+    Q->Z[0][i] = temp ^ Q->Z[0][i];
+    temp = option & (P->Z[1][i] ^ Q->Z[1][i]);
+    P->Z[1][i] = temp ^ P->Z[1][i]; 
+    Q->Z[1][i] = temp ^ Q->Z[1][i]; 
+  }
+}
+
+void LADDER3PT(const f2elm_t xP, const f2elm_t xQ, const f2elm_t xPQ, const uint64_t* m, const unsigned int AliceOrBob, point_proj_t R, const f2elm_t A)
+{
+  point_proj_t R0 = { 0 }, R2 = { 0 };
+  f2elm_t A24 = { 0 };
+  uint64_t mask, i, nbits, bit, swap, prevbit = 0;
+
+  if (AliceOrBob == ALICE) nbits = OALICE_BITS;
+  else                     nbits = OBOB_BITS - 1;
+
+  // initializing constant
+  fpcopy(A24[0], mont_R);               // A24 = 1
+  mp2_add_v0(A24, A24, A24);            // A24 = 2
+  mp2_add_v0(A24, A, A24);              // A24 = A + 2
+  fp2div2(A24, A24);                    // A24 = (A+2)/2
+  fp2div2(A24, A24);                    // A24 = (A+2)/4  
+
+  // initializing points
+  fp2copy(R0->X, xQ);                   // R0 = (xQ,  1)
+  fpcopy(R0->Z[0], mont_R);
+  fp2copy(R2->X, xPQ);                  // R2 = (xPQ, 1)
+  fpcopy(R2->Z[0], mont_R);
+  fp2copy(R->X, xP);                    // R  = (xP,  1)
+  fpcopy(R->Z[0], mont_R);
+  fpzero(R->Z[1]);
+
+  // main loop
+  for (i = 0; i < nbits; i++) {
+    bit = (m[i>>6]>>(i&63)) & 1;
+    swap = bit ^ prevbit;
+    prevbit = bit;
+    mask = 0 - swap;
+
+    swap_points(R, R2, mask);
+    xDBLADD(R0, R2, R->X, R->Z, A24);
+  }
+  swap = 0 ^ prevbit;
+  mask = 0 - swap;
+  swap_points(R, R2, mask);
+}

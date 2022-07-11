@@ -304,3 +304,58 @@ void eval_3_isog_v1(point_proj_t Q, const f2elm_t *coeff)
   fp2mul_mont_v1(Q->X, Q->X, t2);       // 2p->2p |  56->57->56 | X3final = X*[coeff0*(X+Z) + coeff1*(X-Z)]^2        
   fp2mul_mont_v1(Q->Z, Q->Z, t0);       // 2p->2p |  56->57->56 | Z3final = Z*[coeff1*(X-Z) - coeff0*(X+Z)]^2   
 }
+
+void xDBLADD_v0(point_proj_t P, point_proj_t Q, const f2elm_t XPQ, const f2elm_t ZPQ, const f2elm_t A24)
+{
+  f2elm_t t0, t1, t2;
+                                        //  range | limb-length | computation
+  mp2_add_v0(t0, P->X, P->Z);           // 2p->4p |  56    ->56 | t0 = XP+ZP   
+  mp2_sub_p2_v0(t1, P->X, P->Z);        // 2p->4p |  56    ->56 | t1 = XP-ZP
+  fp2sqr_mont_v0(P->X, t0);             // 4p->2p |  56->56->56 | XP = (XP+ZP)^2
+  mp2_sub_p2_v0(t2, Q->X, Q->Z);        // 2p->4p |  56    ->56 | t2 = XQ-ZQ
+  mp2_add_v0(Q->X, Q->X, Q->Z);         // 2p->4p |  56    ->56 | XQ = XQ+ZQ
+  fp2mul_mont_v0(t0, t0, t2);           // 4p->2p |  56->56->56 | t0 = (XP+ZP)*(XQ-ZQ)
+  fp2sqr_mont_v0(P->Z, t1);             // 4p->2p |  56->56->56 | ZP = (XP-ZP)^2  
+  fp2mul_mont_v0(t1, t1, Q->X);         // 4p->2p |  56->56->56 | t1 = (XP-ZP)*(XQ+ZQ)
+  mp2_sub_p2_v0(t2, P->X, P->Z);        // 2p->4p |  56    ->56 | t2 = (XP+ZP)^2-(XP-ZP)^2
+  fp2mul_mont_v0(P->X, P->X, P->Z);     // 2p->2p |  56->56->56 | XP = (XP+ZP)^2*(XP-ZP)^2
+  fp2mul_mont_v0(Q->X, A24, t2);        // 4p->2p |  56->56->56 | XQ = A24*[(XP+ZP)^2-(XP-ZP)^2]
+  mp2_sub_p2_v0(Q->Z, t0, t1);          // 2p->4p |  56    ->56 | ZQ = (XP+ZP)*(XQ-ZQ)-(XP-ZP)*(XQ+ZQ)
+  mp2_add_v0(P->Z, Q->X, P->Z);         // 2p->4p |  56    ->56 | ZP = A24*[(XP+ZP)^2-(XP-ZP)^2]+(XP-ZP)^2
+  mp2_add_v0(Q->X, t0, t1);             // 2p->4p |  56    ->56 | XQ = (XP+ZP)*(XQ-ZQ)+(XP-ZP)*(XQ+ZQ)  
+  fp2mul_mont_v0(P->Z, P->Z, t2);       // 4p->2p |  56->56->56 | ZP = [A24*[(XP+ZP)^2-(XP-ZP)^2]+(XP-ZP)^2]*[(XP+ZP)^2-(XP-ZP)^2]
+  fp2sqr_mont_v0(Q->Z, Q->Z);           // 4p->2p |  56->56->56 | ZQ = [(XP+ZP)*(XQ-ZQ)-(XP-ZP)*(XQ+ZQ)]^2
+  fp2sqr_mont_v0(Q->X, Q->X);           // 4p->2p |  56->56->56 | XQ = [(XP+ZP)*(XQ-ZQ)+(XP-ZP)*(XQ+ZQ)]^2
+  fp2mul_mont_v0(Q->Z, Q->Z, XPQ);      // 2p->2p |  56->56->56 | ZQ = xPQ*[(XP+ZP)*(XQ-ZQ)-(XP-ZP)*(XQ+ZQ)]^2
+  fp2mul_mont_v0(Q->X, Q->X, ZPQ);      // 2p->2p |  56->56->56 | XQ = ZPQ*[(XP+ZP)*(XQ-ZQ)+(XP-ZP)*(XQ+ZQ)]^2 
+}
+
+// NOTE: It might be possible to further optimize `xDBLADD_v1` with using 
+// `mp_sub_p4_v1` (in `fp2_sqr_mont_v2`) for some `fp2_sqr_mont` and using
+// `mp2_sub_p2_v1`. This needs a careful check for overflow.
+void xDBLADD_v1(point_proj_t P, point_proj_t Q, const f2elm_t XPQ, const f2elm_t ZPQ, const f2elm_t A24)
+{
+  f2elm_t t0, t1, t2;
+                                        //  range | limb-length | computation
+  mp2_add_v1(t0, P->X, P->Z);           // 2p->4p |  56    ->57 | t0 = XP+ZP   
+  mp2_sub_p2_v0(t1, P->X, P->Z);        // 2p->4p |  56    ->56 | t1 = XP-ZP
+  fp2sqr_mont_v1(P->X, t0);             // 4p->2p |  57->58->56 | XP = (XP+ZP)^2
+  mp2_sub_p2_v0(t2, Q->X, Q->Z);        // 2p->4p |  56    ->56 | t2 = XQ-ZQ
+  mp2_add_v1(Q->X, Q->X, Q->Z);         // 2p->4p |  56    ->57 | XQ = XQ+ZQ
+  fp2mul_mont_v1(t0, t0, t2);           // 4p->2p |  56,57 ->56 | t0 = (XP+ZP)*(XQ-ZQ)
+  fp2sqr_mont_v1(P->Z, t1);             // 4p->2p |  56->57->56 | ZP = (XP-ZP)^2  
+  fp2mul_mont_v1(t1, t1, Q->X);         // 4p->2p |  56,57 ->56 | t1 = (XP-ZP)*(XQ+ZQ)
+  mp2_sub_p2_v0(t2, P->X, P->Z);        // 2p->4p |  56    ->56 | t2 = (XP+ZP)^2-(XP-ZP)^2
+  fp2mul_mont_v1(P->X, P->X, P->Z);     // 2p->2p |  56->57->56 | XP = (XP+ZP)^2*(XP-ZP)^2
+  fp2mul_mont_v1(Q->X, A24, t2);        // 4p->2p |  56->57->56 | XQ = A24*[(XP+ZP)^2-(XP-ZP)^2]
+  mp2_sub_p2_v0(Q->Z, t0, t1);          // 2p->4p |  56    ->56 | ZQ = (XP+ZP)*(XQ-ZQ)-(XP-ZP)*(XQ+ZQ)
+  mp2_add_v1(P->Z, Q->X, P->Z);         // 2p->4p |  56    ->57 | ZP = A24*[(XP+ZP)^2-(XP-ZP)^2]+(XP-ZP)^2
+  mp2_add_v1(Q->X, t0, t1);             // 2p->4p |  56    ->57 | XQ = (XP+ZP)*(XQ-ZQ)+(XP-ZP)*(XQ+ZQ)  
+  fp2mul_mont_v1(P->Z, P->Z, t2);       // 4p->2p |  56,57 ->56 | ZP = [A24*[(XP+ZP)^2-(XP-ZP)^2]+(XP-ZP)^2]*[(XP+ZP)^2-(XP-ZP)^2]
+  fp2sqr_mont_v1(Q->Z, Q->Z);           // 4p->2p |  56->57->56 | ZQ = [(XP+ZP)*(XQ-ZQ)-(XP-ZP)*(XQ+ZQ)]^2
+  fp2sqr_mont_v1(Q->X, Q->X);           // 4p->2p |  57->58->56 | XQ = [(XP+ZP)*(XQ-ZQ)+(XP-ZP)*(XQ+ZQ)]^2
+  fp2mul_mont_v1(Q->Z, Q->Z, XPQ);      // 2p->2p |  56->57->56 | ZQ = xPQ*[(XP+ZP)*(XQ-ZQ)-(XP-ZP)*(XQ+ZQ)]^2
+  fp2mul_mont_v1(Q->X, Q->X, ZPQ);      // 2p->2p |  56->57->56 | XQ = ZPQ*[(XP+ZP)*(XQ-ZQ)+(XP-ZP)*(XQ+ZQ)]^2 
+}
+
+

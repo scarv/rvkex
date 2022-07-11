@@ -88,3 +88,7 @@
 | 3-isogeny evaluation (eval_3_isog)    | SW  + NP (add) + CP (sub)      |      15249   |        |
 | 3-isogeny evaluation (eval_3_isog)    | ISE + CP (add/sub)             |       7251   |        |
 | 3-isogeny evaluation (eval_3_isog)    | ISE + NP (add) + CP (sub)      |       6979   |        |
+| Montgomery ladder step (xDBLADD)      | SW  + CP (add/sub)             |      28576   |        |
+| Montgomery ladder step (xDBLADD)      | SW  + NP (add) + CP (sub)      |      27856   |        |
+| Montgomery ladder step (xDBLADD)      | ISE + CP (add/sub)             |      13306   |        |
+| Montgomery ladder step (xDBLADD)      | ISE + NP (add) + CP (sub)      |      12796   |        |

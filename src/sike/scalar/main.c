@@ -635,7 +635,7 @@ void test_curve()
   int i;
 
   point_proj P, Q, PQ;
-  f2elm_t A24plus, C24, A24minus, coeff[3];
+  f2elm_t A24plus, C24, A24minus, coeff[3], A24, XPQ, ZPQ;
   const felm_t mont_Rx4 = {
     0x0000000001D0B1, 0x00000000000000, 0x00000000000000, 0x0D000000000000, 
     0x2604AEE67E5999, 0xE3DCE440377525, 0x2737CCF17AFC17, 0x00017F9B77DD48, };
@@ -1278,6 +1278,146 @@ void test_curve()
   mpi56_carry_prop(P.Z[1]);
   mpi_conv_56to64(r64, P.Z[1]);
   mpi64_print("  ZP1 = 0x", r64, 7);
+#endif
+
+  puts("");
+
+  // ---------------------------------------------------------------------------   
+
+  printf("- xDBLADD v0:");
+
+  LOAD_CACHE(xDBLADD_v0(&P, &Q, XPQ, ZPQ, A24), 10);
+  MEASURE_CYCLES(xDBLADD_v0(&P, &Q, XPQ, ZPQ, A24), 100);
+  printf("         #inst = %lld\n", diff_cycles);
+
+  #if DEBUG
+  //
+  // XP0 = 0x191E5C0DCABCD87612E01FFB8946DB44D97B81EC18278EEED4E44D308ED1CF033DC2003\
+           0DC52BEA77CA2E2BA551B2D3F58B2386D7FC8B
+  // XP1 = 0xC662E62FEF6655FCA85F6A12F2F67B87F508BF6974E4EAA07401786BA7CFAEC5DCC28D6\
+           D069FC141D869E6209153A9603399D963D2D8
+  // ZP0 = 0x24AECA94BED31CFB7D9574B7344411721034F07FB0CCE8C017F817A0EED711C84EA9191\
+           8990CC737A965979AAABB0F7D4429129503A8
+  // ZP1 = 0x2120678E34DEC4CEC43C050EF6B695B93E85A2955AE248749D300D4F27B64FB258A3C10\
+           52E7E16305444BE3FD39D5FB034F9809A6AE41
+  // XQ0 = 0xDC035E152D6CA934ED158D953C5F34800E51E0C329F86F7A139E26C2421E968F158D258\
+           B847D0CBCECC4F482E3B24FE355A96F1A0B75
+  // XQ1 = 0x6489A9AE2EE4D753ACEB9675456416658F7A515485BE4E063CCD26E1CD90BA8D66AE5D8\
+           8C50147432FC8C2E9039714820F77252DEAF9
+  // ZQ0 = 0x2AC020A1FA0016DB6D000ED2D8E9736BA7697F4E638FA36DE1B4886D985C5A499B511AF\
+           69612CC8861730A70EE090E4D685591618DA7B
+  // ZQ1 = 0x166226A569EE6414116E69FC7908CA282C77FC302BE3CB08EFCD189C5242B7EC5407655\
+           7172F6EB79BB6B460D07759B0749B6A3A97872
+  // initialization
+  memcpy(&P.X[0], &A_gen[       0], sizeof(uint64_t)*NLMB56); // XPA0
+  memcpy(&P.X[1], &A_gen[  NLMB56], sizeof(uint64_t)*NLMB56); // XPA1
+  memcpy(&P.Z[0], &A_gen[2*NLMB56], sizeof(uint64_t)*NLMB56); // XQA0
+  memcpy(&P.Z[1], &A_gen[3*NLMB56], sizeof(uint64_t)*NLMB56); // XQA1
+  memcpy(&Q.X[0], &A_gen[4*NLMB56], sizeof(uint64_t)*NLMB56); // XRA0
+  memcpy(&Q.X[1], &A_gen[5*NLMB56], sizeof(uint64_t)*NLMB56); // XRA1
+  memcpy(&Q.Z[0], &B_gen[4*NLMB56], sizeof(uint64_t)*NLMB56); // XRB0
+  memcpy(&Q.Z[1], &B_gen[5*NLMB56], sizeof(uint64_t)*NLMB56); // XRB1
+  memcpy(&XPQ[0], &A_gen[       0], sizeof(uint64_t)*NLMB56); // XPA0
+  memcpy(&XPQ[1], &A_gen[  NLMB56], sizeof(uint64_t)*NLMB56); // XPA1
+  memcpy(&ZPQ[0], &A_gen[2*NLMB56], sizeof(uint64_t)*NLMB56); // XQA0
+  memcpy(&ZPQ[1], &A_gen[3*NLMB56], sizeof(uint64_t)*NLMB56); // XQA1
+  memcpy(&A24[0], mont_R, sizeof(uint64_t)*NLMB56);           //    1
+  memset(&A24[1],      0, sizeof(uint64_t)*NLMB56);           //    0
+  // computation
+  xDBLADD_v0(&P, &Q, XPQ, ZPQ, A24);
+  // output
+  mpi56_carry_prop(P.X[0]);
+  mpi_conv_56to64(r64, P.X[0]);
+  mpi64_print("  XP0 = 0x", r64, 7);
+  mpi56_carry_prop(P.X[1]);
+  mpi_conv_56to64(r64, P.X[1]);
+  mpi64_print("  XP1 = 0x", r64, 7);
+  mpi56_carry_prop(P.Z[0]);
+  mpi_conv_56to64(r64, P.Z[0]);
+  mpi64_print("  ZP0 = 0x", r64, 7);
+  mpi56_carry_prop(P.Z[1]);
+  mpi_conv_56to64(r64, P.Z[1]);
+  mpi64_print("  ZP1 = 0x", r64, 7);
+  mpi56_carry_prop(Q.X[0]);
+  mpi_conv_56to64(r64, Q.X[0]);
+  mpi64_print("  XQ0 = 0x", r64, 7);
+  mpi56_carry_prop(Q.X[1]);
+  mpi_conv_56to64(r64, Q.X[1]);
+  mpi64_print("  XQ1 = 0x", r64, 7);
+  mpi56_carry_prop(Q.Z[0]);
+  mpi_conv_56to64(r64, Q.Z[0]);
+  mpi64_print("  ZQ0 = 0x", r64, 7);
+  mpi56_carry_prop(Q.Z[1]);
+  mpi_conv_56to64(r64, Q.Z[1]);
+  mpi64_print("  ZQ1 = 0x", r64, 7);
+#endif
+
+  printf("- xDBLADD v1:");
+
+  LOAD_CACHE(xDBLADD_v1(&P, &Q, XPQ, ZPQ, A24), 10);
+  MEASURE_CYCLES(xDBLADD_v1(&P, &Q, XPQ, ZPQ, A24), 100);
+  printf("         #inst = %lld\n", diff_cycles);
+
+  #if DEBUG
+  //
+  // XP0 = 0x191E5C0DCABCD87612E01FFB8946DB44D97B81EC18278EEED4E44D308ED1CF033DC2003\
+           0DC52BEA77CA2E2BA551B2D3F58B2386D7FC8B
+  // XP1 = 0xC662E62FEF6655FCA85F6A12F2F67B87F508BF6974E4EAA07401786BA7CFAEC5DCC28D6\
+           D069FC141D869E6209153A9603399D963D2D8
+  // ZP0 = 0x24AECA94BED31CFB7D9574B7344411721034F07FB0CCE8C017F817A0EED711C84EA9191\
+           8990CC737A965979AAABB0F7D4429129503A8
+  // ZP1 = 0x2120678E34DEC4CEC43C050EF6B695B93E85A2955AE248749D300D4F27B64FB258A3C10\
+           52E7E16305444BE3FD39D5FB034F9809A6AE41
+  // XQ0 = 0xDC035E152D6CA934ED158D953C5F34800E51E0C329F86F7A139E26C2421E968F158D258\
+           B847D0CBCECC4F482E3B24FE355A96F1A0B75
+  // XQ1 = 0x6489A9AE2EE4D753ACEB9675456416658F7A515485BE4E063CCD26E1CD90BA8D66AE5D8\
+           8C50147432FC8C2E9039714820F77252DEAF9
+  // ZQ0 = 0x2AC020A1FA0016DB6D000ED2D8E9736BA7697F4E638FA36DE1B4886D985C5A499B511AF\
+           69612CC8861730A70EE090E4D685591618DA7B
+  // ZQ1 = 0x166226A569EE6414116E69FC7908CA282C77FC302BE3CB08EFCD189C5242B7EC5407655\
+           7172F6EB79BB6B460D07759B0749B6A3A97872
+  // initialization
+  memcpy(&P.X[0], &A_gen[       0], sizeof(uint64_t)*NLMB56); // XPA0
+  memcpy(&P.X[1], &A_gen[  NLMB56], sizeof(uint64_t)*NLMB56); // XPA1
+  memcpy(&P.Z[0], &A_gen[2*NLMB56], sizeof(uint64_t)*NLMB56); // XQA0
+  memcpy(&P.Z[1], &A_gen[3*NLMB56], sizeof(uint64_t)*NLMB56); // XQA1
+  memcpy(&Q.X[0], &A_gen[4*NLMB56], sizeof(uint64_t)*NLMB56); // XRA0
+  memcpy(&Q.X[1], &A_gen[5*NLMB56], sizeof(uint64_t)*NLMB56); // XRA1
+  memcpy(&Q.Z[0], &B_gen[4*NLMB56], sizeof(uint64_t)*NLMB56); // XRB0
+  memcpy(&Q.Z[1], &B_gen[5*NLMB56], sizeof(uint64_t)*NLMB56); // XRB1
+  memcpy(&XPQ[0], &A_gen[       0], sizeof(uint64_t)*NLMB56); // XPA0
+  memcpy(&XPQ[1], &A_gen[  NLMB56], sizeof(uint64_t)*NLMB56); // XPA1
+  memcpy(&ZPQ[0], &A_gen[2*NLMB56], sizeof(uint64_t)*NLMB56); // XQA0
+  memcpy(&ZPQ[1], &A_gen[3*NLMB56], sizeof(uint64_t)*NLMB56); // XQA1
+  memcpy(&A24[0], mont_R, sizeof(uint64_t)*NLMB56);           //    1
+  memset(&A24[1],      0, sizeof(uint64_t)*NLMB56);           //    0
+  // computation
+  xDBLADD_v0(&P, &Q, XPQ, ZPQ, A24);
+  // output
+  mpi56_carry_prop(P.X[0]);
+  mpi_conv_56to64(r64, P.X[0]);
+  mpi64_print("  XP0 = 0x", r64, 7);
+  mpi56_carry_prop(P.X[1]);
+  mpi_conv_56to64(r64, P.X[1]);
+  mpi64_print("  XP1 = 0x", r64, 7);
+  mpi56_carry_prop(P.Z[0]);
+  mpi_conv_56to64(r64, P.Z[0]);
+  mpi64_print("  ZP0 = 0x", r64, 7);
+  mpi56_carry_prop(P.Z[1]);
+  mpi_conv_56to64(r64, P.Z[1]);
+  mpi64_print("  ZP1 = 0x", r64, 7);
+  mpi56_carry_prop(Q.X[0]);
+  mpi_conv_56to64(r64, Q.X[0]);
+  mpi64_print("  XQ0 = 0x", r64, 7);
+  mpi56_carry_prop(Q.X[1]);
+  mpi_conv_56to64(r64, Q.X[1]);
+  mpi64_print("  XQ1 = 0x", r64, 7);
+  mpi56_carry_prop(Q.Z[0]);
+  mpi_conv_56to64(r64, Q.Z[0]);
+  mpi64_print("  ZQ0 = 0x", r64, 7);
+  mpi56_carry_prop(Q.Z[1]);
+  mpi_conv_56to64(r64, Q.Z[1]);
+  mpi64_print("  ZQ1 = 0x", r64, 7);
 #endif
 
 puts("**************************************************************************\n");

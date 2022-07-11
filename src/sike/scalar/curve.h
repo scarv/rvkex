@@ -22,6 +22,8 @@ void get_3_isog_v0(const point_proj_t P, f2elm_t A24minus, f2elm_t A24plus, f2el
 void get_3_isog_v1(const point_proj_t P, f2elm_t A24minus, f2elm_t A24plus, f2elm_t* coeff);
 void eval_3_isog_v0(point_proj_t Q, const f2elm_t *coeff);
 void eval_3_isog_v1(point_proj_t Q, const f2elm_t *coeff);
+void xDBLADD_v0(point_proj_t P, point_proj_t Q, const f2elm_t XPQ, const f2elm_t ZPQ, const f2elm_t A24);
+void xDBLADD_v1(point_proj_t P, point_proj_t Q, const f2elm_t XPQ, const f2elm_t ZPQ, const f2elm_t A24);
 
 #define xDBL        xDBL_v1
 #define xTPL        xTPL_v1
@@ -29,5 +31,6 @@ void eval_3_isog_v1(point_proj_t Q, const f2elm_t *coeff);
 #define eval_4_isog eval_4_isog_v1
 #define get_3_isog  get_3_isog_v1
 #define eval_3_isog eval_3_isog_v1
+#define xDBLADD     xDBLADD_v1
 
 #endif

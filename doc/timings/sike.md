@@ -92,3 +92,16 @@
 | Montgomery ladder step (xDBLADD)      | SW  + NP (add) + CP (sub)      |      27856   |        |
 | Montgomery ladder step (xDBLADD)      | ISE + CP (add/sub)             |      13306   |        |
 | Montgomery ladder step (xDBLADD)      | ISE + NP (add) + CP (sub)      |      12796   |        |
+
+### SIDH key exchange
+
+| Operation                                     | Type                           | #Instruction | #Cycle |
+| :-------------------------------------------- | :----------------------------- | ------------:| ------:|
+| Alice keygen    (EphemeralKeyGeneration_A)    | SW                             |   32,961,200 |        |
+| Alice keygen    (EphemeralKeyGeneration_A)    | ISE                            |   15,158,127 |        |
+| Bob   keygen    (EphemeralKeyGeneration_B)    | SW                             |   36,749,214 |        |
+| Bob   keygen    (EphemeralKeyGeneration_B)    | ISE                            |   17,042,274 |        |
+| Alice sharedsec (EphemeralSecretAgreement_A)  | SW                             |   26,749,381 |        |
+| Alice sharedsec (EphemeralSecretAgreement_A)  | ISE                            |   12,275,659 |        |
+| Bob   sharedsec (EphemeralSecretAgreement_B)  | SW                             |   31,004,132 |        |
+| Bob   sharedsec (EphemeralSecretAgreement_B)  | ISE                            |   14,382,436 |        |

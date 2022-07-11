@@ -312,3 +312,14 @@ void fp2_encode(const f2elm_t x, unsigned char *enc)
   mpi_conv_56to64(t64, t[1]);           // convert t[1] to radix-2^64
   encode_to_bytes(t64, enc+FP2_ENCODED_BYTES/2, FP2_ENCODED_BYTES/2); 
 }
+
+void fp2_decode(const unsigned char *x, f2elm_t dec)
+{
+  uint64_t r56[NLMB56];
+
+  decode_to_digits(x, r56, FP2_ENCODED_BYTES/2, NWORDS_FIELD);
+  mpi_conv_64to56(dec[0], r56);
+  decode_to_digits(x+FP2_ENCODED_BYTES/2, r56, FP2_ENCODED_BYTES/2, NWORDS_FIELD);
+  mpi_conv_64to56(dec[1], r56);
+  to_fp2mont(dec, dec);
+}

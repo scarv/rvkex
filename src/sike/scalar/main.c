@@ -1429,22 +1429,55 @@ void test_sidh()
   uint64_t start_cycles, end_cycles, diff_cycles;
   int i;
 
-  unsigned char skA[SECRETKEY_A_BYTES] = { 1 }, pkA[CRYPTO_PUBLICKEYBYTES];
+  unsigned char skA[SECRETKEY_A_BYTES], pkA[CRYPTO_PUBLICKEYBYTES];
   unsigned char skB[SECRETKEY_B_BYTES], pkB[CRYPTO_PUBLICKEYBYTES];
   unsigned char ssA[FP2_ENCODED_BYTES], ssB[FP2_ENCODED_BYTES];
 
   puts("\n**************************************************************************");
   puts("SIDH KEY EXCHANGE:\n");
 
-  printf("- Alice keypair gen:");
+  rand_bytes(skA, SECRETKEY_A_BYTES);
+  rand_bytes(skB, SECRETKEY_B_BYTES);
+
+  printf("- Alice key gen:");
 
   LOAD_CACHE(EphemeralKeyGeneration_A(skA, pkA), 1);
   MEASURE_CYCLES(EphemeralKeyGeneration_A(skA, pkA), 1);
-  printf("  #inst = %lld\n", diff_cycles);
+  printf("      #inst = %lld\n", diff_cycles);
 
-  puts("PKA: ");
+  printf("- Bob   key gen:");
+
+  LOAD_CACHE(EphemeralKeyGeneration_B(skB, pkB), 1);
+  MEASURE_CYCLES(EphemeralKeyGeneration_B(skB, pkB), 1);
+  printf("      #inst = %lld\n", diff_cycles);
+
+  printf("- Alice shared sec:");
+
+  LOAD_CACHE(EphemeralSecretAgreement_A(skA, pkB, ssA), 1);
+  MEASURE_CYCLES(EphemeralSecretAgreement_A(skA, pkB, ssA), 1);
+  printf("   #inst = %lld\n", diff_cycles);
+
+  printf("- Bob   shared sec:");
+
+  LOAD_CACHE(EphemeralSecretAgreement_B(skB, pkA, ssB), 1);
+  MEASURE_CYCLES(EphemeralSecretAgreement_B(skB, pkA, ssB), 1);
+  printf("   #inst = %lld\n", diff_cycles);
+
+#if DEBUG 
+  puts("\nSKA: ");
+  for (i = 0; i < SECRETKEY_A_BYTES; i++) printf("%02X", skA[i]);
+  puts("\nSKB: ");
+  for (i = 0; i < SECRETKEY_B_BYTES; i++) printf("%02X", skB[i]);
+  puts("\nPKA: ");
   for (i = 0; i < CRYPTO_PUBLICKEYBYTES; i++) printf("%02X", pkA[i]);
+  puts("\nPKB: ");
+  for (i = 0; i < CRYPTO_PUBLICKEYBYTES; i++) printf("%02X", pkB[i]);
+  puts("\nSSA: ");
+  for (i = 0; i < FP2_ENCODED_BYTES; i++) printf("%02X", ssA[i]);
+  puts("\nSSB: ");
+  for (i = 0; i < FP2_ENCODED_BYTES; i++) printf("%02X", ssB[i]);
   puts("\n");
+#endif
 
 }
 

@@ -43,5 +43,6 @@ void from_mont(felm_t r, const felm_t a);
 
 void decode_to_digits(const unsigned char* x, uint64_t* dec, int nbytes, int ndigits);
 void fp2_encode(const f2elm_t x, unsigned char *enc);
+void fp2_decode(const unsigned char *x, f2elm_t dec);
 
 #endif

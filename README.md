@@ -1,52 +1,44 @@
-# RVKEX: scalar and vectorized pre-, post-quantum, and hybrid key exchange on 64-bit RISC-V 
+# RVKEX: ECC/isogeny-based key exchange on 64-bit RISC-V 
 
-## Overview 
+## Overview
 
-- We consider the RISC-V baseline ISA as being `rv64gcv` meaning that the following standard extensions
+- We consider the RISC-V baseline ISA as being `rv64gc` meaning that the following standard extensions
   - M      (multiplication)
   - A      (atomic)
   - F      (single-precision floating-point)
   - D      (double-precision floating-point)
   - C      (compressed)
-  - **V    (vector)**
 
   are available by default.
 
-- The project `rvkex` primarily targets `V` vector extension which is the standard vector extension for **application processor profiles** (see [1] for details), i.e., `Zvl128b` with a max `EEW = 64`, based on the following consideration (also partly explains why we target `rv64` not `rv32`): 
-  - most of the on-market risc-v vector cores are designed for the application processors instead of embedded devices, and they are exactly `rv64gcv` cores; for example, SiFive P270 [2] and X280 [3], Alibaba XT910 [4].
-
-- Another reason why we target `rv64` not `rv32`: 
-  - `V` extension has a max `EEW = 64`, i.e., the element width in a vector is up to 64 bits. Using `rv64` is able to have a **relatively fair** comparison between risc-v scalar (RVS) implementation and risc-v vector(ized) (RVV) implementation.
-
-- However, the project `rvkex` also discusses, to a certain extent, the efficient software for `zve64*` (i.e., a standard vector extension for **embedded use**, see [5] for details), where the `vmulh` integer multiply variants **are not included** for `EEW=64`.
-
-- `rvkex` considers `128b` (and maybe also `256b`) vector length, since most of the on-market vector cores use `128b` ALU (e.g., SiFive P270 and Alibaba XT910) or `256b` ALU (SiFive X280).
-
 ## Implementations 
 
-- We plan to develop 4 types of implementation for pre-quantum X25519 [6] and post-quantum SIKE [7]:
-  - scalar pure-software 
-  - scalar ISE-supported 
-  - vector pure-software
-  - vector ISE-supported 
+- We plan to develop 4 types of implementation for each of pre-quantum X25519 [1] and post-quantum SIKE [2]:
+  - full-radix    pure-software  
+  - full-radix    ISE-assisted
+  - reduced-radix pure-software
+  - reduced-radix ISE-assisted 
 
+  Furthermore, we plan to design several different ISEs and then discuss different trade-offs. 
 
-## Organization
+- Since SIKE is relatively costly (compared to other PQC KEMs), it makes more sense to target more computing-powerful `rv64` instead of `rv32` in this project. Some details and arguments about the performance of SIKE can be found on page 36 of [3]. 
+
+## Organization 
 
 ```
-├── bin                 - scripts (e.g., environment configuration)
-├── doc                 - documentation (e.g., encoding and design)
-├── src                 - source code
-│   ├── sike            - sike implementations 
-│   │   ├── scalar          - scalar sike   implementation
-│   │   └── vector          - vector sike   implementation       
-│   └── x25519          - x25519 implementations 
-│       ├── scalar          - scalar x25519 implementation
-│       └── vector          - vector x25519 implementation  
-├── toolchain           - scripts to install RISC-V toolchains 
-└── work                - working directory for build
+├── bin                       - scripts (e.g., environment configuration)
+├── doc                       - documentation (e.g., encoding and design)
+├── src                       - source code
+│   ├── sike                  - sike implementations
+│   │   └── sikep434              - sikep434 implementation
+│   │       ├── reduced-radix         - radix-2^56 implementation           
+│   │       └── full-radix            - radix-2^64 implementation 
+│   └────── x25519                - x25519 implementations
+│           ├── reduced-radix         - radix-2^51 implementation           
+│           └── full-radix            - radix-2^64 implementation
+├── toolchain                 - scripts to install RISC-V toolchains 
+└── work                      - working directory for build    
 ```
-
 
 ## Usage 
 
@@ -55,7 +47,6 @@
   ```sh
   export RISCV="/opt/riscv"
   ```
-
 - Clone the repository and setup environment
 
   ```sh
@@ -65,48 +56,26 @@
   source bin/conf.sh
   ```
 
-- Build the toolchain 
+- Build the toolchain
   ```sh
   make -f toolchain/Makefile clone
   make -f toolchain/Makefile apply 
   make -f toolchain/Makefile build
   ```
 
-- Build and evaluate the (different) implementation
+- Build and evaluate the (different) implementation (`f` means full-radix; `r` means reduced-radix)
 
   ```sh
-  make scalar_x25519
-  make vector_x25519
-  make scalar_sike
-  make vector_sike
+  make x25519_f
+  make x25519_r
+  make sikep434_f
+  make sikep434_r
   ```
-
-- Switch different modes in the source code in `src/[x25519/sike]/[scalar/vector]/config.h`
-  - enable debug mode `#define DEBUG 1` 
-  - use ISE `#define ISE 1` 
-
-
-## TODO
-  - Study the novel Montogmery reduction in [8], and see if it is useful for this work.
-  - I'm sure SIKE can be optimized by using some additions/subtractions which don't have carry propagation, e.g., new `mp_add`, new `mp_sub_2p` and `mp_sub_4p`, but the limb range needs to be carefully checked when using them.  
-  - Move the constants and masks for the vector asm functions into the asm files. 
-  - Optimize vector load/store to maybe save the permutation and blending operations.
-
 
 ## References and links
 
-[1] https://github.com/riscv/riscv-v-spec/blob/master/v-spec.adoc#v-vector-extension-for-application-processors
+[1] D. J. Bernstein. *Curve25519: new Diffie-Hellman speed records*, in PKC'2006.
 
-[2] https://www.sifive.com/cores/performance-p270
+[2] https://sike.org/files/SIDH-spec.pdf
 
-[3] https://www.sifive.com/cores/intelligence-x280 
-
-[4] https://www.cnx-software.com/2020/08/25/more-details-about-alibaba-xt910-64-bit-risc-v-core/
-
-[5] https://github.com/riscv/riscv-v-spec/blob/master/v-spec.adoc#182-zve-vector-extensions-for-embedded-processors
-
-[6] D. J. Bernstein. *Curve25519: new Diffie-Hellman speed records*, in PKC'2006.
-
-[7] https://sike.org/files/SIDH-spec.pdf
-
-[8] https://eprint.iacr.org/2017/1015
+[3] https://nvlpubs.nist.gov/nistpubs/ir/2022/NIST.IR.8413.pdf

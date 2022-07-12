@@ -11,14 +11,14 @@ endif
 
 work_dir ?= ${REPO_HOME}/work
 
-vector_x25519:	
-	${MAKE} -C ${REPO_HOME}/src/x25519/vector all       work_dir=${work_dir}/vector_x25519
+x25519_f:
+	${MAKE} -C ${REPO_HOME}/src/x25519/full-radix       		 work_dir=${work_dir}/x25519_f
 
-scalar_x25519: 
-	${MAKE} -C ${REPO_HOME}/src/x25519/scalar all       work_dir=${work_dir}/scalar_x25519
+x25519_r:
+	${MAKE} -C ${REPO_HOME}/src/x25519/reduced-radix    		 work_dir=${work_dir}/x25519_r
 
-vector_sike:	
-	${MAKE} -C ${REPO_HOME}/src/sike/vector all         work_dir=${work_dir}/vector_sike
+sikep434_f:
+	${MAKE} -C ${REPO_HOME}/src/sike/sikep434/full-radix     work_dir=${work_dir}/sikep434_f
 
-scalar_sike: 
-	${MAKE} -C ${REPO_HOME}/src/sike/scalar all         work_dir=${work_dir}/scalar_sike
+sikep434_r:
+	${MAKE} -C ${REPO_HOME}/src/sike/sikep434/reduced-radix  work_dir=${work_dir}/sikep434_r

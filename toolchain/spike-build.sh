@@ -15,7 +15,7 @@ mkdir --parents ${SPIKE_BUILD}
 export PATH="${RISCV}/bin:${PATH}"
 
 cd ${SPIKE_BUILD}
-${SPIKE_REPO}/configure --prefix="${RISCV}" --target="riscv64-unknown-elf" --with-isa="rv64gcv"
+${SPIKE_REPO}/configure --prefix="${RISCV}" --target="riscv64-unknown-elf" --with-isa="rv64gc"
 make
 make install
 cd ${REPO_HOME}

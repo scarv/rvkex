@@ -12,6 +12,6 @@ mkdir --parents ${RISCV}
 
 cd ${GCC_REPO}
 make clean 
-./configure --prefix="${RISCV}" --enable-multilib --disable-linux --with-arch=rv64gcv --with-abi=lp64d
+./configure --prefix="${RISCV}" --enable-multilib --disable-linux --with-arch=rv64gc --with-abi=lp64d
 make -j$(nproc)
 cd ${REPO_HOME}

@@ -1,14 +1,14 @@
 #include "share.h"
 
 
-void randombytes(void *x, int n) 
-{
-  FILE* rand_bytes_prg = NULL;
+// void randombytes(void *x, int n) 
+// {
+//   FILE* rand_bytes_prg = NULL;
 
-  if( NULL == (rand_bytes_prg = fopen( "/dev/urandom", "rb"))) abort();
-  if( n != fread(x, sizeof(uint8_t), n, rand_bytes_prg)) abort();
-  fclose(rand_bytes_prg);
-}
+//   if( NULL == (rand_bytes_prg = fopen( "/dev/urandom", "rb"))) abort();
+//   if( n != fread(x, sizeof(uint8_t), n, rand_bytes_prg)) abort();
+//   fclose(rand_bytes_prg);
+// }
 
 
 void mpi64_print(const char *c, const uint64_t *a, int len)

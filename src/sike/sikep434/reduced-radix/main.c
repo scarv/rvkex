@@ -6,6 +6,7 @@
 #include "curve.h"
 #include "sidh.h"
 #include "sike.h"
+#include "random.h"
 
 
 // macros for measuring CPU cycles

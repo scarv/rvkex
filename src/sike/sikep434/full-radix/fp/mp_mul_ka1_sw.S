@@ -1,5 +1,5 @@
 // void mp_mul_v1_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
-// radix-2^64, product-scanning
+// radix-2^64, 1-level Karatsuba
 
 
 // registers

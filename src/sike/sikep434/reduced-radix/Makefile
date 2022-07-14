@@ -5,7 +5,7 @@ SIM    =${RISCV}/bin/spike
 ISA    =rv64gc
 PK     =${RISCV}/riscv64-unknown-elf/bin/pk
 
-SRCS  = fp/*.S main.c share.c rdtsc.c fpx.c curve.c sidh.c sike.c fips202.c
+SRCS  = fp/*.S main.c share.c rdtsc.c fpx.c curve.c sidh.c sike.c fips202.c random.c
 
 RISCV_GCC_OPTS ?= -DPREALLOCATE=1 -mcmodel=medany -static -std=gnu99 -O3 -ffast-math -fno-common -fno-builtin-printf
 
@@ -14,14 +14,33 @@ CCFLAGS += -march=${ISA} -lm -lgcc
 OUTPUT  = ${work_dir}/sikep434_r.elf
 DISASM  = ${work_dir}/sikep434_r.disasm
 
+KAT_SRCS =  ./KAT/PQCtestKAT_kem434.c \
+            ./KAT/rng/rng.c \
+            ./KAT/aes/aes.c \
+            ./KAT/aes/aes_c.c \
+            fp/*.S share.c rdtsc.c fpx.c curve.c sidh.c sike.c fips202.c
+
+KAT_OUTPUT = ${work_dir}/sikep434_r_kat.elf
+KAT_DISASM = ${work_dir}/sikep434_r_kat.disasm
+
 all: clean ${OUTPUT} ${DISASM}
 	@${SIM} --isa=${ISA} ${PK} ${OUTPUT}
 
 ${OUTPUT} : ${SRCS}
 	@mkdir -p ${work_dir}
-	@${CC} ${RISCV_GCC_OPTS} ${CCFLAGS} -DVLEN${VLEN} -o $@ $^
+	@${CC} ${RISCV_GCC_OPTS} ${CCFLAGS} -o $@ $^
 
 ${DISASM} : ${OUTPUT}
+	@${OBJDUMP} -d -t $< > $@
+
+kat: clean ${KAT_OUTPUT} ${KAT_DISASM}
+	@${SIM} --isa=${ISA} ${PK} ${KAT_OUTPUT}
+
+${KAT_OUTPUT} : ${KAT_SRCS}
+	@mkdir -p ${work_dir}
+	@${CC} ${RISCV_GCC_OPTS} ${CCFLAGS} -o $@ $^
+
+${KAT_DISASM} : ${KAT_OUTPUT}
 	@${OBJDUMP} -d -t $< > $@
 
 clean:

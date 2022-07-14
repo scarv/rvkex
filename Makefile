@@ -22,3 +22,6 @@ sikep434_f:
 
 sikep434_r:
 	${MAKE} -C ${REPO_HOME}/src/sike/sikep434/reduced-radix  work_dir=${work_dir}/sikep434_r
+
+sikep434_r_kat:
+	${MAKE} kat -C ${REPO_HOME}/src/sike/sikep434/reduced-radix  work_dir=${work_dir}/sikep434_r_kat

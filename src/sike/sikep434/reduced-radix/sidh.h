@@ -3,6 +3,7 @@
 
 #include "curve.h"
 #include "share.h"
+#include "random.h"
 
 static const uint64_t A_gen[6*NLMB56] = {
   0xADF455C5C345BF, 0x5C5CC767AC2B05, 0x79951F02579193, 0x89FA27B1AFE4E8,

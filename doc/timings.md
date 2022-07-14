@@ -159,4 +159,4 @@
 | Operation                  | Type      | #Instruction | #Cycle |
 | :------------------------- | :-------- | ------------:| ------:|
 | integer multiplication     | SW  + PS  |        414   |        |
-| integer multiplication     | SW  + KA1 |              |        |
+| integer multiplication     | SW  + KA1 |        530   |        |

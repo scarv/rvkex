@@ -71,7 +71,7 @@ void test_fp()
   mpi_conv_64to56(b56, b64);
 
   puts("\n**************************************************************************");
-  puts("SCALAR FP ARITH 1w:\n");
+  puts("FP ARITH:\n");
 
   printf("- mp mul v0 sw:");
 
@@ -487,13 +487,13 @@ void test_fpx()
   mpi_conv_64to56(a[1], b64);
 
   puts("\n**************************************************************************");
-  puts("SCALAR FP2 ARITH 1w:\n");
+  puts("FP2 ARITH:\n");
 
-  printf("- fp2 mul 1w v0:");
+  printf("- fp2 mul v0:");
 
   LOAD_CACHE(fp2mul_mont_v0(r, a, a), 10);
   MEASURE_CYCLES(fp2mul_mont_v0(r, a, a), 100);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r0 = 0x3306B70C7878F4FC445701989C949D34730CD77D27EB6133F6DB088FED9FA1E7A18F5515\
@@ -510,11 +510,11 @@ void test_fpx()
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
-  printf("- fp2 mul 1w v1:");
+  printf("- fp2 mul v1:");
 
   LOAD_CACHE(fp2mul_mont_v1(r, a, a), 10);
   MEASURE_CYCLES(fp2mul_mont_v1(r, a, a), 100);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r0 = 0x3306B70C7878F4FC445701989C949D34730CD77D27EB6133F6DB088FED9FA1E7A18F5515\
@@ -535,11 +535,11 @@ void test_fpx()
 
   // ---------------------------------------------------------------------------
 
-  printf("- fp2 sqr 1w v0:");
+  printf("- fp2 sqr v0:");
 
   LOAD_CACHE(fp2sqr_mont_v0(r, a), 10);
   MEASURE_CYCLES(fp2sqr_mont_v0(r, a), 100);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r0 = 0xFC4C49B0144AE2C7E59997C4A8F35780D4554679D012157DF735A5FED9FA1E7A18F55157\
@@ -556,11 +556,11 @@ void test_fpx()
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
-  printf("- fp2 sqr 1w v1:");
+  printf("- fp2 sqr v1:");
 
   LOAD_CACHE(fp2sqr_mont_v1(r, a), 10);
   MEASURE_CYCLES(fp2sqr_mont_v1(r, a), 100);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r0 = 0xFC4C49B0144AE2C7E59997C4A8F35780D4554679D012157DF735A5FED9FA1E7A18F55157\
@@ -581,11 +581,11 @@ void test_fpx()
 
 // ---------------------------------------------------------------------------
 
-  printf("- fp2 add 1w v0:");
+  printf("- fp2 add v0:");
 
   LOAD_CACHE(fp2add_v0(r, a, a), 10);
   MEASURE_CYCLES(fp2add_v0(r, a, a), 100);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r0 = 0x22290C528B555284DCB220FCD5B310AB9D1DEB0A63E9606C39DD94D579BDE02468ACF13579BDE\
@@ -606,11 +606,11 @@ void test_fpx()
 
   // ---------------------------------------------------------------------------
 
-  printf("- fp2 sub 1w v0:");
+  printf("- fp2 sub v0:");
 
   LOAD_CACHE(fp2sub_v0(r, a, a), 10);
   MEASURE_CYCLES(fp2sub_v0(r, a, a), 100);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r0 = 0;
@@ -659,7 +659,7 @@ void test_curve()
   memset(&C24[1],        0, sizeof(uint64_t)*NLMB56);         //    0
 
   puts("\n**************************************************************************");
-  puts("SCALAR MONTGOMERY CURVE ARITH 1w:\n");
+  puts("MONTGOMERY CURVE ARITH:\n");
 
   printf("- xDBL v0:");
 

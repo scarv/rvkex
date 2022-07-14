@@ -11,8 +11,8 @@ RISCV_GCC_OPTS ?= -DPREALLOCATE=1 -mcmodel=medany -static -std=gnu99 -O3 -ffast-
 
 CCFLAGS += -march=${ISA} -lm -lgcc
 
-OUTPUT  = ${work_dir}/sim_scalar.elf
-DISASM  = ${work_dir}/sim_scalar.disasm
+OUTPUT  = ${work_dir}/sikep434_r.elf
+DISASM  = ${work_dir}/sikep434_r.disasm
 
 all: clean ${OUTPUT} ${DISASM}
 	@${SIM} --isa=${ISA} ${PK} ${OUTPUT}

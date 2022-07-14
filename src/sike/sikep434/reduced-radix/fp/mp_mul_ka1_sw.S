@@ -66,7 +66,6 @@
   ld    \A7, 56(\addr)
 .endm 
 
-
 // 4 limbs * 4 limbs multiplication based on product-scanning
 // R0-R7 = A0-A3 * B0-B3
 
@@ -174,7 +173,7 @@ mp_mul_v1_sw:
   LOAD_OPERAND a1, s0, s1, s2, s3, s4, s5, s6, s7
   add   t0, s0, s4
   add   t1, s1, s5
-  add   t2, s2, s6 
+  add   t2, s2, s6
   add   t3, s3, s7
   // s8-s11 <- BH + BL
   LOAD_OPERAND a2, s0, s1, s2, s3, s4, s5, s6, s7
@@ -234,7 +233,7 @@ mp_mul_v1_sw:
   // a2, t4-t6, t0-t3 <- AH * BH
   MUL_4X4_PS a2, t4, t5, t6, t0, t1, t2, t3, t0, t1, t2, t3, s8, s9, s10, s11
   // [(AH+AL) * (BH+BL) - AL * BL - AH * BH] + (AL * BL)'
-  sub   s0, s0, a2  
+  sub   s0, s0, a2
   sub   s1, s1, t4
   sub   s2, s2, t5
   sub   s3, s3, t6

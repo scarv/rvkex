@@ -72,6 +72,14 @@
   make sikep434_r
   ```
 
+- Switch different modes in the source code in `config.h`
+  - enable debug mode `#define DEBUG 1` 
+  - use ISE `#define ISE 1` 
+
+## TODO 
+
+- add KAT test for SIKE
+
 ## References and links
 
 [1] D. J. Bernstein. *Curve25519: new Diffie-Hellman speed records*, in PKC'2006.

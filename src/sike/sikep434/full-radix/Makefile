@@ -5,14 +5,14 @@ SIM    =${RISCV}/bin/spike
 ISA    =rv64gc
 PK     =${RISCV}/riscv64-unknown-elf/bin/pk
 
-SRCS  = gfparith/*.S main.c share.c rdtsc.c gfparith.c moncurve.c
+SRCS  = fp/*.S main.c share.c rdtsc.c 
 
 RISCV_GCC_OPTS ?= -DPREALLOCATE=1 -mcmodel=medany -static -std=gnu99 -O3 -ffast-math -fno-common -fno-builtin-printf
 
 CCFLAGS += -march=${ISA} -lm -lgcc
 
-OUTPUT  = ${work_dir}/x25519_r.elf
-DISASM  = ${work_dir}/x25519_r.disasm
+OUTPUT  = ${work_dir}/sikep434_f.elf
+DISASM  = ${work_dir}/sikep434_f.disasm
 
 all: clean ${OUTPUT} ${DISASM}
 	@${SIM} --isa=${ISA} ${PK} ${OUTPUT}

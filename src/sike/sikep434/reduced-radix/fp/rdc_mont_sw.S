@@ -329,13 +329,15 @@
   _ACCUMULATE_AIPJ
   and   R_, ZL, M0
   sd    R_, 48(a0)
-  _PROPAGATE_CARRY
+  srli  ZL, ZL, 56
+  slli  TL, ZH,  8
+  xor   ZL, ZL, TL
 .endm
 
 .macro COMPUTE_R7
   ld    R_,120(a1)
-  _ACCUMULATE_A R_
-  sd    ZL, 56(a0)
+  add   R_, ZL, R_
+  sd    R_, 56(a0)
 .endm
 
 

@@ -30,7 +30,7 @@ void test_fp()
                           0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
                           0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
                           0x0003CDEF01234567ULL };
-  uint64_t z[NLMB64*2];
+  uint64_t z[NLMB64*2], r[NLMB64];
 
   puts("\n**************************************************************************");
   puts("SCALAR FP ARITH:\n");
@@ -63,6 +63,25 @@ void test_fp()
   memset(z, 0, sizeof(uint64_t)*NLMB64*2);
 #endif
 
+  // ---------------------------------------------------------------------------
+
+  printf("- rdc mont v0 sw:");
+
+  mp_mul_v0_sw(z, a, b);
+
+  LOAD_CACHE(rdc_mont_v0_sw(r, z), 100);
+  MEASURE_CYCLES(rdc_mont_v0_sw(r, z), 1000);
+  printf("     #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x147173547FF63D0B52AB864DF1D570AF09061B91AC6FE5B8A6CCE68DD6D2D6BFF0C770842C494\
+          08C8AF46BF03037800688DADCB8D60EF;
+  mpi64_print("  r  = 0x", r, NLMB64);
+  memset(z, 0, sizeof(uint64_t)*NLMB64*2);
+  memset(r, 0, sizeof(uint64_t)*NLMB64);
+#endif 
+
+  puts("**************************************************************************\n");
 }
 
 int main()

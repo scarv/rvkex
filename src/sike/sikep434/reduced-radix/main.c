@@ -1006,6 +1006,75 @@ void test_curve()
   memset(&coeff[2][1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
+  printf("- get_4_isog v2:");
+
+  LOAD_CACHE(get_4_isog_v2(&P, A24plus, C24, coeff), 10);
+  MEASURE_CYCLES(get_4_isog_v2(&P, A24plus, C24, coeff), 100);
+  printf("      #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // A240 = 0x157E17F7452FEEE28513F3FC0D094E5804553AEE4985E4E14B4210744D6E56A0ED9F19\
+            FC6DB24CE717994EEBC63381777CAF5EEFC9FC3
+  // A241 = 0x67892D9C91F4AA901E0AFB3BF40707220C6E93401EEAFE2B331BBAEBA16FBE82A65732\
+            AE5EB3B2D9087720D3719B21BB80B3B8B9FCD4
+  // C240 = 0x14BD537DBF59F40092AFB850108ADA33A424CCF58D374867BC41F7B5DE3FECD7DF89D7\
+            C398B09F727F073A78BC995D6E7C042E73385BE
+  // C241 = 0x5E8B88344AC5425CBC6C0B959B6F5999175DB777E370B5AD02E712F9B3A1F2B8FD1BB4\
+            C018A1F242B2FB85E3E76F2DC476AED1CE179A
+  //  K00 = 0x22A8354DC084A682D125481FF6C85686F0C006E095959A079481734C159158B8499536\
+            43208AFA9AC77EC8D6D55FE61EEC89DB461CEFC
+  //  K01 = 0x80F5EA0863B2A3070A910F1CA39ADCA7C22483C42CB9E08A157966B25F8AC2E3ED8F95\
+            FFF1EFF6668293A381241A8273C6A82513C710C
+  //  K10 = 0x2AD8EDF8CAAD6881D9C5D356510B7D3C0C07519A4ED378A313DDDDF760CADB6EF5971E\
+            D9E698FBEED35857AABBA6406E70E103D0C1E82
+  //  K11 = 0x3D913DC94C3950985F5EBBAB3FA30BCA33C4E4A2175526A2D74B54B881C3663486E804\
+            2D235A5BE71ED0B51FEFCBAC6D31784BB5A79B0
+  //  K20 = 0x1CEE78006153A94DEDA123183F43512FBE2C8BF9E01AB5320D4D0FA7E42B5A8DA77813\
+            C9F9B1F6439833414239DF20474DA9B4E7A6CFA
+  //  K21 = 0x28E6F4A4F47897D56A0E47D0583958AD1C588338C6B34AB07427F6FD1E31F3365F6FBA\
+            55BF604947167124D403D5C223505EC3E5A755E
+  mpi56_carry_prop(A24plus[0]);
+  mpi_conv_56to64(r64, A24plus[0]);
+  mpi64_print(" A240 = 0x", r64, 7);
+  memset(&A24plus[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(A24plus[1]);
+  mpi_conv_56to64(r64, A24plus[1]);
+  mpi64_print(" A241 = 0x", r64, 7);
+  memset(&A24plus[1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(C24[0]);
+  mpi_conv_56to64(r64, C24[0]);
+  mpi64_print(" C240 = 0x", r64, 7);
+  memset(&C24[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(C24[1]);
+  mpi_conv_56to64(r64, C24[1]);
+  mpi64_print(" C241 = 0x", r64, 7);
+  memset(&C24[1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(coeff[0][0]);
+  mpi_conv_56to64(r64, coeff[0][0]);
+  mpi64_print("  K00 = 0x", r64, 7);
+  memset(&coeff[0][0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(coeff[0][1]);
+  mpi_conv_56to64(r64, coeff[0][1]);
+  mpi64_print("  K01 = 0x", r64, 7);
+  memset(&coeff[0][1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(coeff[1][0]);
+  mpi_conv_56to64(r64, coeff[1][0]);
+  mpi64_print("  K10 = 0x", r64, 7);
+  memset(&coeff[1][0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(coeff[1][1]);
+  mpi_conv_56to64(r64, coeff[1][1]);
+  mpi64_print("  K11 = 0x", r64, 7);
+  memset(&coeff[1][1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(coeff[2][0]);
+  mpi_conv_56to64(r64, coeff[2][0]);
+  mpi64_print("  K20 = 0x", r64, 7);
+  memset(&coeff[2][0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(coeff[2][1]);
+  mpi_conv_56to64(r64, coeff[2][1]);
+  mpi64_print("  K21 = 0x", r64, 7);
+  memset(&coeff[2][1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
   puts("");
 
   // ---------------------------------------------------------------------------   
@@ -1067,6 +1136,42 @@ void test_curve()
   // computation
   get_4_isog_v1(&P, A24plus, C24, coeff);
   eval_4_isog_v1(&P, coeff);
+  // output
+  mpi56_carry_prop(P.X[0]);
+  mpi_conv_56to64(r64, P.X[0]);
+  mpi64_print("  XP0 = 0x", r64, 7);
+  mpi56_carry_prop(P.X[1]);
+  mpi_conv_56to64(r64, P.X[1]);
+  mpi64_print("  XP1 = 0x", r64, 7);
+  mpi56_carry_prop(P.Z[0]);
+  mpi_conv_56to64(r64, P.Z[0]);
+  mpi64_print("  ZP0 = 0x", r64, 7);
+  mpi56_carry_prop(P.Z[1]);
+  mpi_conv_56to64(r64, P.Z[1]);
+  mpi64_print("  ZP1 = 0x", r64, 7);
+#endif
+
+  printf("- eval_4_isog v2:");
+
+  LOAD_CACHE(eval_4_isog_v2(&P, coeff), 10);
+  MEASURE_CYCLES(eval_4_isog_v2(&P, coeff), 100);
+  printf("     #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // XP0 = 0x20304752113CC184F1CE286BDBB0BBBB3F435AA82D79B69F4EC6B8FCBDAC0769D733DAB\
+           73590FE44FC9C8AB96D973B459D023CA13EFE9
+  // XP1 = 0xB6F04F935671900A5A0F2E632AB8E2C0512370876CA555AF2C8A7AA0D9C3CECF320124F\
+           C084D83A8A083F3CC0657A5B231EEA1DECFCA
+  // ZP0 = 0x0
+  // ZP1 = 0x0
+  // initialization
+  memcpy(&P.X[0], &A_gen[       0], sizeof(uint64_t)*NLMB56); // XPA0
+  memcpy(&P.X[1], &A_gen[  NLMB56], sizeof(uint64_t)*NLMB56); // XPA1
+  memcpy(&P.Z[0], &A_gen[2*NLMB56], sizeof(uint64_t)*NLMB56); // XQA0
+  memcpy(&P.Z[1], &A_gen[3*NLMB56], sizeof(uint64_t)*NLMB56); // XQA1
+  // computation
+  get_4_isog_v2(&P, A24plus, C24, coeff);
+  eval_4_isog_v2(&P, coeff);
   // output
   mpi56_carry_prop(P.X[0]);
   mpi_conv_56to64(r64, P.X[0]);
@@ -1206,6 +1311,63 @@ void test_curve()
   memset(&coeff[1][1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
+  printf("- get_3_isog v2:");
+
+  LOAD_CACHE(get_3_isog_v2(&P, A24minus, A24plus, coeff), 10);
+  MEASURE_CYCLES(get_3_isog_v2(&P, A24minus, A24plus, coeff), 100);
+  printf("      #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // A-0 = 0x2C9C49309B1B27908BFF5C8F119286846FA4AA36315417B0AD4F79EEEC228AC2EE2566D\
+           756E8CF072A33C9706B15EFDE21D77827B5CE7
+  // A-1 = 0xC4B484894813216A5E2E195209EAEFD4BF775494D7D23FC62A151CDE3FE478AA7BBECE9\
+           D212D58923B3FAE5BB5882F665D45BD7A5412
+  // A+0 = 0x3A723CFD33DD353C42C2BE03BBAB61B3C685ECABC4518F5FB1B2A64803F6EE866654FA6\
+           06BA2FA2F27FC997D9A3F8A110C5EDB946612
+  // A+1 = 0x1C09DB1C485440FB099C6EC93D47559494B6390AAED7DB01CF49A3C1BB779C639F17563\
+           6E2F35CC62C97909E9FBA2041E7872F10DEC96
+  // K00 = 0x2AD8EDF8CAAD6881D9C5D356510B7D3C0C07519A4ED378A313DDDDF760CADB6EF5971ED\
+           9E698FBEED35857AABBA6406E70E103D0C1E82
+  // K01 = 0x3D913DC94C3950985F5EBBAB3FA30BCA33C4E4A2175526A2D74B54B881C3663486E8042\
+           D235A5BE71ED0B51FEFCBAC6D31784BB5A79B0
+  // K10 = 0x1CEE78006153A94DEDA123183F43512FBE2C8BF9E01AB5320D4D0FA7E42B5A8DA77813C\
+           9F9B1F6439833414239DF20474DA9B4E7A6CFA
+  // K11 = 0x28E6F4A4F47897D56A0E47D0583958AD1C588338C6B34AB07427F6FD1E31F3365F6FBA5\
+           5BF604947167124D403D5C223505EC3E5A755E
+  mpi56_carry_prop(A24minus[0]);
+  mpi_conv_56to64(r64, A24minus[0]);
+  mpi64_print("  A-0 = 0x", r64, 7);
+  memset(&A24minus[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(A24minus[1]);
+  mpi_conv_56to64(r64, A24minus[1]);
+  mpi64_print("  A-1 = 0x", r64, 7);
+  memset(&A24minus[1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(A24minus[0]);
+  mpi_conv_56to64(r64, A24plus[0]);
+  mpi64_print("  A+0 = 0x", r64, 7);
+  memset(&A24plus[0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(A24plus[1]);
+  mpi_conv_56to64(r64, A24plus[1]);
+  mpi64_print("  A+1 = 0x", r64, 7);
+  memset(&A24plus[1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(coeff[0][0]);
+  mpi_conv_56to64(r64, coeff[0][0]);
+  mpi64_print("  K00 = 0x", r64, 7);
+  memset(&coeff[0][0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(coeff[0][1]);
+  mpi_conv_56to64(r64, coeff[0][1]);
+  mpi64_print("  K01 = 0x", r64, 7);
+  memset(&coeff[0][1], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(coeff[1][0]);
+  mpi_conv_56to64(r64, coeff[1][0]);
+  mpi64_print("  K10 = 0x", r64, 7);
+  memset(&coeff[1][0], 0, sizeof(uint64_t)*NLMB56);
+  mpi56_carry_prop(coeff[1][1]);
+  mpi_conv_56to64(r64, coeff[1][1]);
+  mpi64_print("  K11 = 0x", r64, 7);
+  memset(&coeff[1][1], 0, sizeof(uint64_t)*NLMB56);
+#endif 
+
   puts("");
 
   // ---------------------------------------------------------------------------   
@@ -1265,8 +1427,44 @@ void test_curve()
   memcpy(&P.Z[0], &A_gen[2*NLMB56], sizeof(uint64_t)*NLMB56); // XQA0
   memcpy(&P.Z[1], &A_gen[3*NLMB56], sizeof(uint64_t)*NLMB56); // XQA1
   // computation
-  get_3_isog_v0(&P, A24minus, A24plus, coeff);
-  eval_3_isog_v0(&P, coeff);
+  get_3_isog_v1(&P, A24minus, A24plus, coeff);
+  eval_3_isog_v1(&P, coeff);
+  // output
+  mpi56_carry_prop(P.X[0]);
+  mpi_conv_56to64(r64, P.X[0]);
+  mpi64_print("  XP0 = 0x", r64, 7);
+  mpi56_carry_prop(P.X[1]);
+  mpi_conv_56to64(r64, P.X[1]);
+  mpi64_print("  XP1 = 0x", r64, 7);
+  mpi56_carry_prop(P.Z[0]);
+  mpi_conv_56to64(r64, P.Z[0]);
+  mpi64_print("  ZP0 = 0x", r64, 7);
+  mpi56_carry_prop(P.Z[1]);
+  mpi_conv_56to64(r64, P.Z[1]);
+  mpi64_print("  ZP1 = 0x", r64, 7);
+#endif
+
+  printf("- eval_3_isog v2:");
+
+  LOAD_CACHE(eval_3_isog_v2(&P, coeff), 10);
+  MEASURE_CYCLES(eval_3_isog_v2(&P, coeff), 100);
+  printf("     #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  // XP0 = 0x3CEEE165BC12A5171255A6E87BA6D231F4DC09DC71FEA67416B4B7822E097272A217E4E\
+           62E1F7EBD28794785A5426669E528FBB48D1F8
+  // XP1 = 0x105654B8FD2A3A14E19B49623343104B3A8AB9272102D8B2F7101E27E666C27E35DB8F6\
+           E8925887AF2087AF1CC3A45998168A61FF02A5
+  // ZP0 = 0x0
+  // ZP1 = 0x0
+  // initialization
+  memcpy(&P.X[0], &A_gen[       0], sizeof(uint64_t)*NLMB56); // XPA0
+  memcpy(&P.X[1], &A_gen[  NLMB56], sizeof(uint64_t)*NLMB56); // XPA1
+  memcpy(&P.Z[0], &A_gen[2*NLMB56], sizeof(uint64_t)*NLMB56); // XQA0
+  memcpy(&P.Z[1], &A_gen[3*NLMB56], sizeof(uint64_t)*NLMB56); // XQA1
+  // computation
+  get_3_isog_v2(&P, A24minus, A24plus, coeff);
+  eval_3_isog_v2(&P, coeff);
   // output
   mpi56_carry_prop(P.X[0]);
   mpi_conv_56to64(r64, P.X[0]);
@@ -1394,7 +1592,75 @@ void test_curve()
   memcpy(&A24[0], mont_R, sizeof(uint64_t)*NLMB56);           //    1
   memset(&A24[1],      0, sizeof(uint64_t)*NLMB56);           //    0
   // computation
-  xDBLADD_v0(&P, &Q, XPQ, ZPQ, A24);
+  xDBLADD_v1(&P, &Q, XPQ, ZPQ, A24);
+  // output
+  mpi56_carry_prop(P.X[0]);
+  mpi_conv_56to64(r64, P.X[0]);
+  mpi64_print("  XP0 = 0x", r64, 7);
+  mpi56_carry_prop(P.X[1]);
+  mpi_conv_56to64(r64, P.X[1]);
+  mpi64_print("  XP1 = 0x", r64, 7);
+  mpi56_carry_prop(P.Z[0]);
+  mpi_conv_56to64(r64, P.Z[0]);
+  mpi64_print("  ZP0 = 0x", r64, 7);
+  mpi56_carry_prop(P.Z[1]);
+  mpi_conv_56to64(r64, P.Z[1]);
+  mpi64_print("  ZP1 = 0x", r64, 7);
+  mpi56_carry_prop(Q.X[0]);
+  mpi_conv_56to64(r64, Q.X[0]);
+  mpi64_print("  XQ0 = 0x", r64, 7);
+  mpi56_carry_prop(Q.X[1]);
+  mpi_conv_56to64(r64, Q.X[1]);
+  mpi64_print("  XQ1 = 0x", r64, 7);
+  mpi56_carry_prop(Q.Z[0]);
+  mpi_conv_56to64(r64, Q.Z[0]);
+  mpi64_print("  ZQ0 = 0x", r64, 7);
+  mpi56_carry_prop(Q.Z[1]);
+  mpi_conv_56to64(r64, Q.Z[1]);
+  mpi64_print("  ZQ1 = 0x", r64, 7);
+#endif
+
+  printf("- xDBLADD v2:");
+
+  LOAD_CACHE(xDBLADD_v2(&P, &Q, XPQ, ZPQ, A24), 10);
+  MEASURE_CYCLES(xDBLADD_v2(&P, &Q, XPQ, ZPQ, A24), 100);
+  printf("         #inst = %lld\n", diff_cycles);
+
+#if DEBUG
+  //
+  // XP0 = 0x191E5C0DCABCD87612E01FFB8946DB44D97B81EC18278EEED4E44D308ED1CF033DC2003\
+           0DC52BEA77CA2E2BA551B2D3F58B2386D7FC8B
+  // XP1 = 0xC662E62FEF6655FCA85F6A12F2F67B87F508BF6974E4EAA07401786BA7CFAEC5DCC28D6\
+           D069FC141D869E6209153A9603399D963D2D8
+  // ZP0 = 0x24AECA94BED31CFB7D9574B7344411721034F07FB0CCE8C017F817A0EED711C84EA9191\
+           8990CC737A965979AAABB0F7D4429129503A8
+  // ZP1 = 0x2120678E34DEC4CEC43C050EF6B695B93E85A2955AE248749D300D4F27B64FB258A3C10\
+           52E7E16305444BE3FD39D5FB034F9809A6AE41
+  // XQ0 = 0xDC035E152D6CA934ED158D953C5F34800E51E0C329F86F7A139E26C2421E968F158D258\
+           B847D0CBCECC4F482E3B24FE355A96F1A0B75
+  // XQ1 = 0x6489A9AE2EE4D753ACEB9675456416658F7A515485BE4E063CCD26E1CD90BA8D66AE5D8\
+           8C50147432FC8C2E9039714820F77252DEAF9
+  // ZQ0 = 0x2AC020A1FA0016DB6D000ED2D8E9736BA7697F4E638FA36DE1B4886D985C5A499B511AF\
+           69612CC8861730A70EE090E4D685591618DA7B
+  // ZQ1 = 0x166226A569EE6414116E69FC7908CA282C77FC302BE3CB08EFCD189C5242B7EC5407655\
+           7172F6EB79BB6B460D07759B0749B6A3A97872
+  // initialization
+  memcpy(&P.X[0], &A_gen[       0], sizeof(uint64_t)*NLMB56); // XPA0
+  memcpy(&P.X[1], &A_gen[  NLMB56], sizeof(uint64_t)*NLMB56); // XPA1
+  memcpy(&P.Z[0], &A_gen[2*NLMB56], sizeof(uint64_t)*NLMB56); // XQA0
+  memcpy(&P.Z[1], &A_gen[3*NLMB56], sizeof(uint64_t)*NLMB56); // XQA1
+  memcpy(&Q.X[0], &A_gen[4*NLMB56], sizeof(uint64_t)*NLMB56); // XRA0
+  memcpy(&Q.X[1], &A_gen[5*NLMB56], sizeof(uint64_t)*NLMB56); // XRA1
+  memcpy(&Q.Z[0], &B_gen[4*NLMB56], sizeof(uint64_t)*NLMB56); // XRB0
+  memcpy(&Q.Z[1], &B_gen[5*NLMB56], sizeof(uint64_t)*NLMB56); // XRB1
+  memcpy(&XPQ[0], &A_gen[       0], sizeof(uint64_t)*NLMB56); // XPA0
+  memcpy(&XPQ[1], &A_gen[  NLMB56], sizeof(uint64_t)*NLMB56); // XPA1
+  memcpy(&ZPQ[0], &A_gen[2*NLMB56], sizeof(uint64_t)*NLMB56); // XQA0
+  memcpy(&ZPQ[1], &A_gen[3*NLMB56], sizeof(uint64_t)*NLMB56); // XQA1
+  memcpy(&A24[0], mont_R, sizeof(uint64_t)*NLMB56);           //    1
+  memset(&A24[1],      0, sizeof(uint64_t)*NLMB56);           //    0
+  // computation
+  xDBLADD_v2(&P, &Q, XPQ, ZPQ, A24);
   // output
   mpi56_carry_prop(P.X[0]);
   mpi_conv_56to64(r64, P.X[0]);

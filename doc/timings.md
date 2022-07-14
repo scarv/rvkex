@@ -58,7 +58,7 @@
 | integer multiplication     | SW  + KA2 |        488   |        |
 | integer multiplication     | ISE + PS  |        177   |        |
 | integer multiplication     | ISE + KA1 |        211   |        |
-| Montgomery reduction       | SW  + PS  |        424   |        |
+| Montgomery reduction       | SW  + PS  |        419   |        |
 | Montgomery reduction       | ISE + PS  |        158   |        |
 | $\mathbb{F}_p$ addition    | SW        |        122   |        |
 | $\mathbb{F}_p$ addition    | ISE       |        108   |        |
@@ -78,12 +78,12 @@
 
 | Operation                             | Type                           | #Instruction | #Cycle |
 | :------------------------------------ | :----------------------------- | ------------:| ------:|
-| $\mathbb{F}_{p^2}$ multiplication     | SW  + KA2 (mul) + CP (add)     |       2688   |        |
-| $\mathbb{F}_{p^2}$ multiplication     | SW  + KA2 (mul) + NP (add)     |       2640   |        |
+| $\mathbb{F}_{p^2}$ multiplication     | SW  + KA2 (mul) + CP (add)     |       2678   |        |
+| $\mathbb{F}_{p^2}$ multiplication     | SW  + KA2 (mul) + NP (add)     |       2630   |        |
 | $\mathbb{F}_{p^2}$ multiplication     | ISE + PS  (mul) + CP (add)     |       1194   |        |
 | $\mathbb{F}_{p^2}$ multiplication     | ISE + PS  (mul) + NP (add)     |       1160   |        |
-| $\mathbb{F}_{p^2}$ squaring           | SW  + KA2 (mul) + CP (add)     |       2129   |        |
-| $\mathbb{F}_{p^2}$ squaring           | SW  + KA2 (mul) + NP (add)     |       2057   |        |
+| $\mathbb{F}_{p^2}$ squaring           | SW  + KA2 (mul) + CP (add)     |       2119   |        |
+| $\mathbb{F}_{p^2}$ squaring           | SW  + KA2 (mul) + NP (add)     |       2071   |        |
 | $\mathbb{F}_{p^2}$ squaring           | ISE + PS  (mul) + CP (add)     |        954   |        |
 | $\mathbb{F}_{p^2}$ squaring           | ISE + PS  (mul) + NP (add)     |        903   |        |
 | $\mathbb{F}_{p^2}$ addition           | SW                             |        256   |        |
@@ -95,62 +95,72 @@
 
 | Operation                             | Type                           | #Instruction | #Cycle |
 | :------------------------------------ | :----------------------------- | ------------:| ------:|
-| point doubling (xDBL)                 | SW  + CP (add/sub)             |      15642   |        |
-| point doubling (xDBL)                 | SW  + NP (add) + CP (sub)      |      15258   |        |
-| point doubling (xDBL)                 | SW  + NP (add/sub)             |      15194   |        |
+| point doubling (xDBL)                 | SW  + CP (add/sub)             |      15582   |        |
+| point doubling (xDBL)                 | SW  + NP (add) + CP (sub)      |      15198   |        |
+| point doubling (xDBL)                 | SW  + NP (add/sub)             |      15134   |        |
 | point doubling (xDBL)                 | ISE + CP (add/sub)             |       7260   |        |
 | point doubling (xDBL)                 | ISE + NP (add) + CP (sub)      |       6988   |        |
 | point doubling (xDBL)                 | ISE + NP (add/sub)             |       6952   |        |
-| point tripling (xTPL)                 | SW  + CP (add/sub)             |      31224   |        |
-| point tripling (xTPL)                 | SW  + NP (add) + CP (sub)      |      30504   |        |
-| point tripling (xTPL)                 | SW  + NP (add/sub)             |      30408   |        |
+| point tripling (xTPL)                 | SW  + CP (add/sub)             |      31104   |        |
+| point tripling (xTPL)                 | SW  + NP (add) + CP (sub)      |      30384   |        |
+| point tripling (xTPL)                 | SW  + NP (add/sub)             |      30288   |        |
 | point tripling (xTPL)                 | ISE + CP (add/sub)             |      14723   |        |
 | point tripling (xTPL)                 | ISE + NP (add) + CP (sub)      |      14213   |        |
 | point tripling (xTPL)                 | ISE + NP (add/sub)             |      14159   |        |
-| 4-isogeny generation (get_4_isog)     | SW  + CP (add/sub)             |       9250   |        |
-| 4-isogeny generation (get_4_isog)     | SW  + NP (add) + CP (sub)      |       8914   |        |
+| 4-isogeny generation (get_4_isog)     | SW  + CP (add/sub)             |       9210   |        |
+| 4-isogeny generation (get_4_isog)     | SW  + NP (add) + CP (sub)      |       8874   |        |
+| 4-isogeny generation (get_4_isog)     | SW  + NP (add/sub)             |       8794   |        |
 | 4-isogeny generation (get_4_isog)     | ISE + CP (add/sub)             |       4480   |        |
 | 4-isogeny generation (get_4_isog)     | ISE + NP (add) + CP (sub)      |       4242   |        |
-| 4-isogeny evaluation (eval_4_isog)    | SW  + CP (add/sub)             |      21313   |        |
-| 4-isogeny evaluation (eval_4_isog)    | SW  + NP (add) + CP (sub)      |      20785   |        |
+| 4-isogeny generation (get_4_isog)     | ISE + NP (add/sub)             |       4190   |        |
+| 4-isogeny evaluation (eval_4_isog)    | SW  + CP (add/sub)             |      21233   |        |
+| 4-isogeny evaluation (eval_4_isog)    | SW  + NP (add) + CP (sub)      |      20705   |        |
+| 4-isogeny evaluation (eval_4_isog)    | ISE + NP (add/sub)             |      20609   |        |
 | 4-isogeny evaluation (eval_4_isog)    | ISE + CP (add/sub)             |       9915   |        |
 | 4-isogeny evaluation (eval_4_isog)    | ISE + NP (add) + CP (sub)      |       9541   |        |
-| 3-isogeny generation (get_3_isog)     | SW  + CP (add/sub)             |      13517   |        |
-| 3-isogeny generation (get_3_isog)     | SW  + NP (add) + CP (sub)      |      12989   |        |
+| 4-isogeny evaluation (eval_4_isog)    | ISE + NP (add/sub)             |       9487   |        |
+| 3-isogeny generation (get_3_isog)     | SW  + CP (add/sub)             |      13467   |        |
+| 3-isogeny generation (get_3_isog)     | SW  + NP (add) + CP (sub)      |      12939   |        |
+| 3-isogeny generation (get_3_isog)     | SW  + NP (add/sub)             |      12811   |        |
 | 3-isogeny generation (get_3_isog)     | ISE + CP (add/sub)             |       6822   |        |
 | 3-isogeny generation (get_3_isog)     | ISE + NP (add) + CP (sub)      |       6448   |        |
-| 3-isogeny evaluation (eval_3_isog)    | SW  + CP (add/sub)             |      15633   |        |
-| 3-isogeny evaluation (eval_3_isog)    | SW  + NP (add) + CP (sub)      |      15249   |        |
+| 3-isogeny generation (get_3_isog)     | ISE + NP (add/sub)             |       6362   |        |
+| 3-isogeny evaluation (eval_3_isog)    | SW  + CP (add/sub)             |      15573   |        |
+| 3-isogeny evaluation (eval_3_isog)    | SW  + NP (add) + CP (sub)      |      15189   |        |
+| 3-isogeny evaluation (eval_3_isog)    | SW  + NP (add/sub)             |      15125   |        |
 | 3-isogeny evaluation (eval_3_isog)    | ISE + CP (add/sub)             |       7251   |        |
 | 3-isogeny evaluation (eval_3_isog)    | ISE + NP (add) + CP (sub)      |       6979   |        |
-| Montgomery ladder step (xDBLADD)      | SW  + CP (add/sub)             |      28576   |        |
-| Montgomery ladder step (xDBLADD)      | SW  + NP (add) + CP (sub)      |      27856   |        |
+| 3-isogeny evaluation (eval_3_isog)    | ISE + NP (add/sub)             |       6943   |        |
+| Montgomery ladder step (xDBLADD)      | SW  + CP (add/sub)             |      28466   |        |
+| Montgomery ladder step (xDBLADD)      | SW  + NP (add) + CP (sub)      |      27746   |        |
+| Montgomery ladder step (xDBLADD)      | SW  + NP (add/sub)             |      27618   |        |
 | Montgomery ladder step (xDBLADD)      | ISE + CP (add/sub)             |      13306   |        |
 | Montgomery ladder step (xDBLADD)      | ISE + NP (add) + CP (sub)      |      12796   |        |
+| Montgomery ladder step (xDBLADD)      | ISE + NP (add/sub)             |      12724   |        |
 
 ### SIDH key exchange
 
 | Operation                                     | Type      | #Instruction | #Cycle |
 | :-------------------------------------------- | :---------| ------------:| ------:|
-| Alice keygen    (EphemeralKeyGeneration_A)    | SW        |   32,961,200 |        |
-| Alice keygen    (EphemeralKeyGeneration_A)    | ISE       |   15,158,127 |        |
-| Bob   keygen    (EphemeralKeyGeneration_B)    | SW        |   36,749,214 |        |
-| Bob   keygen    (EphemeralKeyGeneration_B)    | ISE       |   17,042,274 |        |
-| Alice sharedsec (EphemeralSecretAgreement_A)  | SW        |   26,749,381 |        |
-| Alice sharedsec (EphemeralSecretAgreement_A)  | ISE       |   12,275,659 |        |
-| Bob   sharedsec (EphemeralSecretAgreement_B)  | SW        |   31,004,132 |        |
-| Bob   sharedsec (EphemeralSecretAgreement_B)  | ISE       |   14,382,436 |        |
+| Alice keygen    (EphemeralKeyGeneration_A)    | SW        |   32,831,920 |        |
+| Alice keygen    (EphemeralKeyGeneration_A)    | ISE       |   15,073,599 |        |
+| Bob   keygen    (EphemeralKeyGeneration_B)    | SW        |   36,604,454 |        |
+| Bob   keygen    (EphemeralKeyGeneration_B)    | ISE       |   16,956,512 |        |
+| Alice sharedsec (EphemeralSecretAgreement_A)  | SW        |   26,643,301 |        |
+| Alice sharedsec (EphemeralSecretAgreement_A)  | ISE       |   12,208,627 |        |
+| Bob   sharedsec (EphemeralSecretAgreement_B)  | SW        |   31,881,312 |        |
+| Bob   sharedsec (EphemeralSecretAgreement_B)  | ISE       |   14,311,470 |        |
 
 ### SIKE key encapsulation
 
 | Operation              | Type       | #Instruction | #Cycle |
 | :----------------------| :--------- | ------------:| ------:|
-| Key Generation         | SW         |   36,826,227 |        |
-| Key Generation         | ISE        |   17,119,287 |        |
-| Encaplustaion          | SW         |   59,810,344 |        |
-| Encaplustaion          | ISE        |   27,533,549 |        |
-| Decaplustaion          | SW         |   64,029,374 |        |
-| Decaplustaion          | ISE        |   29,604,605 |        |
+| Key Generation         | SW         |   36,616,660 |        |
+| Key Generation         | ISE        |   16,968,718 |        |
+| Encaplustaion          | SW         |   59,542,579 |        |
+| Encaplustaion          | ISE        |   27,349,584 |        |
+| Decaplustaion          | SW         |   63,777,274 |        |
+| Decaplustaion          | ISE        |   29,449,111 |        |
 
 ---
 
@@ -160,3 +170,4 @@
 | :------------------------- | :-------- | ------------:| ------:|
 | integer multiplication     | SW  + PS  |        414   |        |
 | integer multiplication     | SW  + KA1 |        530   |        |
+| Montgomery reduction       | SW  + PS  |        296   |        |

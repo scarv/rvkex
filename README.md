@@ -72,13 +72,14 @@
   make sikep434_r
   ```
 
+- Build and run the KAT test for SIKE 
+  ```sh 
+  make sikep434_r_kat
+  ```
+
 - Switch different modes in the source code in `config.h`
   - enable debug mode `#define DEBUG 1` 
   - use ISE `#define ISE 1` 
-
-## TODO 
-
-- add KAT test for SIKE
 
 ## References and links
 

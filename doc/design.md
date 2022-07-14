@@ -75,7 +75,7 @@
 
 ## Discussion
 
-- `full-radix` still outperms `reduced-radix` for the pure-software implementation in in-order processor; however, `reduced-radix` seems to be more efficient for ISE-assisted implementation; this needs implementations and experiments to verify.
+- It seems `redeced-radix` is more efficient than `full-radix` on RISC-V, because there is no carry flag. But this needs implementations and experiments to verify.
 
 - Design integer `multiply-add` instructions for `reduced-radix`:
   - integer `multiply-add` should take the offset into account. 

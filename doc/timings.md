@@ -47,6 +47,31 @@
 
 ---
 
+## X25519 radix-$2^{64}$ implementation
+
+### $\mathbb{F}_p$ arithmetic
+
+| Operation                      | Type                    | #Instruction | #Cycle |
+| :----------------------------- | :---------------------- | ------------:| ------:|
+| $\mathbb{F}_p$ multiplication  | SW  + PS                |        191   |        |
+| $\mathbb{F}_p$ squaring        | SW  + PS                |        179   |        |
+| $\mathbb{F}_p$ mul64           | SW  + PS                |         46   |        |
+| $\mathbb{F}_p$ addition        | SW                      |         50   |        |
+
+### Montgomery curve arithmetic
+
+| Operation                      | Type                    | #Instruction | #Cycle |
+| :----------------------------- | :---------------------- | ------------:| ------:|
+| Montgomery ladder step         | SW                      |       2133   |        |
+
+### Variable-base scalar multiplication
+
+| Operation                      | Type                    | #Instruction | #Cycle |
+| :----------------------------- | :---------------------- | ------------:| ------:|
+| scalar multiplication          | SW                      |     611,248  |        |
+
+---
+
 ## SIKEp434 radix-$2^{56}$ implementation
 
 ### $\mathbb{F}_p$ arithmetic

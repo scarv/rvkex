@@ -9,7 +9,7 @@
 // carry propagation for reduced-radix
 .macro sraadd                rd, rs1, rs2, imm            //                  => 1iii iiir rrrr rrrr r001 rrrr r101 1011
 .insn r  CUSTOM_2, 1, \imm+( 1*64), \rd, \rs1, \rs2       //                  => #define MATCH_SRAADD   0x8000105B
-.endm  
+.endm                                                     //                  => #define  MASK_SRAADD   0x8000707F
 
 
 +=====================+======================+==========+=====================+=========+=============+
@@ -27,7 +27,7 @@
 .endm                                                     //                  => #define  MASK_MACC51LO 0x0600707F
 .macro macc51hi              rd, rs1, rs2, rs3            //                  => rrrr r01r rrrr rrrr r000 rrrr r101 1011
 .insn r4 CUSTOM_2, 0,      ( 1* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MACC51HI 0x0200005B
-.endm
+.endm                                                     //                  => #define  MASK_MACC51HI 0x0600707F
 
 
 +=====================+======================+==========+=====================+=========+=============+
@@ -45,4 +45,4 @@
 .endm                                                     //                  => #define  MASK_MACC51LO 0x0600707F
 .macro macc56hi              rd, rs1, rs2, rs3            //                  => rrrr r11r rrrr rrrr r000 rrrr r101 1011
 .insn r4 CUSTOM_2, 0,      ( 3* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MACC51HI 0x0600005B
-.endm  
+.endm                                                     //                  => #define  MASK_MACC51HI 0x0600707F

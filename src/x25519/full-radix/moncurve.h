@@ -14,6 +14,4 @@ typedef struct projective_point {
 void mon_ladder_step(ProPoint *p, ProPoint *q, const uint64_t *xd);
 void mon_mul_varbase(uint64_t *r, const uint64_t *k, const uint64_t *x);
 
-void mon_ladder_step_v1(ProPoint *p, ProPoint *q, const uint64_t *xd);
-
 #endif 

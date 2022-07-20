@@ -1,9 +1,12 @@
 #!/bin/bash
 
-source ${REPO_HOME}/toolchain/share.sh
+source ${REPO_HOME}/sw-toolchain/share.sh
 
 # ------------------------------------------------------------------------------
 
 cd ${SPIKE_REPO}
-git diff --cached > ${SPIKE_PATCH}
+if [ -s ${SPIKE_PATCH} ] ; then
+  git apply ${SPIKE_PATCH}
+  git add --all
+fi
 cd ${REPO_HOME}

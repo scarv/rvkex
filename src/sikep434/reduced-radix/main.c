@@ -1,5 +1,4 @@
 #include "share.h"
-#include "config.h"
 #include "rdtsc.h"
 #include "fp.h"
 #include "fpx.h"
@@ -74,6 +73,7 @@ void test_fp()
   puts("\n**************************************************************************");
   puts("FP ARITH:\n");
 
+#if RV64_TYPE1
   printf("- mp mul v0 sw:");
 
   LOAD_CACHE(mp_mul_v0_sw(z56, a56, b56), 100);
@@ -121,7 +121,7 @@ void test_fp()
   mpi64_print("  r  = 0x", z64, 7*2);
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
 #endif 
-
+#elif RV64_TYPE2
   printf("- mp mul v0 ise:");
 
   LOAD_CACHE(mp_mul_v0_ise(z56, a56, b56), 100);
@@ -153,11 +153,12 @@ void test_fp()
   mpi64_print("  r  = 0x", z64, 7*2);
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
 #endif 
-
+#endif
   puts("");
 
   // ---------------------------------------------------------------------------
 
+#if RV64_TYPE1
   printf("- rdc mont v0 sw:");
 
   mp_mul_v2_sw(z56, a56, b56);
@@ -175,7 +176,7 @@ void test_fp()
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);
 #endif 
-
+#elif RV64_TYPE2
   printf("- rdc mont v0 ise:");
 
   mp_mul_v0_ise(z56, a56, b56);
@@ -193,11 +194,12 @@ void test_fp()
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);
 #endif 
-
+#endif
   puts("");
 
   // ---------------------------------------------------------------------------
 
+#if RV64_TYPE1
   printf("- fp add v0 sw:");
 
   LOAD_CACHE(fpadd_v0_sw(r56, a56, b56), 100);
@@ -219,7 +221,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);  
 #endif 
-
+#elif RV64_TYPE2
   printf("- fp add v0 ise:");
 
   LOAD_CACHE(fpadd_v0_ise(r56, a56, b56), 100);
@@ -241,15 +243,17 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);  
 #endif 
+#endif
 
   puts("");
 
   // ---------------------------------------------------------------------------
 
+#if RV64_TYPE1
   printf("- mp sub p2 v0 sw:");
 
-  LOAD_CACHE(mp_sub_p2_v0(r56, a56, b56), 100);
-  MEASURE_CYCLES(mp_sub_p2_v0(r56, a56, b56), 1000);
+  LOAD_CACHE(mp_sub_p2_v0_sw(r56, a56, b56), 100);
+  MEASURE_CYCLES(mp_sub_p2_v0_sw(r56, a56, b56), 1000);
   printf("    #inst = %lld\n", diff_cycles);
 
 #if DEBUG
@@ -275,7 +279,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
-
+#elif RV64_TYPE2
   printf("- mp sub p2 v0 ise:");
 
   LOAD_CACHE(mp_sub_p2_v0_ise(r56, a56, b56), 100);
@@ -290,7 +294,9 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
+#endif
 
+#if RV64_TYPE1
   printf("- mp sub p4 v0 sw:");
 
   LOAD_CACHE(mp_sub_p4_v0_sw(r56, a56, b56), 100);
@@ -305,7 +311,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
-
+#elif RV64_TYPE2
   printf("- mp sub p4 v0 ise:");
 
   LOAD_CACHE(mp_sub_p4_v0_ise(r56, a56, b56), 100);
@@ -320,7 +326,9 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
+#endif 
 
+#if RV64_TYPE1
   printf("- fp sub v0 sw:");
 
   LOAD_CACHE(fpsub_v0_sw(r56, a56, b56), 100);
@@ -335,7 +343,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);
 #endif 
-
+#elif RV64_TYPE2
   printf("- fp sub v0 ise:");
 
   LOAD_CACHE(fpsub_v0_ise(r56, a56, b56), 100);
@@ -350,11 +358,12 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif 
-
+#endif
   puts("");
 
   // ---------------------------------------------------------------------------
 
+#if RV64_TYPE1
   printf("- fp crt v0 sw:");
 
   memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
@@ -371,7 +380,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
-
+#elif RV64_TYPE2
   printf("- fp crt v0 ise:");
 
   memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
@@ -388,11 +397,13 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
+#endif
 
   puts("");
 
   // ---------------------------------------------------------------------------
 
+#if RV64_TYPE1
   printf("- fp neg v0 sw:");
 
   LOAD_CACHE(fpneg_v0_sw(r56), 100);
@@ -409,7 +420,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
-
+#elif RV64_TYPE2
   printf("- fp neg v0 ise:");
 
   memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
@@ -428,11 +439,13 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
+#endif
 
   puts("");
 
   // ---------------------------------------------------------------------------
 
+#if RV64_TYPE1
   printf("- fp div2 v0 sw:");
 
   LOAD_CACHE(fpdiv2_v0_sw(r56, a56), 100);
@@ -447,7 +460,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
-
+#elif RV64_TYPE2
   printf("- fp div2 v0 ise:");
 
   LOAD_CACHE(fpdiv2_v0_ise(r56, a56), 100);
@@ -461,6 +474,7 @@ void test_fp()
   mpi_conv_56to64(r64, r56);
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
 #endif
 
   puts("**************************************************************************\n");

@@ -1,5 +1,4 @@
 #include "share.h"
-#include "config.h"
 #include "rdtsc.h"
 #include "gfparith.h"
 #include "moncurve.h"

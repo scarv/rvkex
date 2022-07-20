@@ -9,19 +9,27 @@ endif
 
 # ------------------------------------------------------------------------------
 
-work_dir ?= ${REPO_HOME}/work
+export WORK_DIR ?= ${REPO_HOME}/work/${ALG}_${RADIX}
 
-x25519_f:
-	${MAKE} -C ${REPO_HOME}/src/x25519/full-radix       		 work_dir=${work_dir}/x25519_f
+export ALG      ?= x25519
+export RADIX    ?= reduced
 
-x25519_r:
-	${MAKE} -C ${REPO_HOME}/src/x25519/reduced-radix    		 work_dir=${work_dir}/x25519_r
+export TYPE     ?= RV64_TYPE1
+export MODE     ?= 
+# ------------------------------------------------------------------------------
 
-sikep434_f:
-	${MAKE} -C ${REPO_HOME}/src/sike/sikep434/full-radix     work_dir=${work_dir}/sikep434_f
+sw-toolchain-build :
+	@make --directory="${REPO_HOME}/sw-toolchain" clone 
+	@make --directory="${REPO_HOME}/sw-toolchain" apply 
+	@make --directory="${REPO_HOME}/sw-toolchain" build
+sw-toolchain-clean :
+	@make --directory="${REPO_HOME}/sw-toolchain" clean
 
-sikep434_r:
-	${MAKE} -C ${REPO_HOME}/src/sike/sikep434/reduced-radix  work_dir=${work_dir}/sikep434_r
+sw-run:
+	@make --directory="${REPO_HOME}/src/${ALG}/${RADIX}-radix" all
 
-sikep434_r_kat:
-	${MAKE} kat -C ${REPO_HOME}/src/sike/sikep434/reduced-radix  work_dir=${work_dir}/sikep434_r_kat
+sw-kat:
+	@make --directory="${REPO_HOME}/src/${ALG}/${RADIX}-radix" kat
+
+sw-clean:
+	@make --directory="${REPO_HOME}/src/${ALG}/${RADIX}-radix" clean

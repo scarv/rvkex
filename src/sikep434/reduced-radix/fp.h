@@ -2,7 +2,6 @@
 #define _FP_H
 
 #include "share.h"
-#include "config.h"
 
 // pure-software prototypes
 void mp_mul_v0_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
@@ -22,6 +21,7 @@ void mp_add_v1_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_dblsub_v0_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_subadd_v0_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
 
+#if RV64_TYPE2
 // ISE-assisted prototypes
 void mp_mul_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_mul_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
@@ -35,8 +35,9 @@ void fpneg_v0_ise(uint64_t *r);
 void fpdiv2_v0_ise(uint64_t *r, const uint64_t *a);
 void mp_add_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_subadd_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
+#endif
 
-#if ISE
+#if RV64_TYPE2
 // single-version operations
 #define mp_mul        mp_mul_v0_ise
 #define rdc_mont      rdc_mont_v0_ise
@@ -52,7 +53,7 @@ void mp_subadd_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 #define mp_add_v1     mp_add_v1_sw
 #define mp_sub_p2_v0  mp_sub_p2_v0_ise
 #define mp_sub_p2_v1  mp_sub_p2_v1_sw
-#else
+#elif RV64_TYPE1
 // single-version operations
 #define mp_mul        mp_mul_v2_sw
 #define rdc_mont      rdc_mont_v0_sw

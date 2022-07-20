@@ -11,17 +11,17 @@ all: clone apply build
 
 define rule_clone
 $(strip ${1})-clone:
-	@$${REPO_HOME}/toolchain/$(strip ${1})-clone.sh
+	@$${REPO_HOME}/sw-toolchain/$(strip ${1})-clone.sh
 endef
 
 define rule_apply
 $(strip ${1})-apply:
-	@$${REPO_HOME}/toolchain/$(strip ${1})-apply.sh
+	@$${REPO_HOME}/sw-toolchain/$(strip ${1})-apply.sh
 endef
 
 define rule_build
 $(strip ${1})-build:
-	@$${REPO_HOME}/toolchain/$(strip ${1})-build.sh
+	@$${REPO_HOME}/sw-toolchain/$(strip ${1})-build.sh
 endef
 
 $(foreach COMPONENT,${COMPONENTS},$(eval $(call rule_clone, ${COMPONENT})))

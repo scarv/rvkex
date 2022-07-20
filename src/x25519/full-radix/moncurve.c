@@ -43,30 +43,6 @@ void mon_ladder_step(ProPoint *p, ProPoint *q, const uint64_t *xd)
   gfp_mul(q->z, tmp2, xd);
 }
 
-void mon_ladder_step_v1(ProPoint *p, ProPoint *q, const uint64_t *xd)
-{
-  uint64_t *tmp1 = p->y, *tmp2 = q->y;
-
-  gfp_add(tmp1, p->x, p->z);
-  gfp_sub(p->x, p->x, p->z);
-  gfp_add(tmp2, q->x, q->z);
-  gfp_sub(q->x, q->x, q->z);
-  gfp_sqr(p->z, tmp1);
-  // gfp_mul(q->z, tmp2, p->x);
-  // gfp_mul(tmp2, q->x, tmp1);
-  // gfp_sqr(tmp1, p->x);
-  // gfp_mul(p->x, p->z, tmp1);
-  // gfp_sub(tmp1, p->z, tmp1);
-  // gfp_mul64(q->x, tmp1, (CONSTA-2)/4);
-  // gfp_add(q->x, q->x, p->z);
-  // gfp_mul(p->z, q->x, tmp1);
-  // gfp_add(tmp1, tmp2, q->z);
-  // gfp_sqr(q->x, tmp1);
-  // gfp_sub(tmp1, tmp2, q->z);
-  // gfp_sqr(tmp2, tmp1);
-  // gfp_mul(q->z, tmp2, xd);
-}
-
 void mon_mul_varbase(uint64_t *r, const uint64_t *k, const uint64_t *x)
 {
   ProPoint p1, p2;

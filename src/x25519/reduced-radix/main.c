@@ -1,5 +1,4 @@
 #include "share.h"
-#include "config.h"
 #include "rdtsc.h"
 #include "gfparith.h"
 #include "moncurve.h"
@@ -35,25 +34,11 @@ void test_gfp_arith()
   puts("\n**************************************************************************");
   puts("SCALAR GFP ARITH:\n");
 
-  printf("- gfp mul sw:");
+  printf("- gfp mul:");
 
-  LOAD_CACHE(gfp_mul_sw(r51, a51, b51), 100);
-  MEASURE_CYCLES(gfp_mul_sw(r51, a51, b51), 1000);
-  printf("      #inst = %lld\n", diff_cycles);
-
-#if DEBUG
-  // r := 0x359FEE6106B5DA2E7C347321EADF6B4942C8F7E2CF08FC64095D7CA3B3328D77;
-  mpi51_carry_prop(r51);
-  mpi_conv_51to64(r64, r51);
-  mpi64_print("  r  = 0x", r64, 4);
-  memset(r51, 0, sizeof(uint64_t)*NLMB51);
-#endif 
-
-  printf("- gfp mul ise:");
-
-  LOAD_CACHE(gfp_mul_ise(r51, a51, b51), 100);
-  MEASURE_CYCLES(gfp_mul_ise(r51, a51, b51), 1000);
-  printf("     #inst = %lld\n", diff_cycles);
+  LOAD_CACHE(gfp_mul(r51, a51, b51), 100);
+  MEASURE_CYCLES(gfp_mul(r51, a51, b51), 1000);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x359FEE6106B5DA2E7C347321EADF6B4942C8F7E2CF08FC64095D7CA3B3328D77;
@@ -63,15 +48,13 @@ void test_gfp_arith()
   memset(r51, 0, sizeof(uint64_t)*NLMB51);
 #endif 
 
-  puts("");
-
   // ---------------------------------------------------------------------------
 
-  printf("- gfp sqr sw:");
+  printf("- gfp sqr:");
 
-  LOAD_CACHE(gfp_sqr_sw(r51, a51), 100);
-  MEASURE_CYCLES(gfp_sqr_sw(r51, a51), 1000);
-  printf("      #inst = %lld\n", diff_cycles);
+  LOAD_CACHE(gfp_sqr(r51, a51), 100);
+  MEASURE_CYCLES(gfp_sqr(r51, a51), 1000);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x72CC9B9B881D163356F62CB64EB19AF43B1FBDD115461FB51F494EEBDBDAA465;
@@ -81,29 +64,13 @@ void test_gfp_arith()
   memset(r51, 0, sizeof(uint64_t)*NLMB51);
 #endif 
 
-  printf("- gfp sqr ise:");
-
-  LOAD_CACHE(gfp_sqr_ise(r51, a51), 100);
-  MEASURE_CYCLES(gfp_sqr_ise(r51, a51), 1000);
-  printf("     #inst = %lld\n", diff_cycles);
-
-#if DEBUG
-  // r := 0x72CC9B9B881D163356F62CB64EB19AF43B1FBDD115461FB51F494EEBDBDAA465;
-  mpi51_carry_prop(r51);
-  mpi_conv_51to64(r64, r51);
-  mpi64_print("  r  = 0x", r64, 4);
-  memset(r51, 0, sizeof(uint64_t)*NLMB51);
-#endif 
-
-  puts("");
-
   // ---------------------------------------------------------------------------
 
-  printf("- gfp add sw:");
+  printf("- gfp add:");
 
-  LOAD_CACHE(gfp_add_sw(r51, a51, b51), 100);
-  MEASURE_CYCLES(gfp_add_sw(r51, a51, b51), 1000);
-  printf("      #inst = %lld\n", diff_cycles);
+  LOAD_CACHE(gfp_add(r51, a51, b51), 100);
+  MEASURE_CYCLES(gfp_add(r51, a51, b51), 1000);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0xACF13568ACF13568ACF13568ACF13568ACF13568ACF13568ACF13568ACF1356;
@@ -113,15 +80,13 @@ void test_gfp_arith()
   memset(r51, 0, sizeof(uint64_t)*NLMB51);
 #endif 
 
-  puts("");
-
   // ---------------------------------------------------------------------------
 
-  printf("- gfp sub sw:");
+  printf("- gfp sub:");
 
   LOAD_CACHE(gfp_sub_sw(r51, a51, b51), 100);
   MEASURE_CYCLES(gfp_sub_sw(r51, a51, b51), 1000);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0xF777777888888887777777788888888777777778888888877777777888888862;
@@ -131,28 +96,13 @@ void test_gfp_arith()
   memset(r51, 0, sizeof(uint64_t)*NLMB51);
 #endif 
 
-  puts("");
-
   // ---------------------------------------------------------------------------
 
-  printf("- gfp mul51 sw:");
+  printf("- gfp mul51:");
 
   LOAD_CACHE(gfp_mul51_sw(r51, a51, (CONSTA+2)/4), 100);
   MEASURE_CYCLES(gfp_mul51_sw(r51, a51, (CONSTA+2)/4), 1000);
-  printf("    #inst = %lld\n", diff_cycles);
-
-#if DEBUG
-  mpi51_carry_prop(r51);
-  mpi_conv_51to64(r64, r51);
-  mpi64_print("  r  = 0x", r64, 4);
-  memset(r51, 0, sizeof(uint64_t)*NLMB51);
-#endif 
-
-  printf("- gfp mul51 ise:");
-
-  LOAD_CACHE(gfp_mul51_ise(r51, a51, (CONSTA+2)/4), 100);
-  MEASURE_CYCLES(gfp_mul51_ise(r51, a51, (CONSTA+2)/4), 1000);
-  printf("   #inst = %lld\n", diff_cycles);
+  printf("       #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   mpi51_carry_prop(r51);

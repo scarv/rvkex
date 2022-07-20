@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ${REPO_HOME}/toolchain/share.sh
+source ${REPO_HOME}/sw-toolchain/share.sh
 
 # ------------------------------------------------------------------------------
 

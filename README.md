@@ -29,14 +29,13 @@
 ├── bin                       - scripts (e.g., environment configuration)
 ├── doc                       - documentation (e.g., encoding and design)
 ├── src                       - source code
-│   ├── sike                  - sike implementations
-│   │   └── sikep434              - sikep434 implementation
-│   │       ├── reduced-radix         - radix-2^56 implementation           
-│   │       └── full-radix            - radix-2^64 implementation 
-│   └────── x25519                - x25519 implementations
-│           ├── reduced-radix         - radix-2^51 implementation           
-│           └── full-radix            - radix-2^64 implementation
-├── toolchain                 - scripts to install RISC-V toolchains 
+│   ├── sikep434              - sikep434 implementation
+│   │   ├── reduced-radix         - radix-2^56 implementation           
+│   │   └── full-radix            - radix-2^64 implementation 
+│   └── x25519                - x25519 implementations
+│       ├── reduced-radix         - radix-2^51 implementation           
+│       └── full-radix            - radix-2^64 implementation
+├── sw-toolchain              - scripts to install RISC-V sw toolchains 
 └── work                      - working directory for build    
 ```
 
@@ -56,30 +55,26 @@
   source bin/conf.sh
   ```
 
-- Build the toolchain
+- Build the software toolchain
   ```sh
-  make -f toolchain/Makefile clone
-  make -f toolchain/Makefile apply 
-  make -f toolchain/Makefile build
+  make sw-toolchain-build  
   ```
 
-- Build and evaluate the (different) implementation (`f` means full-radix; `r` means reduced-radix)
+- Build and evaluate the (different) software 
 
   ```sh
-  make x25519_f
-  make x25519_r
-  make sikep434_f
-  make sikep434_r
+  make sw-run ALG=[x25519/sikep434] RADIX=[full/reduced] TYPE=RV64_TYPE[1/2]
   ```
 
-- Build and run the KAT test for SIKE 
+- Build and run the KAT test for SIKE (currently only available for reduced-radix sikep434)
   ```sh 
-  make sikep434_r_kat
+  make sw-kat ALG=sikep434 RADIX=reduced TYPE=RV64_TYPE[1/2]
   ```
 
-- Switch different modes in the source code in `config.h`
-  - enable debug mode `#define DEBUG 1` 
-  - use ISE `#define ISE 1` 
+- Enable the debug mode (add `MODE=debug`), e.g.,
+  ```sh
+  make sw-run ALG=x25519 RADIX=reduced TYPE=RV64_TYPE2 MODE=debug 
+  ```
 
 ## References and links
 

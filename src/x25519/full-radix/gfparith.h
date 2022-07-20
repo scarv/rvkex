@@ -2,7 +2,6 @@
 #define _GFPARITH_H
 
 #include "share.h"
-#include "config.h"
 
 void gfp_mul_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void gfp_sqr_sw(uint64_t *r, const uint64_t *a);

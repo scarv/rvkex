@@ -159,7 +159,7 @@ mp_sub_p2_v1_sw:
   EPILOGUE
 
 
-// modular negation
+// field negation
 
 .macro _SUBTRACT R, imm
   ld    A_, 8*\imm(a0)

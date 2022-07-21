@@ -272,10 +272,10 @@
   _ACCU_AIBJ_0  Z1, Z2, Z0
   mul   T0, A5, B5
   mulhu T1, A5, B5
-  _ACCU_AIBJ_0  Z1, Z2, Z0
+  _ACCU_AIBJ_1  Z1, Z2, Z0
   mul   T0, A6, B4
   mulhu T1, A6, B4
-  _ACCU_AIBJ_0  Z1, Z2, Z0
+  _ACCU_AIBJ_1  Z1, Z2, Z0
   sd    Z1, 80(a0)
 .endm
 
@@ -285,7 +285,7 @@
   _ACCU_AIBJ_0  Z2, Z0, Z1
   mul   T0, A6, B5
   mulhu T1, A6, B5
-  _ACCU_AIBJ_0  Z2, Z0, Z1
+  _ACCU_AIBJ_1  Z2, Z0, Z1
   sd    Z2, 88(a0)
 .endm
 

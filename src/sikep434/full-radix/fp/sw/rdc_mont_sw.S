@@ -226,7 +226,9 @@
 
 .macro COMPUTE_R5 
   ld    R_, 96(a1)
-  _ACCU_A   R_, Z0, Z1, Z2
+  add   R_, Z0, R_ 
+  sltu  T0, R_, Z0 
+  add   Z1, Z1, T0 
   mul   T0, A6, P6
   mulhu T1, A6, P6
   add   R_, R_, T0

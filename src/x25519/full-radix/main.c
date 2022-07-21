@@ -29,13 +29,13 @@ void test_gfp_arith()
   uint64_t r[NLMB64];
 
   puts("\n**************************************************************************");
-  puts("SCALAR GFP ARITH:\n");
+  puts("GFP ARITH:\n");
 
-  printf("- gfp mul sw:");
+  printf("- gfp mul:");
 
   LOAD_CACHE(gfp_mul_sw(r, a, b), 100);
   MEASURE_CYCLES(gfp_mul_sw(r, a, b), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x359FEE6106B5DA2E7C347321EADF6B4942C8F7E2CF08FC64095D7CA3B3328D77;
@@ -46,11 +46,11 @@ void test_gfp_arith()
   // ---------------------------------------------------------------------------
 
 
-  printf("- gfp sqr sw:");
+  printf("- gfp sqr:");
 
   LOAD_CACHE(gfp_sqr_sw(r, a), 100);
   MEASURE_CYCLES(gfp_sqr_sw(r, a), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x72CC9B9B881D163356F62CB64EB19AF43B1FBDD115461FB51F494EEBDBDAA465;
@@ -60,11 +60,11 @@ void test_gfp_arith()
 
   // ---------------------------------------------------------------------------
 
-  printf("- gfp mul64 sw:");
+  printf("- gfp mul64:");
 
   LOAD_CACHE(gfp_mul64_sw(r, a, (CONSTA+2)/4), 100);
   MEASURE_CYCLES(gfp_mul64_sw(r, a, (CONSTA+2)/4), 1000);
-  printf("     #inst = %lld\n", diff_cycles);
+  printf("       #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   mpi64_print("  r  = 0x", r, NLMB64);
@@ -73,11 +73,11 @@ void test_gfp_arith()
 
   // ---------------------------------------------------------------------------
 
-  printf("- gfp add sw:");
+  printf("- gfp add:");
 
   LOAD_CACHE(gfp_add_sw(r, a, b), 100);
   MEASURE_CYCLES(gfp_add_sw(r, a, b), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   mpi64_print("  r  = 0x", r, NLMB64);
@@ -86,11 +86,11 @@ void test_gfp_arith()
 
   // ---------------------------------------------------------------------------
 
-  printf("- gfp sub sw:");
+  printf("- gfp sub:");
 
   LOAD_CACHE(gfp_sub_sw(r, a, b), 100);
   MEASURE_CYCLES(gfp_sub_sw(r, a, b), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("         #inst = %lld\n", diff_cycles);
 
 #if DEBUG
   mpi64_print("  r  = 0x", r, NLMB64);
@@ -119,7 +119,7 @@ void test_curve_arith()
   uint64_t r[NLMB64];
 
   puts("\n**************************************************************************");
-  puts("SCALAR MONTGOMERY CURVE ARITH:\n");
+  puts("MONTGOMERY CURVE ARITH:\n");
 
   memcpy(p.x, xp, sizeof(uint64_t)*NLMB64);
   memcpy(p.z, zp, sizeof(uint64_t)*NLMB64);
@@ -141,9 +141,7 @@ void test_curve_arith()
   // z3 := 0x32C0C112720E8B7C9945DA6D5730D5D9CD118B8C76A5A8E7AB247B06822B993C
   // x2 := 0x470F51948095E1CFB7C4EACC0FE04898287A84039F2AAF6099301D3BB17EC40A
   // z2 := 0x6BC1BD72824403011C63885844A207D88F7470C8B423A1FA6DC7CA52785B2725
-  // for (i = 0; i < 4; i++)
-    mon_ladder_step(&p, &q, xd);
-  // mon_ladder_step_v1(&p, &q, xd);  
+  mon_ladder_step(&p, &q, xd); 
   mpi64_print("  x3 = 0x", q.x, 4);
   mpi64_print("  z3 = 0x", q.z, 4);
   mpi64_print("  x2 = 0x", p.x, 4);

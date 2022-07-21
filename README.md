@@ -14,10 +14,15 @@
 ## Implementations 
 
 - We plan to develop 4 types of implementation for each of pre-quantum X25519 [1] and post-quantum SIKE [2]:
-  - full-radix    pure-software  
-  - full-radix    ISE-assisted
-  - reduced-radix pure-software
-  - reduced-radix ISE-assisted 
+  - [x] reduced-radix pure-software  x25519
+  - [x] reduced-radix ISE-assisted   x25519
+  - [x] full-radix    pure-software  x25519
+  - [ ] full-radix    ISE-assisted   x25519
+  - [x] reduced-radix pure-software  sikep434
+  - [x] reduced-radix ISE-assisted   sikep434
+  - [x] full-radix    pure-software  sikep434
+  - [ ] full-radix    ISE-assisted   sikep434
+
 
   Furthermore, we plan to design several different ISEs and then discuss different trade-offs. 
 
@@ -30,13 +35,13 @@
 ├── doc                       - documentation (e.g., encoding and design)
 ├── src                       - source code
 │   ├── sikep434              - sikep434 implementation
-│   │   ├── reduced-radix         - radix-2^56 implementation           
-│   │   └── full-radix            - radix-2^64 implementation 
+│   │   ├── full-radix            - radix-2^64 implementation
+│   │   └── reduced-radix         - radix-2^56 implementation
 │   └── x25519                - x25519 implementations
-│       ├── reduced-radix         - radix-2^51 implementation           
-│       └── full-radix            - radix-2^64 implementation
+│       ├── full-radix            - radix-2^64 implementation
+│       └── reduced-radix         - radix-2^51 implementation
 ├── sw-toolchain              - scripts to install RISC-V sw toolchains 
-└── work                      - working directory for build    
+└── work                      - working directory for build
 ```
 
 ## Usage 
@@ -66,15 +71,19 @@
   make sw-run ALG=[x25519/sikep434] RADIX=[full/reduced] TYPE=RV64_TYPE[1/2]
   ```
 
-- Build and run the KAT test for SIKE (currently only available for reduced-radix sikep434)
+- Build and run the KAT test for SIKE 
   ```sh 
-  make sw-kat ALG=sikep434 RADIX=reduced TYPE=RV64_TYPE[1/2]
+  make sw-kat ALG=sikep434 RADIX=[full/reduced] TYPE=RV64_TYPE[1/2]
   ```
 
 - Enable the debug mode (add `MODE=debug`), e.g.,
   ```sh
   make sw-run ALG=x25519 RADIX=reduced TYPE=RV64_TYPE2 MODE=debug 
   ```
+
+## TODO 
+
+- further save `ld` instructions (regarding modulus) in field/integer subtraction/addition of sike
 
 ## References and links
 

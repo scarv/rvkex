@@ -32,7 +32,7 @@ void test_gfp_arith()
   mpi_conv_64to51(b51, b64);
 
   puts("\n**************************************************************************");
-  puts("SCALAR GFP ARITH:\n");
+  puts("GFP ARITH:\n");
 
   printf("- gfp mul:");
 
@@ -133,7 +133,7 @@ void test_curve_arith()
   uint64_t r64[NLMB51], xd51[NLMB51];
 
   puts("\n**************************************************************************");
-  puts("SCALAR MONTGOMERY CURVE ARITH:\n");
+  puts("MONTGOMERY CURVE ARITH:\n");
 
   mpi_conv_64to51(p.x, xp64);
   mpi_conv_64to51(p.z, zp64);

@@ -224,11 +224,8 @@ mp_mul_v1_sw:
   add   s10, s10, s2
   sltu  s1,  s10, s2
   or    s0,  s0,  s1
-  add   s11, s0,  s7
-  sltu  s0,  s11, s7
-  add   s11, s11, s3
-  sltu  s1,  s11, s3
-  add   t5,  s0,  s1
+  add   s11, s0,  s3
+  sltu  t5,  s11, s3
   // s0-s7 <- (AH+AL) * (BH+BL)
   MUL_4X4_PS s0, s1, s2, s3, s4, s5, s6, s7, t0, t1, t2, t3, s8, s9, s10, s11 
   // t0-t3 <- masked (AH + AL)
@@ -269,7 +266,7 @@ mp_mul_v1_sw:
   add   s6, s6, t0 
   sltu  t0, s6, t0 
   add   s6, s6, t2 
-  sltu  t1, s5, t2 
+  sltu  t1, s6, t2 
   add   t0, t0, t1
   add   s7, s7, t0 
   add   s7, s7, t3 

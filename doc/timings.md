@@ -195,7 +195,7 @@
 | Operation                  | Type      | #Instruction | #Cycle |
 | :------------------------- | :-------- | ------------:| ------:|
 | integer multiplication     | SW  + PS  |        417   |        |
-| integer multiplication     | SW  + KA1 |        530   |        |
+| integer multiplication     | SW  + KA1 |        527   |        |
 | Montgomery reduction       | SW  + PS  |        295   |        |
 | $\mathbb{F}_p$ addition    | SW        |        143   |        |
 | integer subtraction        | SW        |         95   |        |

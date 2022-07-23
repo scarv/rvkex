@@ -17,7 +17,7 @@ void fpneg_v0_sw(uint64_t *r);
 void fpdiv2_v0_sw(uint64_t *r, const uint64_t *a);
 void fpcorrection_v0_sw(uint64_t *r);
 
-#define mp_mul        mp_mul_v0_sw
+#define mp_mul        mp_mul_v1_sw
 #define rdc_mont      rdc_mont_v0_sw
 #define mp_subadd     mp_subadd_v0_sw
 #define mp_add        mp_add_v0_sw

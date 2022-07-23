@@ -33,3 +33,23 @@ sw-kat:
 
 sw-clean:
 	@make --directory="${REPO_HOME}/src/${ALG}/${RADIX}-radix" clean
+
+# -----------------------------------------------------------------------------
+
+hw-toolchain-build :
+	@make --directory="${REPO_HOME}/hw-toolchain" clone 
+	@make --directory="${REPO_HOME}/hw-toolchain" build
+hw-toolchain-clean :
+	@make --directory="${REPO_HOME}/hw-toolchain" clean
+
+hw-get-rocketchip :
+	@make --directory="${REPO_HOME}/src/hw" rocketchip-clone
+	@make --directory="${REPO_HOME}/src/hw" rocketchip-apply
+
+fpga-hw : 
+	@make --directory="${REPO_HOME}/src/hw" fpga-verilog
+	@make --directory="${REPO_HOME}/src/hw" bitstream
+
+fpga-run :
+#	@make --directory="${REPO_HOME}/src/hw" program-fpga
+	@make --directory="${REPO_HOME}/src/hw" fpga-swclean fpga-run	

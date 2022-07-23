@@ -34,8 +34,8 @@ void test_fp()
                           0x0003CDEF01234567ULL };
   uint64_t z[NLMB64*2], r[NLMB64];
 
-  puts("\n**************************************************************************");
-  puts("FP ARITH:\n");
+  printf("\n**************************************************************************\n");
+  printf("FP ARITH:\n");
 
   printf("- mp mul v0 sw:");
 
@@ -65,7 +65,7 @@ void test_fp()
   memset(z, 0, sizeof(uint64_t)*NLMB64*2);
 #endif
 
-  puts("");
+  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ void test_fp()
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif 
 
-  puts("");
+  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -115,7 +115,7 @@ void test_fp()
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif 
 
-  puts("");
+  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -158,7 +158,7 @@ void test_fp()
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif
 
-  puts("");
+  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -177,7 +177,7 @@ void test_fp()
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif
 
-  puts("");
+  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -194,7 +194,7 @@ void test_fp()
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif
 
-  puts("");
+  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -213,7 +213,7 @@ void test_fp()
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif
 
-  puts("**************************************************************************\n");
+  printf("**************************************************************************\n");
 }
 
 void test_fpx()
@@ -236,8 +236,8 @@ void test_fpx()
   memcpy(a[0], a64, sizeof(uint64_t)*NLMB64); 
   memcpy(a[1], b64, sizeof(uint64_t)*NLMB64); 
 
-  puts("\n**************************************************************************");
-  puts("FP2 ARITH:\n");
+  printf("\n**************************************************************************\n");
+  printf("FP2 ARITH:\n");
 
   printf("- fp2 mul:");
 
@@ -307,7 +307,7 @@ void test_fpx()
   memset(r, 0, sizeof(uint64_t)*NLMB64*2);
 #endif
 
-  puts("**************************************************************************\n");
+  printf("**************************************************************************\n");
 }
 
 void test_curve()
@@ -337,8 +337,8 @@ void test_curve()
   memcpy(&C24[0], mont_Rx4, sizeof(uint64_t)*NLMB64);         //    4
   memset(&C24[1],        0, sizeof(uint64_t)*NLMB64);         //    0
 
-  puts("\n**************************************************************************");
-  puts("MONTGOMERY CURVE ARITH:\n");
+  printf("\n**************************************************************************\n");
+  printf("MONTGOMERY CURVE ARITH:\n");
 
   printf("- xDBL:");
 
@@ -621,7 +621,7 @@ void test_curve()
   memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB64);
 #endif
 
-  puts("**************************************************************************\n");
+  printf("**************************************************************************\n");
 }
 
 void test_sidh()
@@ -633,8 +633,8 @@ void test_sidh()
   unsigned char skB[SECRETKEY_B_BYTES], pkB[CRYPTO_PUBLICKEYBYTES];
   unsigned char ssA[FP2_ENCODED_BYTES], ssB[FP2_ENCODED_BYTES];
 
-  puts("\n**************************************************************************");
-  puts("SIDH KEY EXCHANGE:\n");
+  printf("\n**************************************************************************\n");
+  printf("SIDH KEY EXCHANGE:\n");
 
   randombytes(skA, SECRETKEY_A_BYTES);
   randombytes(skB, SECRETKEY_B_BYTES);
@@ -664,22 +664,22 @@ void test_sidh()
   printf("   #inst = %lld\n", diff_cycles);
 
 #if DEBUG 
-  puts("\nSKA: ");
+  printf("\nSKA: ");
   for (i = 0; i < SECRETKEY_A_BYTES; i++) printf("%02X", skA[i]);
-  puts("\nSKB: ");
+  printf("\nSKB: ");
   for (i = 0; i < SECRETKEY_B_BYTES; i++) printf("%02X", skB[i]);
-  puts("\nPKA: ");
+  printf("\nPKA: ");
   for (i = 0; i < CRYPTO_PUBLICKEYBYTES; i++) printf("%02X", pkA[i]);
-  puts("\nPKB: ");
+  printf("\nPKB: ");
   for (i = 0; i < CRYPTO_PUBLICKEYBYTES; i++) printf("%02X", pkB[i]);
-  puts("\nSSA: ");
+  printf("\nSSA: ");
   for (i = 0; i < FP2_ENCODED_BYTES; i++) printf("%02X", ssA[i]);
-  puts("\nSSB: ");
+  printf("\nSSB: ");
   for (i = 0; i < FP2_ENCODED_BYTES; i++) printf("%02X", ssB[i]);
-  puts("\n");
+  printf("\n");
 #endif
 
-  puts("**************************************************************************\n");
+  printf("**************************************************************************\n");
 }
 
 void test_sike()
@@ -693,8 +693,8 @@ void test_sike()
   unsigned char ss[CRYPTO_BYTES] = { 0 };
   unsigned char ss_[CRYPTO_BYTES] = { 0 };
 
-  puts("\n**************************************************************************");
-  puts("SIKE KEY ENCAPSULATION:\n");
+  printf("\n**************************************************************************\n");
+  printf("SIKE KEY ENCAPSULATION:\n");
 
   crypto_kem_keypair(pk, sk);
   crypto_kem_enc(ct, ss, pk);
@@ -726,14 +726,14 @@ void test_sike()
   printf("             #inst = %lld\n", diff_cycles);
 
 #if DEBUG 
-  puts("\nSSA: ");
+  printf("\nSSA: ");
   for (i = 0; i < CRYPTO_BYTES; i++) printf("%02X", ss[i]);
-  puts("\nSSB: ");
+  printf("\nSSB: ");
   for (i = 0; i < CRYPTO_BYTES; i++) printf("%02X", ss_[i]);
-  puts("");
+  printf("");
 #endif 
 
-  puts("**************************************************************************\n");
+  printf("**************************************************************************\n");
 }
 
 int main()

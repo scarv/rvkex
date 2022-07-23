@@ -12,7 +12,7 @@
 #define LSLP51 0x7FFFFFFFFFFEDULL       // least significant limb of modulus p 
 
 // auxiliary functions
-void rand_bytes(void *x, int n);
+void rand_bytes(uint8_t *x, int n);
 void mpi64_print(const char *c, const uint64_t *a, int len);
 void mpi51_carry_prop(uint64_t *a);
 void mpi_conv_64to51(uint64_t *r, const uint64_t *a);

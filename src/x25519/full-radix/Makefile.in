@@ -1,0 +1,12 @@
+
+SRCS  = gfparith/sw/*.S main.c share.c rdtsc.c gfparith.c moncurve.c
+
+ifeq ($(TYPE), RV64_TYPE2)
+	SRCS += gfparith/ise/*.S
+endif
+
+ifeq ($(MODE), debug)
+	CCFLAGS += -DDEBUG
+endif
+
+

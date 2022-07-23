@@ -28,8 +28,8 @@ void test_gfp_arith()
                          0x89ABCDEF01234567ULL, 0x09ABCDEF01234567ULL, };
   uint64_t r[NLMB64];
 
-  puts("\n**************************************************************************");
-  puts("GFP ARITH:\n");
+  printf("\n**************************************************************************\n");
+  printf("GFP ARITH:\n");
 
   printf("- gfp mul:");
 
@@ -97,7 +97,7 @@ void test_gfp_arith()
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif
 
-  puts("**************************************************************************\n");
+  printf("**************************************************************************\n");
 }
 
 void test_curve_arith()
@@ -118,8 +118,8 @@ void test_curve_arith()
   ProPoint p, q;
   uint64_t r[NLMB64];
 
-  puts("\n**************************************************************************");
-  puts("MONTGOMERY CURVE ARITH:\n");
+  printf("\n**************************************************************************\n");
+  printf("MONTGOMERY CURVE ARITH:\n");
 
   memcpy(p.x, xp, sizeof(uint64_t)*NLMB64);
   memcpy(p.z, zp, sizeof(uint64_t)*NLMB64);
@@ -148,7 +148,7 @@ void test_curve_arith()
   mpi64_print("  z2 = 0x", p.z, 4);
 #endif 
 
-  puts("");
+  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -168,13 +168,13 @@ void test_curve_arith()
   mpi64_print("  R  = 0x", r, 4);
 #endif  
 
-  puts("**************************************************************************\n");
+  printf("**************************************************************************\n");
 }
 
 void test_ecdh()
 {
-  puts("\n**************************************************************************");
-  puts("ECDH CORRECTNESS TEST:");
+  printf("\n**************************************************************************\n");
+  printf("ECDH CORRECTNESS TEST:\n");
 
   // RFC7748 test vectors
   static uint32_t RFC7748_A[8] = { 
@@ -189,27 +189,27 @@ void test_ecdh()
   static union tvec base_pt = { 9 };
   int wrong = 0;
 
-  puts("--------------------------------------------------------------------------");
-  puts("X25519: (Alice <---> Bob, RFC7748 test vectors)");
+  printf("--------------------------------------------------------------------------\n");
+  printf("X25519: (Alice <---> Bob, RFC7748 test vectors)\n");
 
   memcpy(sk_a.t64, RFC7748_A, 32);
   memcpy(sk_b.t64, RFC7748_B, 32);
 
-  puts("\n- Private key:");
+  printf("\n- Private key:\n");
   mpi64_print("  Alice: ", sk_a.t64, 4);
   mpi64_print("  Bob  : ", sk_b.t64, 4);
 
   mon_mul_varbase(pk_a.t64, sk_a.t64, base_pt.t64);
   mon_mul_varbase(pk_b.t64, sk_b.t64, base_pt.t64);
 
-  puts("\n- Public key:");
+  printf("\n- Public key:\n");
   mpi64_print("  Alice: ", pk_a.t64, 4);
   mpi64_print("  Bob  : ", pk_b.t64, 4);
 
   mon_mul_varbase(ss_a.t64, sk_a.t64, pk_b.t64);
   mon_mul_varbase(ss_b.t64, sk_b.t64, pk_a.t64);
 
-  puts("\n- Shared secret:");
+  printf("\n- Shared secret:\n");
   mpi64_print("  Alice: ", ss_a.t64, 4);
   mpi64_print("  Bob  : ", ss_b.t64, 4);
 
@@ -220,29 +220,29 @@ void test_ecdh()
   if (wrong == 0) printf("\x1b[32m EQUAL!\x1b[0m\n");
   else            printf("\x1b[31m NOT EQUAL!\x1b[0m\n");
 
-  puts("");
+  printf("");
 
   // ---------------------------------------------------------------------------
-  puts("X25519: (Carol <---> Dave, random test vectors)");
+  printf("X25519: (Carol <---> Dave, random test vectors)\n");
 
   rand_bytes(sk_a.t64, 32);
   rand_bytes(sk_b.t64, 32);
 
-  puts("\n- Private key:");
+  printf("\n- Private key:\n");
   mpi64_print("  Carol: ", sk_a.t64, 4);
   mpi64_print("  Dave : ", sk_b.t64, 4);
 
   mon_mul_varbase(pk_a.t64, sk_a.t64, base_pt.t64);
   mon_mul_varbase(pk_b.t64, sk_b.t64, base_pt.t64);
 
-  puts("\n- Public key:");
+  printf("\n- Public key:\n");
   mpi64_print("  Carol: ", pk_a.t64, 4);
   mpi64_print("  Dave : ", pk_b.t64, 4);
 
   mon_mul_varbase(ss_a.t64, sk_a.t64, pk_b.t64);
   mon_mul_varbase(ss_b.t64, sk_b.t64, pk_a.t64);
 
-  puts("\n- Shared secret:");
+  printf("\n- Shared secret:\n");
   mpi64_print("  Carol: ", ss_a.t64, 4);
   mpi64_print("  Dave : ", ss_b.t64, 4);
 
@@ -253,7 +253,7 @@ void test_ecdh()
   if (wrong == 0) printf("\x1b[32m EQUAL!\x1b[0m\n");
   else            printf("\x1b[31m NOT EQUAL!\x1b[0m\n");
 
-  puts("**************************************************************************\n");
+  printf("**************************************************************************\n");
 }
 
 int main()

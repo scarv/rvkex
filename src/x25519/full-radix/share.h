@@ -10,7 +10,7 @@
 #define NLMB64 4                        // the limb number when using radix-51
 
 // auxiliary functions
-void rand_bytes(void *x, int n);
+void rand_bytes(uint8_t *x, int n);
 void mpi64_print(const char *c, const uint64_t *a, int len);
 
 #endif

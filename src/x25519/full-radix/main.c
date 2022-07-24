@@ -33,8 +33,8 @@ void test_gfp_arith()
 
   printf("- gfp mul:");
 
-  LOAD_CACHE(gfp_mul_sw(r, a, b), 100);
-  MEASURE_CYCLES(gfp_mul_sw(r, a, b), 1000);
+  LOAD_CACHE(gfp_mul(r, a, b), 100);
+  MEASURE_CYCLES(gfp_mul(r, a, b), 1000);
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
@@ -48,8 +48,8 @@ void test_gfp_arith()
 
   printf("- gfp sqr:");
 
-  LOAD_CACHE(gfp_sqr_sw(r, a), 100);
-  MEASURE_CYCLES(gfp_sqr_sw(r, a), 1000);
+  LOAD_CACHE(gfp_sqr(r, a), 100);
+  MEASURE_CYCLES(gfp_sqr(r, a), 1000);
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
@@ -62,8 +62,8 @@ void test_gfp_arith()
 
   printf("- gfp mul64:");
 
-  LOAD_CACHE(gfp_mul64_sw(r, a, (CONSTA+2)/4), 100);
-  MEASURE_CYCLES(gfp_mul64_sw(r, a, (CONSTA+2)/4), 1000);
+  LOAD_CACHE(gfp_mul64(r, a, (CONSTA+2)/4), 100);
+  MEASURE_CYCLES(gfp_mul64(r, a, (CONSTA+2)/4), 1000);
   printf("       #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
@@ -75,8 +75,8 @@ void test_gfp_arith()
 
   printf("- gfp add:");
 
-  LOAD_CACHE(gfp_add_sw(r, a, b), 100);
-  MEASURE_CYCLES(gfp_add_sw(r, a, b), 1000);
+  LOAD_CACHE(gfp_add(r, a, b), 100);
+  MEASURE_CYCLES(gfp_add(r, a, b), 1000);
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
@@ -88,8 +88,8 @@ void test_gfp_arith()
 
   printf("- gfp sub:");
 
-  LOAD_CACHE(gfp_sub_sw(r, a, b), 100);
-  MEASURE_CYCLES(gfp_sub_sw(r, a, b), 1000);
+  LOAD_CACHE(gfp_sub(r, a, b), 100);
+  MEASURE_CYCLES(gfp_sub(r, a, b), 1000);
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG

@@ -6,16 +6,16 @@
 
 | Mnemonic            | Type                         | Meaning                                                          |
 | :------------------ | :--------------------------- | :----------------------------------------------------------------|
-| `X25519_TYPE1`      | pure-software, radix-$2^{51}$  | select RISC-V base ISA:          option 1, per description below |
-| `X25519_TYPE2`      | ISE-assisted, radix-$2^{51}$   | select RISC-V base ISA plus ISE: option 2, per description below |
-| `SIKE_TYPE1`        | pure-software, radix-$2^{56}$  | select RISC-V base ISA:          option 1, per description below |
-| `SIKE_TYPE2`        | ISE-assisted, radix-$2^{56}$   | select RISC-V base ISA plus ISE: option 3, per description below |
+| `RV64_RDCD_TYPE1`   | pure-software, reduced-radix | select RISC-V base ISA:          option 1, per description below |
+| `RV64_RDCD_TYPE2`   | ISE-assisted, reduced-radix  | select RISC-V base ISA plus ISE: option 2, per description below |
+| `RV64_FULL_TYPE1`   | pure-software, full-radix    | select RISC-V base ISA:          option 1, per description below |
+| `RV64_FULL_TYPE2`   | ISE-assisted, full-radix     | select RISC-V base ISA plus ISE: option 3, per description below |
 
 ## Details 
 
-- `X25519_TYPE1` and `SIKE_TYPE1`: base ISA. 
+- `RV64_RDCD_TYPE1` and `RV64_FULL_TYPE1`: base ISA. 
 
-- `X25519_TYPE2`: base ISA plus ISE. 
+- `RV64_RDCD_TYPE2`: base ISA plus ISE. 
 
 ```
   sraadd   rd, rs1, rs2, imm {
@@ -42,17 +42,6 @@
     r       <- (((x * y) >> 51) & m) + z 
     GPR[rd] <- r
   }
-```
-
-- `SIKE_TYPE2`: base ISA plus ISE. 
-
-```
-  sraadd   rd, rs1, rs2, imm {
-    x       <- GPR[rs1]
-    y       <- GPR[rs2]
-    r       <- x + EXTS(y >> imm)
-    GPR[rd] <- r
-  }
 
   macc56lo rd, rs1, rs2, rs3 {
     x       <- GPR[rs1]
@@ -73,9 +62,29 @@
   }
 ```
 
-## Discussion
+- `RV64_FULL_TYPE2`: base ISA plus ISE. 
 
-- It seems `redeced-radix` is more efficient than `full-radix` on RISC-V, because there is no carry flag. But this needs implementations and experiments to verify.
+```
+  macclo   rd, rs1, rs2, rs3 {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+    z       <- GPR[rs3]
+    m       <- (1 << 64) - 1
+    r       <- ( (x * y)        & m) + z 
+    GPR[rd] <- r
+  }
+
+  macchi   rd, rs1, rs2, rs3 {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+    z       <- GPR[rs3]
+    m       <- (1 << 64) - 1
+    r       <- (((x * y) >> 64) & m) + z 
+    GPR[rd] <- r
+  }
+```
+
+## Discussion
 
 - Design integer `multiply-add` instructions for `reduced-radix`:
   - integer `multiply-add` should take the offset into account. 

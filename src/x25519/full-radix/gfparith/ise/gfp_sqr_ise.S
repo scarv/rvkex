@@ -1,5 +1,8 @@
-// void gfp_sqr_sw(uint64_t *r, const uint64_t *a);
+// void gfp_sqr_ise(uint64_t *r, const uint64_t *a);
 // radix-2^64
+
+
+#include "ise.h"
 
 
 // registers 
@@ -67,13 +70,14 @@
 
 // integer squaring (based on product-scanning)
 
-.macro _ACCU_AIAJ  L, M, H
-  add   \L, \L, T0
-  sltu  T0, \L, T0
-  add   T1, T1, T0
-  add   \M, \M, T1
-  sltu  T1, \M, T1
-  add   \H, \H, T1
+// accu: H M L -> H M T 
+.macro _ACCU_AIAJ   L, M, H, T, A, B 
+  macclo \T, \A, \B, \L
+  sltu   \L, \T, \L
+  macchi \L, \A, \B, \L                 // no carry-out
+  add    \M, \M, \L
+  sltu   \L, \M, \L
+  add    \H, \H, \L
 .endm
 
 .macro COMPUTE_R0
@@ -108,8 +112,8 @@
   slli  T1, T1,  1
   or    T1, T1, T3
 
-  add   R2, R2, T0 
-  sltu  T0, R2, T0
+  add   T3, R2, T0 
+  sltu  T0, T3, T0
 
   add   R3, R3, T0 
   sltu  T0, R3, T0 
@@ -118,22 +122,18 @@
   or    R4, T0, T1
   
   add   R4, R4, T2
-  mul   T0, A1, A1
-  mulhu T1, A1, A1
-  _ACCU_AIAJ    R2, R3, R4
+  _ACCU_AIAJ    T3, R3, R4, R2, A1, A1
 .endm
 
 .macro COMPUTE_R3 
-  mul   T0, A0, A3 
-  mulhu T1, A0, A3
-  mul   T2, A1, A2 
-  mulhu T3, A1, A2
+  mul   T2, A0, A3 
+  mulhu T3, A0, A3
 
-  add   T0, T0, T2 
-  sltu  T2, T0, T2 
-  add   T1, T1, T2 
-  add   T1, T1, T3 
-  sltu  T2, T1, T3
+  macclo T0, A1, A2, T2
+  sltu   T1, T0, T2 
+  macchi T1, A1, A2, T1
+  add    T1, T1, T3 
+  sltu   T2, T1, T3
 
   srli  T3, T0, 63 
   slli  T0, T0,  1
@@ -163,8 +163,8 @@
   slli  T1, T1,  1
   or    T1, T1, T3
 
-  add   R4, R4, T0 
-  sltu  T0, R4, T0
+  add   T3, R4, T0 
+  sltu  T0, T3, T0
   add   R5, R5, T0 
   sltu  T0, R5, T0 
   add   R5, R5, T1 
@@ -174,7 +174,7 @@
 
   mul   T0, A2, A2
   mulhu T1, A2, A2
-  _ACCU_AIAJ    R4, R5, R6
+  _ACCU_AIAJ    T3, R5, R6, R4, A2, A2
 .endm
 
 .macro COMPUTE_R5 
@@ -191,79 +191,69 @@
   sltu  T0, R5, T0 
   add   R6, R6, T0 
   sltu  T0, R6, T0 
-  add   R6, R6, T1
-  sltu  T1, R6, T1 
-  or    R7, T1, T0
+  add   T1, R6, T1
+  sltu  R6, T1, R6 
+  or    R7, R6, T0
   add   R7, R7, T2 
 .endm
 
 .macro COMPUTE_R6
-  mul   T0, A3, A3
-  mulhu T1, A3, A3
-  add   R6, R6, T0
-  sltu  T0, R6, T0
-  add   T1, T1, T0
+  macclo R6, A3, A3, T1
+  sltu   T1, R6, T1 
+  macchi R7, A3, A3, R7
 .endm
 
-.macro COMPUTE_R7
-  add   R7, R7, T1
+.macro COMPUTE_R7 
+  add    R7, R7, T1
 .endm
 
 // reduction A0-A4 = R0-R3 + 38*(R4-R7)
 
-.macro REDUCTION 
-  li    M0, 38
-  mul   T0, R4, M0
-  mulhu T1, R4, M0
-  add   A0, R0, T0
-  sltu  T0, A0, T0
-  add   A1, T1, T0
+.macro REDUCTION
+  li     M0, 38 
 
-  mul   T0, R5, M0
-  mulhu T1, R5, M0
-  add   A1, A1, T0 
-  sltu  T0, A1, T0 
-  add   A2, T1, T0
-  add   A1, A1, R1 
-  sltu  T0, A1, R1 
-  add   A2, A2, T0
+  macclo A0, R4, M0, R0
+  sltu   T0, A0, R0
+  macchi A1, R4, M0, T0                 // no carry-out
 
-  mul   T0, R6, M0 
-  mulhu T1, R6, M0 
-  add   A2, A2, T0 
-  sltu  T0, A2, T0
-  add   A3, T0, T1
-  add   A2, A2, R2 
-  sltu  T0, A2, R2 
-  add   A3, A3, T0 
+  macclo T0, R5, M0, A1 
+  sltu   T1, T0, A1 
+  macchi A2, R5, M0, T1                 // no carry-out
+  add    A1, T0, R1 
+  sltu   T0, A1, T0 
+  add    A2, A2, T0
 
-  mul   T0, R7, M0 
-  mulhu T1, R7, M0 
-  add   A3, A3, T0 
-  sltu  T0, A3, T0 
-  add   A4, T0, T1
-  add   A3, A3, R3 
-  sltu  T0, A3, R3 
-  add   A4, A4, T0 
+  macclo T0, R6, M0, A2 
+  sltu   T1, T0, A2 
+  macchi A3, R6, M0, T1                 // no carry-out
+  add    A2, T0, R2 
+  sltu   T0, A2, T0 
+  add    A3, A3, T0  
+ 
+  macclo T0, R7, M0, A3 
+  sltu   T1, T0, A3 
+  macchi A4, R7, M0, T1                 // no carry-out
+  add    A3, T0, R3 
+  sltu   T0, A3, T0 
+  add    A4, A4, T0 
 .endm
 
 // final reduction 
 
 .macro FINAL_REDC
-  slli  R3, A3, 1
-  srli  R3, R3, 1 
-  srli  A3, A3, 63
-  slli  A4, A4, 1
-  or    A3, A3, A4 
-  li    M0, 19
-  mul   T0, A3, M0
-  add   R0, A0, T0 
-  sltu  R1, R0, T0 
-  add   R1, R1, A1 
-  sltu  R2, R1, A1 
-  add   R2, R2, A2 
-  sltu  T0, R2, A2 
-  add   R3, R3, T0 
+  slli   R3, A3, 1
+  srli   R3, R3, 1 
+  srli   A3, A3, 63
+  slli   A4, A4, 1
+  or     A3, A3, A4 
+  li     M0, 19
+  macclo R0, A3, M0, A0
+  sltu   R1, R0, A0 
+  add    R1, R1, A1 
+  sltu   R2, R1, A1 
+  add    R2, R2, A2 
+  sltu   T0, R2, A2 
+  add    R3, R3, T0 
 .endm
 
 
@@ -271,9 +261,9 @@
 
 .section .text
 
-.global gfp_sqr_sw
+.global gfp_sqr_ise
 
-gfp_sqr_sw:
+gfp_sqr_ise:
   PROLOGUE
   LOAD_A
   COMPUTE_R0

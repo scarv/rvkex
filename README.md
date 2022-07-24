@@ -17,7 +17,7 @@
   - [x] reduced-radix pure-software  x25519
   - [x] reduced-radix ISE-assisted   x25519
   - [x] full-radix    pure-software  x25519
-  - [ ] full-radix    ISE-assisted   x25519
+  - [x] full-radix    ISE-assisted   x25519
   - [x] reduced-radix pure-software  sikep434
   - [x] reduced-radix ISE-assisted   sikep434
   - [x] full-radix    pure-software  sikep434

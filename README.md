@@ -21,7 +21,7 @@
   - [x] reduced-radix pure-software  sikep434
   - [x] reduced-radix ISE-assisted   sikep434
   - [x] full-radix    pure-software  sikep434
-  - [ ] full-radix    ISE-assisted   sikep434
+  - [x] full-radix    ISE-assisted   sikep434
 
 
   Furthermore, we plan to design several different ISEs and then discuss different trade-offs. 

@@ -37,6 +37,7 @@ void test_fp()
   printf("\n**************************************************************************\n");
   printf("FP ARITH:\n");
 
+#if RV64_TYPE1
   printf("- mp mul v0 sw:");
 
   LOAD_CACHE(mp_mul_v0_sw(z, a, b), 100);
@@ -64,11 +65,27 @@ void test_fp()
   mpi64_print("  r  = 0x", z, NLMB64*2);
   memset(z, 0, sizeof(uint64_t)*NLMB64*2);
 #endif
+#elif RV64_TYPE2
+  printf("- mp mul v0 ise:");
+
+  LOAD_CACHE(mp_mul_v0_ise(z, a, b), 100);
+  MEASURE_CYCLES(mp_mul_v0_ise(z, a, b), 1000);
+  printf("      #cycle = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0xC71D855A44CD3BEDA4E7F8313B9FA5AA82B26B0832720F67607CDDDF294479243E4750B62016E\
+          2E11C11C38D16E94C9DF9DC36640DBB99F02F53956C58E4B033518922956212467673BEAFBE6B3F\
+          DCB995F43CE7746D72FCB829CA107D9B093FDA5F573986C89F82FC94E4629;
+  mpi64_print("  r  = 0x", z, NLMB64*2);
+  memset(z, 0, sizeof(uint64_t)*NLMB64*2);
+#endif
+#endif
 
   printf("");
 
   // ---------------------------------------------------------------------------
 
+#if RV64_TYPE1
   printf("- rdc mont v0 sw:");
 
   mp_mul_v0_sw(z, a, b);
@@ -84,6 +101,23 @@ void test_fp()
   memset(z, 0, sizeof(uint64_t)*NLMB64*2);
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif 
+#elif RV64_TYPE2
+  printf("- rdc mont v0 ise:");
+
+  mp_mul_v0_sw(z, a, b);
+
+  LOAD_CACHE(rdc_mont_v0_ise(r, z), 100);
+  MEASURE_CYCLES(rdc_mont_v0_ise(r, z), 1000);
+  printf("    #cycle = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x147173547FF63D0B52AB864DF1D570AF09061B91AC6FE5B8A6CCE68DD6D2D6BFF0C770842C494\
+          08C8AF46BF03037800688DADCB8D60EF;
+  mpi64_print("  r  = 0x", r, NLMB64);
+  memset(z, 0, sizeof(uint64_t)*NLMB64*2);
+  memset(r, 0, sizeof(uint64_t)*NLMB64);
+#endif 
+#endif
 
   printf("");
 

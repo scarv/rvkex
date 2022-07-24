@@ -229,27 +229,21 @@
   add   A1, A1, R1 
   sltu  T0, A1, R1 
   add   A2, A2, T0
-  sltu  A3, A2, T0
 
   mul   T0, R6, M0 
   mulhu T1, R6, M0 
   add   A2, A2, T0 
   sltu  T0, A2, T0
-  add   T1, T0, T1 
-  add   A3, A3, T1
-  sltu  A4, A3, T1
+  add   A3, T0, T1
   add   A2, A2, R2 
   sltu  T0, A2, R2 
   add   A3, A3, T0 
-  sltu  T0, A3, T0 
-  add   A4, A4, T0
 
   mul   T0, R7, M0 
   mulhu T1, R7, M0 
   add   A3, A3, T0 
   sltu  T0, A3, T0 
-  add   T1, T1, T0 
-  add   A4, A4, T1 
+  add   A4, T0, T1
   add   A3, A3, R3 
   sltu  T0, A3, R3 
   add   A4, A4, T0 

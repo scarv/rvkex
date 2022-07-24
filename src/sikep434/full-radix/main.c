@@ -41,7 +41,7 @@ void test_fp()
 
   LOAD_CACHE(mp_mul_v0_sw(z, a, b), 100);
   MEASURE_CYCLES(mp_mul_v0_sw(z, a, b), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("       #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0xC71D855A44CD3BEDA4E7F8313B9FA5AA82B26B0832720F67607CDDDF294479243E4750B62016E\
@@ -55,7 +55,7 @@ void test_fp()
 
   LOAD_CACHE(mp_mul_v1_sw(z, a, b), 100);
   MEASURE_CYCLES(mp_mul_v1_sw(z, a, b), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("       #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0xC71D855A44CD3BEDA4E7F8313B9FA5AA82B26B0832720F67607CDDDF294479243E4750B62016E\
@@ -75,7 +75,7 @@ void test_fp()
 
   LOAD_CACHE(rdc_mont_v0_sw(r, z), 100);
   MEASURE_CYCLES(rdc_mont_v0_sw(r, z), 1000);
-  printf("     #inst = %lld\n", diff_cycles);
+  printf("     #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x147173547FF63D0B52AB864DF1D570AF09061B91AC6FE5B8A6CCE68DD6D2D6BFF0C770842C494\
@@ -93,7 +93,7 @@ void test_fp()
 
   LOAD_CACHE(mp_add_v0_sw(r, a, b), 100);
   MEASURE_CYCLES(mp_add_v0_sw(r, a, b), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("       #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x713568ACF13568ACF13568ACF13568ACF13568ACF13568ACF13568ACF13568ACF13568ACF1356\
@@ -106,7 +106,7 @@ void test_fp()
 
   LOAD_CACHE(fpadd_v0_sw(r, a, b), 100);
   MEASURE_CYCLES(fpadd_v0_sw(r, a, b), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("       #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x2AB183CA02CCDB0D653A98744D2A993425A66281DB60E8F4C2660C4CF13568ACF13568ACF1356\
@@ -123,7 +123,7 @@ void test_fp()
 
   LOAD_CACHE(mp_sub_p2_v0_sw(r, a, b), 100);
   MEASURE_CYCLES(mp_sub_p2_v0_sw(r, a, b), 1000);
-  printf("    #inst = %lld\n", diff_cycles);
+  printf("    #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x3DFB6D6B76F10517037258C12C9346F043068EB39E5CF72FA646E4E8888877777777888888887\
@@ -136,7 +136,7 @@ void test_fp()
 
   LOAD_CACHE(mp_sub_p4_v0_sw(r, a, b), 100);
   MEASURE_CYCLES(mp_sub_p4_v0_sw(r, a, b), 1000);
-  printf("    #inst = %lld\n", diff_cycles);
+  printf("    #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x847F524E655992B68F6D28F9D09E16690E9594DEB43176E7D5164148888877777777888888887\
@@ -149,7 +149,7 @@ void test_fp()
 
   LOAD_CACHE(fpsub_v0_sw(r, a, b), 100);
   MEASURE_CYCLES(fpsub_v0_sw(r, a, b), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("       #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x3DFB6D6B76F10517037258C12C9346F043068EB39E5CF72FA646E4E8888877777777888888887\
@@ -166,7 +166,7 @@ void test_fp()
 
   LOAD_CACHE(fpneg_v0_sw(r), 100);
   MEASURE_CYCLES(fpneg_v0_sw(r), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("       #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x122D6C4831899D8D57A4579DE72BDF6697388D9058F58FA5FA78E3C543210FEDCBA9876543210\
@@ -185,7 +185,7 @@ void test_fp()
 
   LOAD_CACHE(fpdiv2_v0_sw(r, a), 100);
   MEASURE_CYCLES(fpdiv2_v0_sw(r, a), 1000);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("      #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x2BCC35861A099B70FD29F05B87722BE74D0EFDD823E497F725DF13655E6F78091A2B3C4D5E6F7\
@@ -204,7 +204,7 @@ void test_fp()
 
   LOAD_CACHE(fpcorrection_v0_sw(r), 100);
   MEASURE_CYCLES(fpcorrection_v0_sw(r), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("       #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x1114862945AAA9426E59107E6AD98855CE8EF58531F4B0361CEECA6ABCDEF0123456789ABCDEF\
@@ -243,7 +243,7 @@ void test_fpx()
 
   LOAD_CACHE(fp2mul_mont(r, a, a), 10);
   MEASURE_CYCLES(fp2mul_mont(r, a, a), 100);
-  printf("            #inst = %lld\n", diff_cycles);
+  printf("            #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r0 = 0x3306B70C7878F4FC445701989C949D34730CD77D27EB6133F6DB088FED9FA1E7A18F5515\
@@ -261,7 +261,7 @@ void test_fpx()
 
   LOAD_CACHE(fp2sqr_mont(r, a), 10);
   MEASURE_CYCLES(fp2sqr_mont(r, a), 100);
-  printf("            #inst = %lld\n", diff_cycles);
+  printf("            #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r0 = 0x3306B70C7878F4FC445701989C949D34730CD77D27EB6133F6DB088FED9FA1E7A18F5515\
@@ -279,7 +279,7 @@ void test_fpx()
 
   LOAD_CACHE(fp2add(r, a, a), 10);
   MEASURE_CYCLES(fp2add(r, a, a), 100);
-  printf("            #inst = %lld\n", diff_cycles);
+  printf("            #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r0 = 0x22290C528B555284DCB220FCD5B310AB9D1DEB0A63E9606C39DD94D579BDE02468ACF13579BDE\
@@ -297,7 +297,7 @@ void test_fpx()
 
   LOAD_CACHE(fp2sub(r, a, a), 10);
   MEASURE_CYCLES(fp2sub(r, a, a), 100);
-  printf("            #inst = %lld\n", diff_cycles);
+  printf("            #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r0 = 0;
@@ -344,7 +344,7 @@ void test_curve()
 
   LOAD_CACHE(xDBL(&P, &Q, A24plus, C24), 10);
   MEASURE_CYCLES(xDBL(&P, &Q, A24plus, C24), 100);
-  printf("               #inst = %lld\n", diff_cycles);
+  printf("               #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // XQ0 = 0x1DF58B543C8AD438BF85AFB581109D9A9A5F01854AC9BC0324C1D8623B473C0CF70800C3714AF\
@@ -371,7 +371,7 @@ void test_curve()
 
   LOAD_CACHE(xTPL(&P, &Q, A24minus, A24plus), 10);
   MEASURE_CYCLES(xTPL(&P, &Q, A24minus, A24plus), 100);
-  printf("               #inst = %lld\n", diff_cycles);   
+  printf("               #cycle = %lld\n", diff_cycles);   
 
 #if DEBUG
   // XQ0 = 0x416C62092E5919D21AE4E1D0B30C117ACD21EF38B18F934708A2215C8EE7A30D59BBC6E\
@@ -398,7 +398,7 @@ void test_curve()
 
   LOAD_CACHE(get_4_isog(&P, A24plus, C24, coeff), 10);
   MEASURE_CYCLES(get_4_isog(&P, A24plus, C24, coeff), 100);
-  printf("         #inst = %lld\n", diff_cycles);
+  printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // A240 = 0x157E17F7452FEEE28513F3FC0D094E5804553AEE4985E4E14B4210744D6E56A0ED9F19\
@@ -449,7 +449,7 @@ void test_curve()
 
   LOAD_CACHE(eval_4_isog(&P, coeff), 10);
   MEASURE_CYCLES(eval_4_isog(&P, coeff), 100);
-  printf("        #inst = %lld\n", diff_cycles);
+  printf("        #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // XP0 = 0x20304752113CC184F1CE286BDBB0BBBB3F435AA82D79B69F4EC6B8FCBDAC0769D733DAB\
@@ -489,7 +489,7 @@ void test_curve()
 
   LOAD_CACHE(get_3_isog(&P, A24minus, A24plus, coeff), 10);
   MEASURE_CYCLES(get_3_isog(&P, A24minus, A24plus, coeff), 100);
-  printf("         #inst = %lld\n", diff_cycles);
+  printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // A-0 = 0x2C9C49309B1B27908BFF5C8F119286846FA4AA36315417B0AD4F79EEEC228AC2EE2566D\
@@ -532,7 +532,7 @@ void test_curve()
 
   LOAD_CACHE(eval_3_isog(&P, coeff), 10);
   MEASURE_CYCLES(eval_3_isog(&P, coeff), 100);
-  printf("        #inst = %lld\n", diff_cycles);
+  printf("        #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // XP0 = 0x3CEEE165BC12A5171255A6E87BA6D231F4DC09DC71FEA67416B4B7822E097272A217E4E\
@@ -566,7 +566,7 @@ void test_curve()
 
   LOAD_CACHE(xDBLADD(&P, &Q, XPQ, ZPQ, A24), 10);
   MEASURE_CYCLES(xDBLADD(&P, &Q, XPQ, ZPQ, A24), 100);
-  printf("            #inst = %lld\n", diff_cycles);
+  printf("            #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // XP0 = 0x191E5C0DCABCD87612E01FFB8946DB44D97B81EC18278EEED4E44D308ED1CF033DC2003\
@@ -643,25 +643,25 @@ void test_sidh()
 
   LOAD_CACHE(EphemeralKeyGeneration_A(skA, pkA), 1);
   MEASURE_CYCLES(EphemeralKeyGeneration_A(skA, pkA), 1);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("      #cycle = %lld\n", diff_cycles);
 
   printf("- Bob   key gen:");
 
   LOAD_CACHE(EphemeralKeyGeneration_B(skB, pkB), 1);
   MEASURE_CYCLES(EphemeralKeyGeneration_B(skB, pkB), 1);
-  printf("      #inst = %lld\n", diff_cycles);
+  printf("      #cycle = %lld\n", diff_cycles);
 
   printf("- Alice shared sec:");
 
   LOAD_CACHE(EphemeralSecretAgreement_A(skA, pkB, ssA), 1);
   MEASURE_CYCLES(EphemeralSecretAgreement_A(skA, pkB, ssA), 1);
-  printf("   #inst = %lld\n", diff_cycles);
+  printf("   #cycle = %lld\n", diff_cycles);
 
   printf("- Bob   shared sec:");
 
   LOAD_CACHE(EphemeralSecretAgreement_B(skB, pkA, ssB), 1);
   MEASURE_CYCLES(EphemeralSecretAgreement_B(skB, pkA, ssB), 1);
-  printf("   #inst = %lld\n", diff_cycles);
+  printf("   #cycle = %lld\n", diff_cycles);
 
 #if DEBUG 
   printf("\nSKA: ");
@@ -711,19 +711,19 @@ void test_sike()
 
   LOAD_CACHE(crypto_kem_keypair(pk, sk), 1);
   MEASURE_CYCLES(crypto_kem_keypair(pk, sk), 1);
-  printf("             #inst = %lld\n", diff_cycles);
+  printf("             #cycle = %lld\n", diff_cycles);
 
   printf("- Encaps:");
 
   LOAD_CACHE(crypto_kem_enc(ct, ss, pk), 1);
   MEASURE_CYCLES(crypto_kem_enc(ct, ss, pk), 1);
-  printf("             #inst = %lld\n", diff_cycles);
+  printf("             #cycle = %lld\n", diff_cycles);
 
   printf("- Decaps:");
 
   LOAD_CACHE(crypto_kem_dec(ss_, ct, sk), 1);
   MEASURE_CYCLES(crypto_kem_dec(ss_, ct, sk), 1);
-  printf("             #inst = %lld\n", diff_cycles);
+  printf("             #cycle = %lld\n", diff_cycles);
 
 #if DEBUG 
   printf("\nSSA: ");

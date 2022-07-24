@@ -35,7 +35,7 @@ void test_gfp_arith()
 
   LOAD_CACHE(gfp_mul_sw(r, a, b), 100);
   MEASURE_CYCLES(gfp_mul_sw(r, a, b), 1000);
-  printf("         #inst = %lld\n", diff_cycles);
+  printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x359FEE6106B5DA2E7C347321EADF6B4942C8F7E2CF08FC64095D7CA3B3328D77;
@@ -50,7 +50,7 @@ void test_gfp_arith()
 
   LOAD_CACHE(gfp_sqr_sw(r, a), 100);
   MEASURE_CYCLES(gfp_sqr_sw(r, a), 1000);
-  printf("         #inst = %lld\n", diff_cycles);
+  printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // r := 0x72CC9B9B881D163356F62CB64EB19AF43B1FBDD115461FB51F494EEBDBDAA465;
@@ -64,7 +64,7 @@ void test_gfp_arith()
 
   LOAD_CACHE(gfp_mul64_sw(r, a, (CONSTA+2)/4), 100);
   MEASURE_CYCLES(gfp_mul64_sw(r, a, (CONSTA+2)/4), 1000);
-  printf("       #inst = %lld\n", diff_cycles);
+  printf("       #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   mpi64_print("  r  = 0x", r, NLMB64);
@@ -77,7 +77,7 @@ void test_gfp_arith()
 
   LOAD_CACHE(gfp_add_sw(r, a, b), 100);
   MEASURE_CYCLES(gfp_add_sw(r, a, b), 1000);
-  printf("         #inst = %lld\n", diff_cycles);
+  printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   mpi64_print("  r  = 0x", r, NLMB64);
@@ -90,7 +90,7 @@ void test_gfp_arith()
 
   LOAD_CACHE(gfp_sub_sw(r, a, b), 100);
   MEASURE_CYCLES(gfp_sub_sw(r, a, b), 1000);
-  printf("         #inst = %lld\n", diff_cycles);
+  printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   mpi64_print("  r  = 0x", r, NLMB64);
@@ -130,7 +130,7 @@ void test_curve_arith()
 
   LOAD_CACHE(mon_ladder_step(&p, &q, xd), 10);
   MEASURE_CYCLES(mon_ladder_step(&p, &q, xd), 100);
-  printf(" #inst = %lld\n", diff_cycles);
+  printf(" #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   memcpy(p.x, xp, sizeof(uint64_t)*NLMB64);
@@ -161,7 +161,7 @@ void test_curve_arith()
 
   LOAD_CACHE(mon_mul_varbase(r, k, x), 10);
   MEASURE_CYCLES(mon_mul_varbase(r, k, x), 50);
-  printf(" #inst = %lld\n", diff_cycles);
+  printf(" #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
   // R := 0x5285A2775507B454F7711C4903CFEC324F088DF24DEA948E90C6E99D3755DAC3;
@@ -220,13 +220,13 @@ void test_ecdh()
   if (wrong == 0) printf("\x1b[32m EQUAL!\x1b[0m\n");
   else            printf("\x1b[31m NOT EQUAL!\x1b[0m\n");
 
-  printf("");
+  printf("\n");
 
   // ---------------------------------------------------------------------------
   printf("X25519: (Carol <---> Dave, random test vectors)\n");
 
-  rand_bytes(sk_a.t64, 32);
-  rand_bytes(sk_b.t64, 32);
+  rand_bytes((uint8_t *)sk_a.t64, 32);
+  rand_bytes((uint8_t *)sk_b.t64, 32);
 
   printf("\n- Private key:\n");
   mpi64_print("  Carol: ", sk_a.t64, 4);

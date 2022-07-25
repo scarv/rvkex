@@ -1,7 +1,7 @@
-#ifndef _ISE_H
-#define _ISE_H
+#ifndef _ISE2_H
+#define _ISE2_H
 
-#if RV64_TYPE2
+#if ( RV64_TYPE2 || RV64_TYPE3 )
 .macro macc56lo              rd, rs1, rs2, rs3            
 .insn r4 CUSTOM_2, 0,      ( 2* 1), \rd, \rs1, \rs2, \rs3 
 .endm                                                     

@@ -15,7 +15,11 @@ OUTPUT  = ${WORK_DIR}/sikep434.elf
 DISASM  = ${WORK_DIR}/sikep434.disasm
 
 ifeq ($(TYPE), RV64_TYPE2)
-	SRCS += fp/ise/*.S
+	SRCS += fp/ise2/*.S
+endif
+
+ifeq ($(TYPE), RV64_TYPE3)
+	SRCS += fp/ise2/*.S fp/ise3/*.S
 endif
 
 ifeq ($(MODE), debug)

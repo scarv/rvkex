@@ -121,7 +121,7 @@ void test_fp()
   mpi64_print("  r  = 0x", z64, 7*2);
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
 #endif 
-#elif RV64_TYPE2
+#elif ( RV64_TYPE2 || RV64_TYPE3 )
   printf("- mp mul v0 ise:");
 
   LOAD_CACHE(mp_mul_v0_ise(z56, a56, b56), 100);
@@ -176,7 +176,7 @@ void test_fp()
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);
 #endif 
-#elif RV64_TYPE2
+#elif ( RV64_TYPE2 || RV64_TYPE3 )
   printf("- rdc mont v0 ise:");
 
   mp_mul_v0_ise(z56, a56, b56);
@@ -221,7 +221,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);  
 #endif 
-#elif RV64_TYPE2
+#elif  RV64_TYPE2 
   printf("- fp add v0 ise:");
 
   LOAD_CACHE(fpadd_v0_ise(r56, a56, b56), 100);
@@ -238,6 +238,28 @@ void test_fp()
   // r := 0x3456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF\
           0123456789ABCDEF0123456789ABCDEF
   fpadd_v0_ise(r56, a56, r56);
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56);  
+#endif 
+#elif  RV64_TYPE3 
+  printf("- fp add v1 ise:");
+
+  LOAD_CACHE(fpadd_v1_ise(r56, a56, b56), 100);
+  MEASURE_CYCLES(fpadd_v1_ise(r56, a56, b56), 1000);
+  printf("      #cycle = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x2AB183CA02CCDB0D653A98744D2A993425A66281DB60E8F4C2660C4CF13568ACF13568ACF1356\
+          8ACF13568ACF13568ACF13568ACF1358
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56);
+  // r := 0x3456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF\
+          0123456789ABCDEF0123456789ABCDEF
+  fpadd_v1_ise(r56, a56, r56);
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
   mpi64_print("  r  = 0x", r64, 7);
@@ -279,7 +301,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
-#elif RV64_TYPE2
+#elif ( RV64_TYPE2 || RV64_TYPE3 )
   printf("- mp sub p2 v0 ise:");
 
   LOAD_CACHE(mp_sub_p2_v0_ise(r56, a56, b56), 100);
@@ -311,7 +333,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
-#elif RV64_TYPE2
+#elif ( RV64_TYPE2 || RV64_TYPE3 )
   printf("- mp sub p4 v0 ise:");
 
   LOAD_CACHE(mp_sub_p4_v0_ise(r56, a56, b56), 100);
@@ -343,7 +365,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);
 #endif 
-#elif RV64_TYPE2
+#elif ( RV64_TYPE2 || RV64_TYPE3 )
   printf("- fp sub v0 ise:");
 
   LOAD_CACHE(fpsub_v0_ise(r56, a56, b56), 100);
@@ -380,7 +402,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
-#elif RV64_TYPE2
+#elif ( RV64_TYPE2 || RV64_TYPE3 )
   printf("- fp crt v0 ise:");
 
   memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
@@ -420,7 +442,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
-#elif RV64_TYPE2
+#elif ( RV64_TYPE2 || RV64_TYPE3 )
   printf("- fp neg v0 ise:");
 
   memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
@@ -460,7 +482,7 @@ void test_fp()
   mpi64_print("  r  = 0x", r64, 7);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
-#elif RV64_TYPE2
+#elif ( RV64_TYPE2 || RV64_TYPE3 )
   printf("- fp div2 v0 ise:");
 
   LOAD_CACHE(fpdiv2_v0_ise(r56, a56), 100);

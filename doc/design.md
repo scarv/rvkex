@@ -6,16 +6,17 @@
 
 | Mnemonic            | Type                         | Meaning                                                          |
 | :------------------ | :--------------------------- | :----------------------------------------------------------------|
-| `RV64_RDCD_TYPE1`   | pure-software, reduced-radix | select RISC-V base ISA:          option 1, per description below |
-| `RV64_RDCD_TYPE2`   | ISE-assisted, reduced-radix  | select RISC-V base ISA plus ISE: option 2, per description below |
-| `RV64_FULL_TYPE1`   | pure-software, full-radix    | select RISC-V base ISA:          option 1, per description below |
-| `RV64_FULL_TYPE2`   | ISE-assisted, full-radix     | select RISC-V base ISA plus ISE: option 3, per description below |
+| `RV64_RDCD_TYPE1`   | pure-software, reduced-radix | RISC-V base ISA                                                  |
+| `RV64_RDCD_TYPE2`   | ISE-assisted, reduced-radix  | RISC-V base ISA + general-use ISE                                |
+| `RV64_RDCD_TYPE3`   | ISE-assisted, reduced-radix  | RISC-V base ISA + general-use ISE + specific-use ISE             |
+| `RV64_FULL_TYPE1`   | pure-software, full-radix    | RISC-V base ISA                                                  |
+| `RV64_FULL_TYPE2`   | ISE-assisted, full-radix     | RISC-V base ISA + general-use ISE                                |
 
 ## Details 
 
 - `RV64_RDCD_TYPE1` and `RV64_FULL_TYPE1`: base ISA. 
 
-- `RV64_RDCD_TYPE2`: base ISA plus ISE. 
+- `RV64_RDCD_TYPE2`: RISC-V base ISA + general-use ISE shown below. 
 
 ```
   sraadd   rd, rs1, rs2, imm {
@@ -62,7 +63,118 @@
   }
 ```
 
-- `RV64_FULL_TYPE2`: base ISA plus ISE. 
+- `RV64_RDCD_TYPE3`: base ISA + general-use ISE shown above + specific-use ISE shown below. 
+```
+  sike.add.p434x2.sub56 rd, rs1, rs2, imm {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+
+    if      ( imm == 0 ) { 
+      r <- x + 0xFFFFFFFFFFFFFE - y
+    }
+    else if ( imm == 1 | imm == 2) {
+      r <- x + 0xFFFFFFFFFFFFFF - y
+    }
+    else if ( imm == 3) {
+      r <- x + 0xC5FFFFFFFFFFFF - y  
+    }
+    else if ( imm == 4) {
+      r <- x + 0xB15D47FB82ECF5 - y
+    }
+    else if ( imm == 5) {
+      r <- x + 0x40ACF78CB8F062 - y
+    }
+    else if ( imm == 6) {
+      r <- x + 0x88D9F8BFAD038A - y
+    }
+    else if ( imm == 7) {
+      r <- x + 0x0004683E4E2EE6 - y
+    }    
+  }
+
+  sike.add.p434x4.sub56 rd, rs1, rs2, imm {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+
+    if      ( imm == 0 ) { 
+      r <- x + 0xFFFFFFFFFFFFFC - y
+    }
+    else if ( imm == 1 || imm == 2) {
+      r <- x + 0xFFFFFFFFFFFFFF - y
+    }
+    else if ( imm == 3) {
+      r <- x + 0x8BFFFFFFFFFFFF - y  
+    }
+    else if ( imm == 4) {
+      r <- x + 0x62BA8FF705D9EB - y
+    }
+    else if ( imm == 5) {
+      r <- x + 0x8159EF1971E0C5 - y
+    }
+    else if ( imm == 6) {
+      r <- x + 0x11B3F17F5A0714 - y
+    }
+    else if ( imm == 7) {
+      r <- x + 0x0008D07C9C5DCD - y
+    }    
+  }
+
+  sike.sub.p434x2.add56 rd, rs1, rs2, imm {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+
+    if      ( imm == 0 ) { 
+      r <- x - 0xFFFFFFFFFFFFFE + y
+    }
+    else if ( imm == 1 || imm == 2) {
+      r <- x - 0xFFFFFFFFFFFFFF + y
+    }
+    else if ( imm == 3) {
+      r <- x - 0xC5FFFFFFFFFFFF + y  
+    }
+    else if ( imm == 4) {
+      r <- x - 0xB15D47FB82ECF5 + y
+    }
+    else if ( imm == 5) {
+      r <- x - 0x40ACF78CB8F062 + y
+    }
+    else if ( imm == 6) {
+      r <- x - 0x88D9F8BFAD038A + y
+    }
+    else if ( imm == 7) {
+      r <- x - 0x0004683E4E2EE6 + y
+    }    
+  } 
+
+  sike.and.p434x2.add56 rd, rs1, rs2, imm {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+
+    if      ( imm == 0 ) { 
+      r <- ( x & 0xFFFFFFFFFFFFFE ) + y
+    }
+    else if ( imm == 1 || imm == 2) {
+      r <- ( x & 0xFFFFFFFFFFFFFF ) + y
+    }
+    else if ( imm == 3) {
+      r <- ( x & 0xC5FFFFFFFFFFFF ) + y  
+    }
+    else if ( imm == 4) {
+      r <- ( x & 0xB15D47FB82ECF5 ) + y
+    }
+    else if ( imm == 5) {
+      r <- ( x & 0x40ACF78CB8F062 ) + y
+    }
+    else if ( imm == 6) {
+      r <- ( x & 0x88D9F8BFAD038A ) + y
+    }
+    else if ( imm == 7) {
+      r <- ( x & 0x0004683E4E2EE6 ) + y
+    }  
+  }
+```
+
+- `RV64_FULL_TYPE2`: base ISA + general-use ISE shown below. 
 
 ```
   macclo   rd, rs1, rs2, rs3 {
@@ -96,8 +208,6 @@
 - Since it claimed that SIKE is "happy hybrids" [3], it would be interesting to see: whether SIKE is indeed "happy hybrids" **from an ISE point of view**?
 
 ## Ideas for more custom instructions 
-
-- subtruction with hardcoded modulus `p` or `2p`
 
 - squaring 
 

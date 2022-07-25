@@ -8,7 +8,7 @@
 #define R0 s0
 #define R1 s1
 #define R2 s2
-#define R3 s3
+#define R3 t2
 #define R4 t4
 #define R5 t5
 #define R6 t6
@@ -26,12 +26,12 @@
 // modulus "2p"
 #define P0 t1
 #define P1 a1
-#define P2 a2
+#define P2 a1
 #define P3 a3
 #define P4 a4
 #define P5 a5
 #define P6 a6
-#define P7 t2
+#define P7 a2
 
 // constants and masks
 #define M0 t3
@@ -40,11 +40,10 @@
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi  sp, sp, -32
+  addi  sp, sp, -24
   sd    s0,  0(sp)
   sd    s1,  8(sp)
   sd    s2, 16(sp)
-  sd    s3, 24(sp)
   li    M0, 0xFFFFFFFFFFFFFFULL
 .endm
 
@@ -52,8 +51,7 @@
   ld    s0,  0(sp)
   ld    s1,  8(sp)
   ld    s2, 16(sp)
-  ld    s3, 24(sp)
-  addi  sp, sp, 32 
+  addi  sp, sp, 24
   ret 
 .endm
 
@@ -62,13 +60,12 @@
 .macro LOAD_P
   la    t0, P434X2
   ld    P0,  0(t0)
-  ld    P1,  8(t0)
-  ld    P2, 16(t0)
-  ld    P3, 24(t0)
-  ld    P4, 32(t0)
-  ld    P5, 40(t0)
-  ld    P6, 48(t0)
-  ld    P7, 56(t0)
+  addi  P1, P0, 1 
+  ld    P3,  8(t0)
+  ld    P4, 16(t0)
+  ld    P5, 24(t0)
+  ld    P6, 32(t0)
+  ld    P7, 40(t0)
 .endm
 
 .macro STORE_R 
@@ -115,7 +112,7 @@
 .macro MASK_2P
   and   P0, P0, T_
   and   P1, P1, T_
-  and   P2, P2, T_
+//and   P2, P2, T_
   and   P3, P3, T_
   and   P4, P4, T_
   and   P5, P5, T_
@@ -197,8 +194,8 @@ fpadd_v0_sw:
 
 P434X2:
 .dword 0xFFFFFFFFFFFFFE                 // P0
-.dword 0xFFFFFFFFFFFFFF                 // P1
-.dword 0xFFFFFFFFFFFFFF                 // P2
+// .dword 0xFFFFFFFFFFFFFF              // P1
+// .dword 0xFFFFFFFFFFFFFF              // P2
 .dword 0xC5FFFFFFFFFFFF                 // P3
 .dword 0xB15D47FB82ECF5                 // P4
 .dword 0x40ACF78CB8F062                 // P5

@@ -28,8 +28,8 @@
 
 // modulus "p"
 #define P0 a3
-#define P1 a4
-#define P2 a5
+#define P1 a3
+#define P2 a3
 #define P3 a6
 #define P4 a7
 #define P5 t3 
@@ -72,13 +72,11 @@
 .macro LOAD_P
   la    a2,    P434
   ld    P0,    0(a2)
-  ld    P1,    8(a2)
-  ld    P2,   16(a2)
-  ld    P3,   24(a2)
-  ld    P4,   32(a2)
-  ld    P5,   40(a2)
-  ld    P6,   48(a2)
-  ld    P7,   56(a2)
+  ld    P3,    8(a2)
+  ld    P4,   16(a2)
+  ld    P5,   24(a2)
+  ld    P6,   32(a2)
+  ld    P7,   40(a2)
 .endm
 
 .macro STORE_R1ST 
@@ -153,8 +151,8 @@
 
 .macro MASK_P
   and   P0, P0, T_
-  and   P1, P1, T_
-  and   P2, P2, T_
+//and   P1, P1, T_
+//and   P2, P2, T_
   and   P3, P3, T_
   and   P4, P4, T_
   and   P5, P5, T_
@@ -198,8 +196,8 @@ mp_subadd_v0_ise:
 
 P434:
 .dword 0xFFFFFFFFFFFFFF                 // P0 
-.dword 0xFFFFFFFFFFFFFF                 // P1
-.dword 0xFFFFFFFFFFFFFF                 // P2
+// .dword 0xFFFFFFFFFFFFFF              // P1
+// .dword 0xFFFFFFFFFFFFFF              // P2
 .dword 0xE2FFFFFFFFFFFF                 // P3
 .dword 0x58AEA3FDC1767A                 // P4
 .dword 0x20567BC65C7831                 // P5

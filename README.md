@@ -83,7 +83,9 @@
 
 ## TODO 
 
-- further save `ld` instructions (regarding modulus) in field/integer subtraction/addition of sike
+- [x] further save `ld` instructions (regarding modulus) in field/integer subtraction/addition of sike
+- [ ] add custom instructions for additions/subtractions in sike
+
 
 ## References and links
 

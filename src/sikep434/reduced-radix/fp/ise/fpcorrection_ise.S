@@ -10,8 +10,8 @@
 // operand and result "r"
 #define R0 s0
 #define R1 s1
-#define R2 s2
-#define R3 s3
+#define R2 a6
+#define R3 t2
 #define R4 t4
 #define R5 t5
 #define R6 t6
@@ -19,13 +19,13 @@
 
 // modulus "p"
 #define P0 t1
-#define P1 a1
-#define P2 a2
-#define P3 a3
-#define P4 a4
-#define P5 a5
-#define P6 a6
-#define P7 t2
+#define P1 t1
+#define P2 t1
+#define P3 a1
+#define P4 a2
+#define P5 a3
+#define P6 a4
+#define P7 a5
 
 // temp "t"
 #define T_ t0
@@ -37,20 +37,16 @@
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi  sp, sp, -32
+  addi  sp, sp, -16
   sd    s0,  0(sp)
   sd    s1,  8(sp)
-  sd    s2, 16(sp)
-  sd    s3, 24(sp)
   li    M0, 0xFFFFFFFFFFFFFFULL
 .endm
 
 .macro EPILOGUE
   ld    s0,  0(sp)
   ld    s1,  8(sp)
-  ld    s2, 16(sp)
-  ld    s3, 24(sp)
-  addi  sp, sp, 32
+  addi  sp, sp, 16
   ret 
 .endm
 
@@ -59,13 +55,11 @@
 .macro LOAD_P
   la    t0, P434
   ld    P0,  0(t0)
-  ld    P1,  8(t0)
-  ld    P2, 16(t0)
-  ld    P3, 24(t0)
-  ld    P4, 32(t0)
-  ld    P5, 40(t0)
-  ld    P6, 48(t0)
-  ld    P7, 56(t0)
+  ld    P3,  8(t0)
+  ld    P4, 16(t0)
+  ld    P5, 24(t0)
+  ld    P6, 32(t0)
+  ld    P7, 40(t0)
 .endm
 
 .macro LOAD_R 
@@ -105,8 +99,8 @@
 
 .macro MASK_P
   and   P0, P0, T_
-  and   P1, P1, T_
-  and   P2, P2, T_
+//and   P1, P1, T_
+//and   P2, P2, T_
   and   P3, P3, T_
   and   P4, P4, T_
   and   P5, P5, T_
@@ -179,11 +173,11 @@ fpcorrection_v0_ise:
 .balign 8
 
 P434:
-.dword 0xFFFFFFFFFFFFFF 
-.dword 0xFFFFFFFFFFFFFF
-.dword 0xFFFFFFFFFFFFFF
-.dword 0xE2FFFFFFFFFFFF
-.dword 0x58AEA3FDC1767A
-.dword 0x20567BC65C7831
-.dword 0x446CFC5FD681C5
-.dword 0x0002341F271773
+.dword 0xFFFFFFFFFFFFFF                 // P0 
+// .dword 0xFFFFFFFFFFFFFF              // P1
+// .dword 0xFFFFFFFFFFFFFF              // P2
+.dword 0xE2FFFFFFFFFFFF                 // P3
+.dword 0x58AEA3FDC1767A                 // P4
+.dword 0x20567BC65C7831                 // P5
+.dword 0x446CFC5FD681C5                 // P6
+.dword 0x0002341F271773                 // P7

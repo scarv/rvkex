@@ -58,15 +58,26 @@
 .macro _COMPUTE_R R, imm
   ld    A_, 8*\imm(a1)
   ld    B_, 8*\imm(a2)
-  ld    P_, 8*\imm(a3)
+  ld    P_, 8*\imm-16(a3)
   add   \R, A_, P_
   sub   \R, \R, B_
 .endm
 
-.macro COMPUTE_R 
-  _COMPUTE_R R0, 0
-  _COMPUTE_R R1, 1
-  _COMPUTE_R R2, 2
+.macro COMPUTE_R imm
+  ld    A_,  0(a1)
+  ld    B_,  0(a2)
+  ld    P_,  0(a3)
+  add   R0, A_, P_
+  sub   R0, R0, B_
+  ld    A_,  8(a1)
+  ld    B_,  8(a2)
+  addi  P_, P_, \imm
+  add   R1, A_, P_
+  sub   R1, R1, B_
+  ld    A_, 16(a1)
+  ld    B_, 16(a2)
+  add   R2, A_, P_
+  sub   R2, R2, B_
   _COMPUTE_R R3, 3
   _COMPUTE_R R4, 4
   _COMPUTE_R R5, 5
@@ -105,7 +116,7 @@
 mp_sub_p2_v0_sw:
   PROLOGUE
   la a3, P434X2
-  COMPUTE_R
+  COMPUTE_R 1
   CARRY_PROPAGATION
   STORE_R
   EPILOGUE
@@ -116,7 +127,7 @@ mp_sub_p2_v0_sw:
 mp_sub_p4_v0_sw:
   PROLOGUE
   la a3, P434X4
-  COMPUTE_R
+  COMPUTE_R 3
   CARRY_PROPAGATION
   STORE_R
   EPILOGUE
@@ -163,14 +174,19 @@ mp_sub_p2_v1_sw:
 
 .macro _SUBTRACT R, imm
   ld    A_, 8*\imm(a0)
-  ld    P_, 8*\imm(a3)
+  ld    P_, 8*\imm-16(a3)
   sub   \R, P_, A_
 .endm
 
 .macro SUBTRACTION
-  _SUBTRACT R0, 0
-  _SUBTRACT R1, 1
-  _SUBTRACT R2, 2
+  ld    A_,  0(a0)
+  ld    P_,  0(a3)
+  sub   R0, P_, A_
+  ld    A_,  8(a0)
+  addi  P_, P_, 1
+  sub   R1, P_, A_
+  ld    A_, 16(a0)
+  sub   R2, P_, A_
   _SUBTRACT R3, 3
   _SUBTRACT R4, 4
   _SUBTRACT R5, 5
@@ -212,8 +228,8 @@ mp_dblsub_v0_sw:
 
 P434X2:
 .dword 0xFFFFFFFFFFFFFE                 // P0
-.dword 0xFFFFFFFFFFFFFF                 // P1
-.dword 0xFFFFFFFFFFFFFF                 // P2
+// .dword 0xFFFFFFFFFFFFFF              // P1
+// .dword 0xFFFFFFFFFFFFFF              // P2
 .dword 0xC5FFFFFFFFFFFF                 // P3
 .dword 0xB15D47FB82ECF5                 // P4
 .dword 0x40ACF78CB8F062                 // P5
@@ -222,8 +238,8 @@ P434X2:
 
 P434X4:
 .dword 0xFFFFFFFFFFFFFC                 // P0
-.dword 0xFFFFFFFFFFFFFF                 // P1
-.dword 0xFFFFFFFFFFFFFF                 // P2
+// .dword 0xFFFFFFFFFFFFFF              // P1
+// .dword 0xFFFFFFFFFFFFFF              // P2
 .dword 0x8BFFFFFFFFFFFF                 // P3
 .dword 0x62BA8FF705D9EB                 // P4
 .dword 0x8159EF1971E0C5                 // P5

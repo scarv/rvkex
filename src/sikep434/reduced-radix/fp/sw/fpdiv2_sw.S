@@ -62,7 +62,7 @@
 
 .macro _COMPUTE_R R, imm
   ld    A_, 8*\imm(a1)
-  ld    P_, 8*\imm(a2)
+  ld    P_, 8*(\imm-2)(a2)
   and   P_, P_, T_
   add   \R, A_, P_
 .endm
@@ -71,8 +71,10 @@
   ld    P_,  0(a2)
   and   P_, P_, T_
   add   R0, A_, P_
-  _COMPUTE_R R1, 1
-  _COMPUTE_R R2, 2
+  ld    A_,  8(a1)
+  add   R1, A_, P_
+  ld    A_, 16(a1)
+  add   R2, A_, P_
   _COMPUTE_R R3, 3
   _COMPUTE_R R4, 4
   _COMPUTE_R R5, 5
@@ -137,11 +139,11 @@ fpdiv2_v0_sw:
 .balign 8
 
 P434:
-.dword 0xFFFFFFFFFFFFFF 
-.dword 0xFFFFFFFFFFFFFF
-.dword 0xFFFFFFFFFFFFFF
-.dword 0xE2FFFFFFFFFFFF
-.dword 0x58AEA3FDC1767A
-.dword 0x20567BC65C7831
-.dword 0x446CFC5FD681C5
-.dword 0x0002341F271773
+.dword 0xFFFFFFFFFFFFFF                 // P0 
+// .dword 0xFFFFFFFFFFFFFF              // P1
+// .dword 0xFFFFFFFFFFFFFF              // P2
+.dword 0xE2FFFFFFFFFFFF                 // P3
+.dword 0x58AEA3FDC1767A                 // P4
+.dword 0x20567BC65C7831                 // P5
+.dword 0x446CFC5FD681C5                 // P6
+.dword 0x0002341F271773                 // P7

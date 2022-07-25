@@ -39,13 +39,19 @@ void mp_subadd_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 
 #if RV64_TYPE3
 void fpadd_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
+void mp_sub_p2_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
+void mp_sub_p4_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 #endif 
 
 #if (RV64_TYPE2 || RV64_TYPE3)
 #if RV64_TYPE3
 #define fpadd         fpadd_v1_ise
+#define mp_sub_p2_v1  mp_sub_p2_v1_ise
+#define mp_sub_p4     mp_sub_p4_v1_ise
 #elif RV64_TYPE2
 #define fpadd         fpadd_v0_ise
+#define mp_sub_p2_v1  mp_sub_p2_v1_sw
+#define mp_sub_p4     mp_sub_p4_v0_ise
 #endif
 // single-version operations
 #define mp_mul        mp_mul_v0_ise
@@ -55,12 +61,10 @@ void fpadd_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 #define fpneg         fpneg_v0_ise
 #define fpdiv2        fpdiv2_v0_ise
 #define fpcorrection  fpcorrection_v0_ise
-#define mp_sub_p4     mp_sub_p4_v0_ise
 // multi-version operations
 #define mp_add_v0     mp_add_v0_ise
 #define mp_add_v1     mp_add_v1_sw
 #define mp_sub_p2_v0  mp_sub_p2_v0_ise
-#define mp_sub_p2_v1  mp_sub_p2_v1_sw
 #elif RV64_TYPE1
 // single-version operations
 #define mp_mul        mp_mul_v2_sw

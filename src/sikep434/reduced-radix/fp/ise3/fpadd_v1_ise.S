@@ -59,7 +59,7 @@
 .macro _COMPUTE_R R, imm
   ld    A_, 8*\imm(a1)
   ld    B_, 8*\imm(a2)
-  sike.sub.p434x2.add56 \R, A_, B_
+  sike.sub.p434x2.add56 \R, A_, B_, \imm
 .endm
 
 .macro COMPUTE_R 
@@ -74,14 +74,14 @@
 .endm
 
 .macro ADD_MASK
-  sike.and.p434x2.add56 R0, T_, R0
-  sike.and.p434x2.add56 R1, T_, R1
-  sike.and.p434x2.add56 R2, T_, R2
-  sike.and.p434x2.add56 R3, T_, R3
-  sike.and.p434x2.add56 R4, T_, R4
-  sike.and.p434x2.add56 R5, T_, R5
-  sike.and.p434x2.add56 R6, T_, R6
-  sike.and.p434x2.add56 R7, T_, R7
+  sike.and.p434x2.add56 R0, T_, R0, 0
+  sike.and.p434x2.add56 R1, T_, R1, 1
+  sike.and.p434x2.add56 R2, T_, R2, 2
+  sike.and.p434x2.add56 R3, T_, R3, 3
+  sike.and.p434x2.add56 R4, T_, R4, 4
+  sike.and.p434x2.add56 R5, T_, R5, 5
+  sike.and.p434x2.add56 R6, T_, R6, 6
+  sike.and.p434x2.add56 R7, T_, R7, 7
 .endm
 
 // carry propagation 

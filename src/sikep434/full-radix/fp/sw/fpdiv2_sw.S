@@ -58,7 +58,7 @@
 
 .macro _COMPUTE_R R, imm
   ld    A_, 8*\imm(a1)
-  ld    P_, 8*\imm(a2)
+  ld    P_, 8*\imm-16(a2)
   and   P_, P_, M_
   add   \R, A_, P_
   sltu  T1, \R, P_
@@ -72,13 +72,23 @@
   and   P_, P_, M_
   add   R0, A_, P_
   sltu  T0, R0, P_
-  _COMPUTE_R R1, 1
-  _COMPUTE_R R2, 2
+  ld    A_,  8(a1)
+  add   R1, A_, P_
+  sltu  T1, R1, P_
+  add   R1, R1, T0 
+  sltu  T0, R1, T0 
+  or    T0, T1, T0 
+  ld    A_, 16(a1)
+  add   R2, A_, P_
+  sltu  T1, R2, P_
+  add   R2, R2, T0 
+  sltu  T0, R2, T0 
+  or    T0, T1, T0 
   _COMPUTE_R R3, 3
   _COMPUTE_R R4, 4
   _COMPUTE_R R5, 5
   ld    A_, 48(a1)
-  ld    P_, 48(a2)
+  ld    P_, 32(a2)
   and   P_, P_, M_
   add   R6, A_, P_
   add   R6, R6, T0
@@ -122,8 +132,8 @@ fpdiv2_v0_sw:
 
 P434:
 .dword  0xFFFFFFFFFFFFFFFF              // P0
-.dword  0xFFFFFFFFFFFFFFFF              // P1
-.dword  0xFFFFFFFFFFFFFFFF              // P2
+// .dword  0xFFFFFFFFFFFFFFFF           // P1
+// .dword  0xFFFFFFFFFFFFFFFF           // P2
 .dword  0xFDC1767AE2FFFFFF              // P3
 .dword  0x7BC65C783158AEA3              // P4
 .dword  0x6CFC5FD681C52056              // P5

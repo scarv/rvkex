@@ -22,7 +22,7 @@
 // modulus "2p"
 #define P0 t1
 #define P1 a1
-#define P2 a2
+#define P2 a1
 #define P3 a3
 #define P4 a4
 #define P5 a5
@@ -55,12 +55,11 @@
 .macro LOAD_P
   la    t0, P434X2
   ld    P0,  0(t0)
-  ld    P1,  8(t0)
-  ld    P2, 16(t0)
-  ld    P3, 24(t0)
-  ld    P4, 32(t0)
-  ld    P5, 40(t0)
-  ld    P6, 48(t0)
+  addi  P1, P0, 1
+  ld    P3,  8(t0)
+  ld    P4, 16(t0)
+  ld    P5, 24(t0)
+  ld    P6, 32(t0)
 .endm
 
 .macro STORE_R 
@@ -106,7 +105,7 @@
   sub   T0, x0, T0
   and   P0, P0, T0
   and   P1, P1, T0
-  and   P2, P2, T0
+//and   P2, P2, T0
   and   P3, P3, T0
   and   P4, P4, T0
   and   P5, P5, T0
@@ -155,8 +154,8 @@ fpsub_v0_sw:
 
 P434X2:
 .dword  0xFFFFFFFFFFFFFFFE              // P0
-.dword  0xFFFFFFFFFFFFFFFF              // P1
-.dword  0xFFFFFFFFFFFFFFFF              // P2
+// .dword  0xFFFFFFFFFFFFFFFF           // P1
+// .dword  0xFFFFFFFFFFFFFFFF           // P2
 .dword  0xFB82ECF5C5FFFFFF              // P3
 .dword  0xF78CB8F062B15D47              // P4
 .dword  0xD9F8BFAD038A40AC              // P5

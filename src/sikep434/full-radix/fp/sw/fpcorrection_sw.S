@@ -14,9 +14,9 @@
 #define R6 a6
 
 // modulus "p"
-#define P0 s0
-#define P1 s1
-#define P2 t2
+#define P0 t2
+#define P1 t3
+#define P2 t3
 #define P3 t3
 #define P4 t4
 #define P5 t5
@@ -30,15 +30,9 @@
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi  sp, sp, -16
-  sd    s0,  0(sp)
-  sd    s1,  8(sp)
 .endm
 
 .macro EPILOGUE
-  ld    s0,  0(sp)
-  ld    s1,  8(sp)
-  addi  sp, sp, 16
   ret 
 .endm
 
@@ -47,12 +41,10 @@
 .macro LOAD_P
   la    t0, P434
   ld    P0,  0(t0)
-  ld    P1,  8(t0)
-  ld    P2, 16(t0)
-  ld    P3, 24(t0)
-  ld    P4, 32(t0)
-  ld    P5, 40(t0)
-  ld    P6, 48(t0)
+  ld    P3,  8(t0)
+  ld    P4, 16(t0)
+  ld    P5, 24(t0)
+  ld    P6, 32(t0)
 .endm
 
 .macro LOAD_R 
@@ -99,8 +91,8 @@
 .macro MASK_P
   sub   T0, x0, T0
   and   P0, P0, T0
-  and   P1, P1, T0
-  and   P2, P2, T0
+//and   P1, P1, T0
+//and   P2, P2, T0
   and   P3, P3, T0
   and   P4, P4, T0
   and   P5, P5, T0
@@ -150,8 +142,8 @@ fpcorrection_v0_sw:
 
 P434:
 .dword  0xFFFFFFFFFFFFFFFF              // P0
-.dword  0xFFFFFFFFFFFFFFFF              // P1
-.dword  0xFFFFFFFFFFFFFFFF              // P2
+// .dword  0xFFFFFFFFFFFFFFFF           // P1
+// .dword  0xFFFFFFFFFFFFFFFF           // P2
 .dword  0xFDC1767AE2FFFFFF              // P3
 .dword  0x7BC65C783158AEA3              // P4
 .dword  0x6CFC5FD681C52056              // P5

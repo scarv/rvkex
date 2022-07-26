@@ -22,7 +22,7 @@ void mp_dblsub_v0_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_subadd_v0_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
 
 #if (RV64_TYPE2 || RV64_TYPE3)
-// ISE-assisted prototypes
+// ISE-assisted prototypes (general-use ISE)
 void mp_mul_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_mul_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void rdc_mont_v0_ise(uint64_t *r, const uint64_t *a);
@@ -38,6 +38,7 @@ void mp_subadd_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 #endif
 
 #if RV64_TYPE3
+// ISE-assisted prototypes (specific-use ISE)
 void fpadd_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_sub_p2_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 void mp_sub_p4_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);

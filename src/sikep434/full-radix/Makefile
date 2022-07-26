@@ -15,7 +15,11 @@ OUTPUT  = ${WORK_DIR}/sikep434.elf
 DISASM  = ${WORK_DIR}/sikep434.disasm
 
 ifeq ($(TYPE), RV64_TYPE2)
-	SRCS += fp/ise/*.S
+	SRCS += fp/ise2/*.S
+endif
+
+ifeq ($(TYPE), RV64_TYPE3)
+	SRCS += fp/ise2/*.S fp/ise3/*.S
 endif
 
 ifeq ($(MODE), debug)
@@ -32,7 +36,11 @@ KAT_OUTPUT = ${WORK_DIR}/sikep434_kat.elf
 KAT_DISASM = ${WORK_DIR}/sikep434_kat.disasm
 
 ifeq ($(TYPE), RV64_TYPE2)
-	KAT_SRCS += fp/ise/*.S
+	KAT_SRCS += fp/ise2/*.S
+endif
+
+ifeq ($(TYPE), RV64_TYPE3)
+	KAT_SRCS += fp/ise2/*.S fp/ise3/*.S
 endif
 
 all: clean ${OUTPUT} ${DISASM}

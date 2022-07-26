@@ -65,7 +65,7 @@ void test_fp()
   mpi64_print("  r  = 0x", z, NLMB64*2);
   memset(z, 0, sizeof(uint64_t)*NLMB64*2);
 #endif
-#elif RV64_TYPE2
+#elif ( RV64_TYPE2 || RV64_TYPE3 )
   printf("- mp mul v0 ise:");
 
   LOAD_CACHE(mp_mul_v0_ise(z, a, b), 100);
@@ -101,7 +101,7 @@ void test_fp()
   memset(z, 0, sizeof(uint64_t)*NLMB64*2);
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif 
-#elif RV64_TYPE2
+#elif ( RV64_TYPE2 || RV64_TYPE3 )
   printf("- rdc mont v0 ise:");
 
   mp_mul_v0_sw(z, a, b);

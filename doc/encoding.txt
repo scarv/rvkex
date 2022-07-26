@@ -6,7 +6,7 @@
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
-// carry propagation for reduced-radix
+// carry propagation for reduced-radix big number arithmetic
 .macro sraadd                rd, rs1, rs2, imm            //                  => 1iii iiir rrrr rrrr r001 rrrr r101 1011
 .insn r  CUSTOM_2, 1, \imm+( 1*64), \rd, \rs1, \rs2       //                  => #define MATCH_SRAADD   0x8000105B
 .endm                                                     //                  => #define  MASK_SRAADD   0x8000707F
@@ -21,7 +21,7 @@
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
-// multiply-add for radix-2^51
+// multiply-add for radix-2^51 big number arithmetic
 .macro macc51lo              rd, rs1, rs2, rs3            //                  => rrrr r00r rrrr rrrr r000 rrrr r101 1011
 .insn r4 CUSTOM_2, 0,      ( 0* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MACC51LO 0x0000005B
 .endm                                                     //                  => #define  MASK_MACC51LO 0x0600707F
@@ -39,7 +39,7 @@
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
-// multiply-add for radix-2^56
+// multiply-add for radix-2^56 big number arithmetic
 .macro macc56lo              rd, rs1, rs2, rs3            //                  => rrrr r10r rrrr rrrr r000 rrrr r101 1011
 .insn r4 CUSTOM_2, 0,      ( 2* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MACC51LO 0x0400005B
 .endm                                                     //                  => #define  MASK_MACC51LO 0x0600707F
@@ -55,10 +55,11 @@
 | RV64_RDCD_TYPE3     | sike.add.p434x4.sub56 | 2R+I->1R | 0001 : imm3         | 2 = 010 | 2 = 1011011 |
 | RV64_RDCD_TYPE3     | sike.sub.p434x2.add56 | 2R+I->1R | 0010 : imm3         | 2 = 010 | 2 = 1011011 |
 | RV64_RDCD_TYPE3     | sike.and.p434x2.add56 | 2R+I->1R | 0011 : imm3         | 2 = 010 | 2 = 1011011 |
+| RV64_RDCD_TYPE3     | sike.and.p434.add56   | 2R+I->1R | 0100 : imm3         | 2 = 010 | 2 = 1011011 |
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
-// modulus-related addition/subtraction
+// modulus-related addition/subtraction for radix-2^56 SIKE
 .macro sike.add.p434x2.sub56 rd, rs1, rs2, imm            //                  => 0000 iiir rrrr rrrr r010 rrrr r101 1011
 .insn r  CUSTOM_2, 2, \imm+( 0* 8), \rd, \rs1, \rs2       //                  => #define MATCH_SIKE_ADD_P434X2_SUB56 0x0000205B
 .endm                                                     //                  => #define  MASK_SIKE_ADD_P434X2_SUB56 0xF000707F
@@ -71,6 +72,9 @@
 .macro sike.and.p434x2.add56 rd, rs1, rs2, imm            //                  => 0011 iiir rrrr rrrr r010 rrrr r101 1011
 .insn r  CUSTOM_2, 2, \imm+( 3* 8), \rd, \rs1, \rs2       //                  => #define MATCH_SIKE_AND_P434X2_ADD56 0x3000205B
 .endm                                                     //                  => #define  MASK_SIKE_AND_P434X2_ADD56 0xF000707F
+.macro sike.and.p434.add56   rd, rs1, rs2, imm            //                  => 0100 iiir rrrr rrrr r010 rrrr r101 1011
+.insn r  CUSTOM_2, 2, \imm+( 4* 8), \rd, \rs1, \rs2       //                  => #define MATCH_SIKE_AND_P434X2_ADD56 0x4000205B
+.endm                                                     //                  => #define  MASK_SIKE_AND_P434X2_ADD56 0xF000707F
 
 
 +=====================+=======================+==========+=====================+=========+=============+
@@ -82,10 +86,27 @@
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
-// multiply-add for radix-2^64
+// multiply-add for radix-2^64 big number arithmetic
 .macro macclo                rd, rs1, rs2, rs3            //                  => rrrr r00r rrrr rrrr r000 rrrr r111 1011
 .insn r4 CUSTOM_3, 0,      ( 0* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MACCLO 0x0000007B
 .endm                                                     //                  => #define  MASK_MACCLO 0x0600707F
 .macro macchi                rd, rs1, rs2, rs3            //                  => rrrr r01r rrrr rrrr r000 rrrr r111 1011
 .insn r4 CUSTOM_3, 0,      ( 1* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MACCHI 0x0200007B
 .endm                                                     //                  => #define  MASK_MACCHI 0x0600707F
+
++=====================+=======================+==========+=====================+=========+=============+
+| class               | instruction           | format   | f7                  | f3      | custom      |
++=====================+=======================+==========+=====================+=========+=============+
+|                     |                       |          |                     |         |             |
+| RV64_FULL_TYPE3     | sike.and.p434x2.add64 | 2R+I->1R | 0011 : imm3         | 2 = 010 | 3 = 1111011 |
+| RV64_FULL_TYPE3     | sike.and.p434.add64   | 2R+I->1R | 0100 : imm3         | 2 = 010 | 3 = 1111011 |
+|                     |                       |          |                     |         |             |
++=====================+=======================+==========+=====================+=========+=============+
+
+// modulus-related addition/subtraction for radix-2^64 SIKE
+.macro sike.and.p434x2.add64 rd, rs1, rs2, imm            //                  => 0011 iiir rrrr rrrr r010 rrrr r111 1011
+.insn r  CUSTOM_3, 2, \imm+( 3* 8), \rd, \rs1, \rs2       //                  => #define MATCH_SIKE_AND_P434X2_ADD64 0x3000207B
+.endm                                                     //                  => #define  MASK_SIKE_AND_P434X2_ADD64 0xF000707F
+.macro sike.and.p434.add64   rd, rs1, rs2, imm            //                  => 0011 iiir rrrr rrrr r010 rrrr r111 1011
+.insn r  CUSTOM_3, 2, \imm+( 4* 8), \rd, \rs1, \rs2       //                  => #define MATCH_SIKE_AND_P434X2_ADD64 0x4000207B
+.endm                                                     //                  => #define  MASK_SIKE_AND_P434X2_ADD64 0xF000707F

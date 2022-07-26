@@ -13,8 +13,10 @@
 .endm                                                     
 .macro sike.and.p434x2.add56 rd, rs1, rs2, imm            
 .insn r  CUSTOM_2, 2, \imm+( 3* 8), \rd, \rs1, \rs2      
+.endm 
+.macro sike.and.p434.add56   rd, rs1, rs2, imm            
+.insn r  CUSTOM_2, 2, \imm+( 4* 8), \rd, \rs1, \rs2      
 .endm                                                     
-
 #endif                                                  
 
 #endif 

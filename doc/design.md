@@ -7,10 +7,11 @@
 | Mnemonic            | Type                         | Meaning                                                          |
 | :------------------ | :--------------------------- | :----------------------------------------------------------------|
 | `RV64_RDCD_TYPE1`   | pure-software, reduced-radix | RISC-V base ISA                                                  |
-| `RV64_RDCD_TYPE2`   | ISE-assisted, reduced-radix  | RISC-V base ISA + general-use ISE                                |
-| `RV64_RDCD_TYPE3`   | ISE-assisted, reduced-radix  | RISC-V base ISA + general-use ISE + specific-use ISE             |
+| `RV64_RDCD_TYPE2`   | ISE-assisted,  reduced-radix | RISC-V base ISA + general-use ISE                                |
+| `RV64_RDCD_TYPE3`   | ISE-assisted,  reduced-radix | RISC-V base ISA + general-use ISE + specific-use ISE             |
 | `RV64_FULL_TYPE1`   | pure-software, full-radix    | RISC-V base ISA                                                  |
-| `RV64_FULL_TYPE2`   | ISE-assisted, full-radix     | RISC-V base ISA + general-use ISE                                |
+| `RV64_FULL_TYPE2`   | ISE-assisted,  full-radix    | RISC-V base ISA + general-use ISE                                |
+| `RV64_FULL_TYPE3`   | ISE-assisted,  full-radix    | RISC-V base ISA + general-use ISE + specific-use ISE             |
 
 ## Details 
 
@@ -72,7 +73,7 @@
     if      ( imm == 0 ) { 
       r <- x + 0xFFFFFFFFFFFFFE - y
     }
-    else if ( imm == 1 | imm == 2) {
+    else if ( imm == 1 | imm == 2 ) {
       r <- x + 0xFFFFFFFFFFFFFF - y
     }
     else if ( imm == 3) {
@@ -89,7 +90,9 @@
     }
     else if ( imm == 7) {
       r <- x + 0x0004683E4E2EE6 - y
-    }    
+    }
+
+    GPR[rd] <- r    
   }
 
   sike.add.p434x4.sub56 rd, rs1, rs2, imm {
@@ -99,7 +102,7 @@
     if      ( imm == 0 ) { 
       r <- x + 0xFFFFFFFFFFFFFC - y
     }
-    else if ( imm == 1 || imm == 2) {
+    else if ( imm == 1 || imm == 2 ) {
       r <- x + 0xFFFFFFFFFFFFFF - y
     }
     else if ( imm == 3) {
@@ -116,7 +119,9 @@
     }
     else if ( imm == 7) {
       r <- x + 0x0008D07C9C5DCD - y
-    }    
+    }
+
+    GPR[rd] <- r    
   }
 
   sike.sub.p434x2.add56 rd, rs1, rs2, imm {
@@ -126,7 +131,7 @@
     if      ( imm == 0 ) { 
       r <- x - 0xFFFFFFFFFFFFFE + y
     }
-    else if ( imm == 1 || imm == 2) {
+    else if ( imm == 1 || imm == 2 ) {
       r <- x - 0xFFFFFFFFFFFFFF + y
     }
     else if ( imm == 3) {
@@ -143,7 +148,9 @@
     }
     else if ( imm == 7) {
       r <- x - 0x0004683E4E2EE6 + y
-    }    
+    }
+
+    GPR[rd] <- r    
   } 
 
   sike.and.p434x2.add56 rd, rs1, rs2, imm {
@@ -153,7 +160,7 @@
     if      ( imm == 0 ) { 
       r <- ( x & 0xFFFFFFFFFFFFFE ) + y
     }
-    else if ( imm == 1 || imm == 2) {
+    else if ( imm == 1 || imm == 2 ) {
       r <- ( x & 0xFFFFFFFFFFFFFF ) + y
     }
     else if ( imm == 3) {
@@ -170,7 +177,35 @@
     }
     else if ( imm == 7) {
       r <- ( x & 0x0004683E4E2EE6 ) + y
-    }  
+    }
+
+    GPR[rd] <- r  
+  }
+
+  sike.and.p434.add56   rd, rs1, rs2, imm {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+
+    if      ( imm == 0 || imm == 1 || imm == 2) { 
+      r <- ( x & 0xFFFFFFFFFFFFFF ) + y;
+    }
+    else if ( imm == 3) {
+      r <- ( x & 0xE2FFFFFFFFFFFF ) + y; 
+    }
+    else if ( imm == 4) {
+      r <- ( x & 0x58AEA3FDC1767A ) + y;
+    }
+    else if ( imm == 5) {
+      r <- ( x & 0x20567BC65C7831 ) + y;
+    }
+    else if ( imm == 6) {
+      r <- ( x & 0x446CFC5FD681C5 ) + y;
+    }
+    else if ( imm == 7) {
+      r <- ( x & 0x0002341F271773 ) + y;
+    }
+
+    GPR[rd] <- r  
   }
 ```
 
@@ -192,6 +227,44 @@
     z       <- GPR[rs3]
     m       <- (1 << 64) - 1
     r       <- (((x * y) >> 64) & m) + z 
+    GPR[rd] <- r
+  }
+```
+
+- `RV64_FULL_TYPE3`: base ISA + general-use ISE shown above + specific-use ISE shown below. 
+```
+  sike.and.p434x2.add64 rd, rs1, rs2, imm {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+
+    if      ( imm == 0 ) { 
+      r <- ( x & 0xFFFFFFFFFFFFFFFE ) + y
+    }
+    else if ( imm == 1 || imm == 2 ) {
+      r <- ( x & 0xFFFFFFFFFFFFFFFF ) + y
+    }
+    else if ( imm == 3) {
+      r <- ( x & 0xFB82ECF5C5FFFFFF ) + y  
+    }
+    else if ( imm == 4) {
+      r <- ( x & 0xF78CB8F062B15D47 ) + y
+    }
+    else if ( imm == 5) {
+      r <- ( x & 0xD9F8BFAD038A40AC ) + y
+    }
+    else if ( imm == 6) {
+      r <- ( x & 0x0004683E4E2EE688 ) + y
+    }
+
+    GPR[rd] <- r
+  }
+
+  sike.and.p434.add64   rd, rs1, rs2, imm {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+
+
+
     GPR[rd] <- r
   }
 ```

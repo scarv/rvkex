@@ -1,8 +1,11 @@
-// void mp_subadd_v0_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void mp_subadd_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // radix-2^64
 
 
-// registers 
+#include "ise3.h"
+
+
+// registers
 
 // result "r"
 #define R0  t0
@@ -19,15 +22,6 @@
 #define R11 s3
 #define R12 s4
 #define R13 s5
-
-// modulus "p"
-#define P0 t0
-#define P1 t0
-#define P2 t0
-#define P3 t3
-#define P4 t4
-#define P5 t5
-#define P6 t6
 
 // operand "a"
 #define A_ a3
@@ -63,17 +57,6 @@
   ret 
 .endm
 
-// load modulus + store result 
-
-.macro LOAD_P
-  la    a2,    P434
-  ld    P0,    0(a2)
-  ld    P3,    8(a2)
-  ld    P4,   16(a2)
-  ld    P5,   24(a2)
-  ld    P6,   32(a2)
-.endm
-
 .macro STORE_R1ST 
   sd    R0,    0(a0)
   sd    R1,    8(a0)
@@ -85,13 +68,13 @@
 .endm 
 
 .macro STORE_R2ND
-  sd    R7,   56(a0) 
-  sd    R8,   64(a0)
-  sd    R9,   72(a0)
-  sd    R10,  80(a0)
-  sd    R11,  88(a0)
-  sd    R12,  96(a0)
-  sd    R13, 104(a0)
+  sd    R0,   56(a0) 
+  sd    R1,   64(a0)
+  sd    R2,   72(a0)
+  sd    R3,   80(a0)
+  sd    R4,   88(a0)
+  sd    R5,   96(a0)
+  sd    R6,  104(a0)
 .endm
 
 // arithmetic computation
@@ -130,35 +113,25 @@
   _AI_SUB_BI R13, 13
 .endm
 
-.macro MASK_P
-  sub   T0, x0, T0
-  and   P0, P0, T0
-//and   P1, P1, T0
-//and   P2, P2, T0
-  and   P3, P3, T0
-  and   P4, P4, T0
-  and   P5, P5, T0
-  and   P6, P6, T0
-.endm
-
-.macro _RI_ADD_PJ R, P
-  add   \R, \R, T0 
-  sltu  T0, \R, T0 
-  add   \R, \R, \P
-  sltu  T1, \R, \P
-  or    T0, T0, T1
+.macro _ADD_MASK R, A, imm
+  sike.and.p434.add64 \R, T0, \A, \imm
+  sltu \A, \R, \A 
+  add  \R, \R, T1
+  sltu T1, \R, T1
+  or   T1, T1, \A
 .endm
 
 .macro ADD_MASK 
-  add  R7, R7, P0
-  sltu T0, R7, P0
-  _RI_ADD_PJ   R8,  P1 
-  _RI_ADD_PJ   R9,  P2
-  _RI_ADD_PJ   R10, P3
-  _RI_ADD_PJ   R11, P4
-  _RI_ADD_PJ   R12, P5
-  add  R13, R13, T0 
-  add  R13, R13, P6
+  sub  T0, x0, T0
+  sike.and.p434.add64 R0, T0, R7,  0
+  sltu T1, R0, R7
+  _ADD_MASK R1, R8,  1
+  _ADD_MASK R2, R9,  2
+  _ADD_MASK R3, R10, 3
+  _ADD_MASK R4, R11, 4
+  _ADD_MASK R5, R12, 5
+  sike.and.p434.add64 R6, T0, R13, 6
+  add  R6, R6, T1
 .endm
 
 
@@ -166,27 +139,14 @@
 
 .section .text
 
-.global mp_subadd_v0_sw
+// v1: using specific-use ISE
 
-mp_subadd_v0_sw:
+.global mp_subadd_v1_ise
+
+mp_subadd_v1_ise:
   PROLOGUE
   A_SUB_B
   STORE_R1ST
-  LOAD_P
-  MASK_P
   ADD_MASK
   STORE_R2ND
   EPILOGUE
-
-
-.section .data 
-.balign 8
-
-P434:
-.dword  0xFFFFFFFFFFFFFFFF              // P0
-// .dword  0xFFFFFFFFFFFFFFFF           // P1
-// .dword  0xFFFFFFFFFFFFFFFF           // P2
-.dword  0xFDC1767AE2FFFFFF              // P3
-.dword  0x7BC65C783158AEA3              // P4
-.dword  0x6CFC5FD681C52056              // P5
-.dword  0x0002341F27177344              // P6

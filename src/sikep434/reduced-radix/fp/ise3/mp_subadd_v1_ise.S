@@ -129,14 +129,14 @@
 .endm
 
 .macro ADD_MASK 
-  sike.and.p434x2.add56 R8,  T_, R8,  0
-  sike.and.p434x2.add56 R9,  T_, R9,  0
-  sike.and.p434x2.add56 R10, T_, R10, 0
-  sike.and.p434x2.add56 R11, T_, R11, 0
-  sike.and.p434x2.add56 R12, T_, R12, 0
-  sike.and.p434x2.add56 R13, T_, R13, 0
-  sike.and.p434x2.add56 R14, T_, R14, 0
-  sike.and.p434x2.add56 R15, T_, R15, 0
+  sike.and.p434.add56 R8,  T_, R8,  0
+  sike.and.p434.add56 R9,  T_, R9,  1
+  sike.and.p434.add56 R10, T_, R10, 2
+  sike.and.p434.add56 R11, T_, R11, 3
+  sike.and.p434.add56 R12, T_, R12, 4
+  sike.and.p434.add56 R13, T_, R13, 5
+  sike.and.p434.add56 R14, T_, R14, 6
+  sike.and.p434.add56 R15, T_, R15, 7
 .endm
 
 

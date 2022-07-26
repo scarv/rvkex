@@ -55,7 +55,7 @@
 
 .macro _AI_ADD_PI R, imm
   ld    A_, 8*\imm(a1)
-  ld    P_, 8*\imm(a3)
+  ld    P_, 8*\imm-16(a3)
   add   \R, A_, P_
   sltu  T1, \R, A_
   add   \R, \R, T0
@@ -63,24 +63,42 @@
   or    T0, T0, T1
 .endm
 
-.macro _A0_ADD_P0
+.macro _AJ_ADD_PJ R, imm
+  ld    A_, 8*\imm(a1)
+  add   \R, A_, P_
+  sltu  T1, \R, A_
+  add   \R, \R, T0
+  sltu  T0, \R, T0
+  or    T0, T0, T1
+.endm
+
+.macro _A0_ADD_P0_2P
   ld    A_,  0(a1)
   ld    P_,  0(a3)
   add   R0, A_, P_
   sltu  T0, R0, A_
+  addi  P_, P_, 1
+.endm 
+
+.macro _A0_ADD_P0_4P
+  ld    A_,  0(a1)
+  ld    P_,  0(a3)
+  add   R0, A_, P_
+  sltu  T0, R0, A_
+  addi  P_, P_, 3
 .endm 
 
 .macro _A6_ADD_P6
   ld    A_, 48(a1)
-  ld    P_, 48(a3)
+  ld    P_, 32(a3)
   add   R6, A_, P_
   add   R6, R6, T0 
 .endm
 
-.macro A_ADD_P 
-  _A0_ADD_P0 
-  _AI_ADD_PI R1, 1
-  _AI_ADD_PI R2, 2
+.macro A_ADD_P P
+  _A0_ADD_P0_\P 
+  _AJ_ADD_PJ R1, 1
+  _AJ_ADD_PJ R2, 2
   _AI_ADD_PI R3, 3
   _AI_ADD_PI R4, 4
   _AI_ADD_PI R5, 5
@@ -127,7 +145,7 @@
 mp_sub_p2_v0_sw:
   PROLOGUE
   la a3, P434X2
-  A_ADD_P
+  A_ADD_P 2P
   R_SUB_B
   STORE_R
   EPILOGUE
@@ -138,7 +156,7 @@ mp_sub_p2_v0_sw:
 mp_sub_p4_v0_sw:
   PROLOGUE
   la a3, P434X4
-  A_ADD_P
+  A_ADD_P 4P
   R_SUB_B
   STORE_R
   EPILOGUE
@@ -186,7 +204,16 @@ mp_dblsub_v0_sw:
 
 .macro _PI_SUB_AI R, imm 
   ld    A_, 8*\imm(a0)
-  ld    P_, 8*\imm(a3)
+  ld    P_, 8*\imm-16(a3)
+  sltu  T1, P_, T0
+  sub   \R, P_, T0
+  sltu  T0, \R, A_ 
+  sub   \R, \R, A_ 
+  or    T0, T0, T1
+.endm
+
+.macro _PJ_SUB_AJ R, imm 
+  ld    A_, 8*\imm(a0)
   sltu  T1, P_, T0
   sub   \R, P_, T0
   sltu  T0, \R, A_ 
@@ -199,19 +226,20 @@ mp_dblsub_v0_sw:
   ld    P_,  0(a3)
   sltu  T0, P_, A_ 
   sub   R0, P_, A_
+  addi  P_, P_,  1
 .endm
 
 .macro _P6_SUB_A6
   ld    A_, 48(a0)
-  ld    P_, 48(a3)
+  ld    P_, 32(a3)
   sub   R6, P_, A_
   sub   R6, R6, T0
 .endm
 
 .macro P_SUB_A
   _P0_SUB_A0
-  _PI_SUB_AI R1, 1
-  _PI_SUB_AI R2, 2
+  _PJ_SUB_AJ R1, 1
+  _PJ_SUB_AJ R2, 2
   _PI_SUB_AI R3, 3
   _PI_SUB_AI R4, 4
   _PI_SUB_AI R5, 5
@@ -234,8 +262,8 @@ fpneg_v0_sw:
 
 P434X2:
 .dword  0xFFFFFFFFFFFFFFFE              // P0
-.dword  0xFFFFFFFFFFFFFFFF              // P1
-.dword  0xFFFFFFFFFFFFFFFF              // P2
+// .dword  0xFFFFFFFFFFFFFFFF           // P1
+// .dword  0xFFFFFFFFFFFFFFFF           // P2
 .dword  0xFB82ECF5C5FFFFFF              // P3
 .dword  0xF78CB8F062B15D47              // P4
 .dword  0xD9F8BFAD038A40AC              // P5
@@ -243,8 +271,8 @@ P434X2:
 
 P434X4:
 .dword  0xFFFFFFFFFFFFFFFC              // P0
-.dword  0xFFFFFFFFFFFFFFFF              // P1
-.dword  0xFFFFFFFFFFFFFFFF              // P2
+// .dword  0xFFFFFFFFFFFFFFFF           // P1
+// .dword  0xFFFFFFFFFFFFFFFF           // P2
 .dword  0xF705D9EB8BFFFFFF              // P3
 .dword  0xEF1971E0C562BA8F              // P4
 .dword  0xB3F17F5A07148159              // P5

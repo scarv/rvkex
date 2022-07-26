@@ -49,7 +49,10 @@
 | :----------------------| :---------------------- | ------------:| ------:|
 | Key Generation         | `RV64_TYPE1`            |   35,910,075 |        |
 | Key Generation         | `RV64_TYPE2`            |   26,388,427 |        |
+| Key Generation         | `RV64_TYPE3`            |   26,227,681 |        |
 | Encaplustaion          | `RV64_TYPE1`            |   58,527,705 |        |
 | Encaplustaion          | `RV64_TYPE2`            |   42,849,945 |        |
+| Encaplustaion          | `RV64_TYPE2`            |   42,583,367 |        |
 | Decaplustaion          | `RV64_TYPE1`            |   62,598,805 |        |
 | Decaplustaion          | `RV64_TYPE2`            |   45,928,349 |        |
+| Decaplustaion          | `RV64_TYPE3`            |   45,646,228 |        |

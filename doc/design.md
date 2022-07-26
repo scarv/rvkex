@@ -263,7 +263,21 @@
     x       <- GPR[rs1]
     y       <- GPR[rs2]
 
-
+    if      ( imm == 0 || imm == 1 || imm == 2 ) {
+      r <- ( x & 0xFFFFFFFFFFFFFFFF ) + y;
+    }
+    else if ( imm == 3) {
+      r <- ( x & 0xFDC1767AE2FFFFFF ) + y;
+    }
+    else if ( imm == 4) {
+      r <- ( x & 0x7BC65C783158AEA3 ) + y;
+    }
+    else if ( imm == 5) {
+      r <- ( x & 0x6CFC5FD681C52056 ) + y;
+    }
+    else if ( imm == 6) {
+      r <- ( x & 0x0002341F27177344 ) + y;
+    }
 
     GPR[rd] <- r
   }

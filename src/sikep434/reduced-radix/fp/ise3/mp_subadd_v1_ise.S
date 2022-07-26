@@ -110,22 +110,22 @@
 // carry propagation
 
 .macro GET_SIGN 
-  sraadd T_, R1,  R0, 56
-  sraadd T_, R2,  T_, 56
-  sraadd T_, R3,  T_, 56
-  sraadd T_, R4,  T_, 56
-  sraadd T_, R5,  T_, 56
-  sraadd T_, R6,  T_, 56
-  sraadd T_, R7,  T_, 56
-  sraadd T_, R8,  T_, 56
-  sraadd T_, R9,  T_, 56
-  sraadd T_, R10, T_, 56
-  sraadd T_, R11, T_, 56
-  sraadd T_, R12, T_, 56
-  sraadd T_, R13, T_, 56
-  sraadd T_, R14, T_, 56
-  sraadd T_, R15, T_, 56
-  srai   T_, T_, 63
+  sraiadd T_, R1,  R0, 56
+  sraiadd T_, R2,  T_, 56
+  sraiadd T_, R3,  T_, 56
+  sraiadd T_, R4,  T_, 56
+  sraiadd T_, R5,  T_, 56
+  sraiadd T_, R6,  T_, 56
+  sraiadd T_, R7,  T_, 56
+  sraiadd T_, R8,  T_, 56
+  sraiadd T_, R9,  T_, 56
+  sraiadd T_, R10, T_, 56
+  sraiadd T_, R11, T_, 56
+  sraiadd T_, R12, T_, 56
+  sraiadd T_, R13, T_, 56
+  sraiadd T_, R14, T_, 56
+  sraiadd T_, R15, T_, 56
+  srai    T_, T_, 63
 .endm
 
 .macro ADD_MASK 

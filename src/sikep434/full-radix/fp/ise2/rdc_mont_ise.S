@@ -82,26 +82,26 @@
 
 // accu: H M L -> H M T 
 .macro _ACCU_AIBJ_1 L, M, H, T, A, B 
-  macclo \T, \A, \B, \L
+  maddlu \T, \A, \B, \L
   sltu   \L, \T, \L
-  macchi \L, \A, \B, \L                 // no carry-out
+  maddhu \L, \A, \B, \L                 // no carry-out
   add    \M, \M, \L
   sltu   \L, \M, \L
   add    \H, \H, \L
 .endm
 
 .macro COMPUTE_A3
-  macclo A3, A0, P3, T0 
+  maddlu A3, A0, P3, T0 
   sltu   T0, A3, T0 
-  macchi Z1, A0, P3, T0
+  maddhu Z1, A0, P3, T0
 .endm
 
 .macro COMPUTE_A4 
   add    A4, Z1, A4 
   sltu   Z2, A4, Z1
-  macclo T0, A0, P4, A4
+  maddlu T0, A0, P4, A4
   sltu   A4, T0, A4
-  macchi A4, A0, P4, A4
+  maddhu A4, A0, P4, A4
   add    Z2, Z2, A4
   sltu   Z0, Z2, A4
   _ACCU_AIBJ_1   T0, Z2, Z0, A4, A1, P3 
@@ -176,10 +176,10 @@
   add    Z0, Z0, R_ 
   sltu   T0, Z0, R_ 
   add    Z1, Z1, T0
-  macclo R_, A6, P6, Z0
+  maddlu R_, A6, P6, Z0
   sltu   T0, R_, Z0
   add    Z1, Z1, T0 
-  macchi Z1, A6, P6, Z1 
+  maddhu Z1, A6, P6, Z1 
   sd     R_, 40(a0)
 .endm
 

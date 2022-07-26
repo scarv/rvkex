@@ -79,190 +79,190 @@
 // integer multiplication (based on product-scanning)
 
 .macro COMPUTE_R0
-  macc56lo ZL, A0, B0, x0
-  macc56hi ZH, A0, B0, x0
+  madd56lu ZL, A0, B0, x0
+  madd56hu ZH, A0, B0, x0
   sd       ZL,  0(a0)
 .endm
 
 .macro COMPUTE_R1
-  macc56lo ZH, A0, B1, ZH
-  macc56hi ZL, A0, B1, x0
-  macc56lo ZH, A1, B0, ZH
-  macc56hi ZL, A1, B0, ZL
+  madd56lu ZH, A0, B1, ZH
+  madd56hu ZL, A0, B1, x0
+  madd56lu ZH, A1, B0, ZH
+  madd56hu ZL, A1, B0, ZL
   sd       ZH,  8(a0)
 .endm
 
 .macro COMPUTE_R2
-  macc56lo ZL, A0, B2, ZL
-  macc56hi ZH, A0, B2, x0
-  macc56lo ZL, A1, B1, ZL
-  macc56hi ZH, A1, B1, ZH
-  macc56lo ZL, A2, B0, ZL
-  macc56hi ZH, A2, B0, ZH
+  madd56lu ZL, A0, B2, ZL
+  madd56hu ZH, A0, B2, x0
+  madd56lu ZL, A1, B1, ZL
+  madd56hu ZH, A1, B1, ZH
+  madd56lu ZL, A2, B0, ZL
+  madd56hu ZH, A2, B0, ZH
   sd       ZL, 16(a0)
 .endm
 
 .macro COMPUTE_R3
-  macc56lo ZH, A0, B3, ZH
-  macc56hi ZL, A0, B3, x0
-  macc56lo ZH, A1, B2, ZH
-  macc56hi ZL, A1, B2, ZL
-  macc56lo ZH, A2, B1, ZH
-  macc56hi ZL, A2, B1, ZL
-  macc56lo ZH, A3, B0, ZH
-  macc56hi ZL, A3, B0, ZL
+  madd56lu ZH, A0, B3, ZH
+  madd56hu ZL, A0, B3, x0
+  madd56lu ZH, A1, B2, ZH
+  madd56hu ZL, A1, B2, ZL
+  madd56lu ZH, A2, B1, ZH
+  madd56hu ZL, A2, B1, ZL
+  madd56lu ZH, A3, B0, ZH
+  madd56hu ZL, A3, B0, ZL
   sd       ZH, 24(a0)
 .endm
 
 .macro COMPUTE_R4
-  macc56lo ZL, A0, B4, ZL
-  macc56hi ZH, A0, B4, x0
-  macc56lo ZL, A1, B3, ZL
-  macc56hi ZH, A1, B3, ZH
-  macc56lo ZL, A2, B2, ZL
-  macc56hi ZH, A2, B2, ZH
-  macc56lo ZL, A3, B1, ZL
-  macc56hi ZH, A3, B1, ZH
-  macc56lo ZL, A4, B0, ZL
-  macc56hi ZH, A4, B0, ZH
+  madd56lu ZL, A0, B4, ZL
+  madd56hu ZH, A0, B4, x0
+  madd56lu ZL, A1, B3, ZL
+  madd56hu ZH, A1, B3, ZH
+  madd56lu ZL, A2, B2, ZL
+  madd56hu ZH, A2, B2, ZH
+  madd56lu ZL, A3, B1, ZL
+  madd56hu ZH, A3, B1, ZH
+  madd56lu ZL, A4, B0, ZL
+  madd56hu ZH, A4, B0, ZH
   sd       ZL, 32(a0)
 .endm
 
 .macro COMPUTE_R5
-  macc56lo ZH, A0, B5, ZH
-  macc56hi ZL, A0, B5, x0
-  macc56lo ZH, A1, B4, ZH
-  macc56hi ZL, A1, B4, ZL
-  macc56lo ZH, A2, B3, ZH
-  macc56hi ZL, A2, B3, ZL
-  macc56lo ZH, A3, B2, ZH
-  macc56hi ZL, A3, B2, ZL
-  macc56lo ZH, A4, B1, ZH
-  macc56hi ZL, A4, B1, ZL
-  macc56lo ZH, A5, B0, ZH
-  macc56hi ZL, A5, B0, ZL
+  madd56lu ZH, A0, B5, ZH
+  madd56hu ZL, A0, B5, x0
+  madd56lu ZH, A1, B4, ZH
+  madd56hu ZL, A1, B4, ZL
+  madd56lu ZH, A2, B3, ZH
+  madd56hu ZL, A2, B3, ZL
+  madd56lu ZH, A3, B2, ZH
+  madd56hu ZL, A3, B2, ZL
+  madd56lu ZH, A4, B1, ZH
+  madd56hu ZL, A4, B1, ZL
+  madd56lu ZH, A5, B0, ZH
+  madd56hu ZL, A5, B0, ZL
   sd       ZH, 40(a0)
 .endm
 
 .macro COMPUTE_R6
-  macc56lo ZL, A0, B6, ZL
-  macc56hi ZH, A0, B6, x0
-  macc56lo ZL, A1, B5, ZL
-  macc56hi ZH, A1, B5, ZH
-  macc56lo ZL, A2, B4, ZL
-  macc56hi ZH, A2, B4, ZH
-  macc56lo ZL, A3, B3, ZL
-  macc56hi ZH, A3, B3, ZH
-  macc56lo ZL, A4, B2, ZL
-  macc56hi ZH, A4, B2, ZH
-  macc56lo ZL, A5, B1, ZL
-  macc56hi ZH, A5, B1, ZH
-  macc56lo ZL, A6, B0, ZL
-  macc56hi ZH, A6, B0, ZH
+  madd56lu ZL, A0, B6, ZL
+  madd56hu ZH, A0, B6, x0
+  madd56lu ZL, A1, B5, ZL
+  madd56hu ZH, A1, B5, ZH
+  madd56lu ZL, A2, B4, ZL
+  madd56hu ZH, A2, B4, ZH
+  madd56lu ZL, A3, B3, ZL
+  madd56hu ZH, A3, B3, ZH
+  madd56lu ZL, A4, B2, ZL
+  madd56hu ZH, A4, B2, ZH
+  madd56lu ZL, A5, B1, ZL
+  madd56hu ZH, A5, B1, ZH
+  madd56lu ZL, A6, B0, ZL
+  madd56hu ZH, A6, B0, ZH
   sd       ZL, 48(a0)
 .endm
 
 .macro COMPUTE_R7
-  macc56lo ZH, A0, B7, ZH
-  macc56hi ZL, A0, B7, x0
-  macc56lo ZH, A1, B6, ZH
-  macc56hi ZL, A1, B6, ZL
-  macc56lo ZH, A2, B5, ZH
-  macc56hi ZL, A2, B5, ZL
-  macc56lo ZH, A3, B4, ZH
-  macc56hi ZL, A3, B4, ZL
-  macc56lo ZH, A4, B3, ZH
-  macc56hi ZL, A4, B3, ZL
-  macc56lo ZH, A5, B2, ZH
-  macc56hi ZL, A5, B2, ZL
-  macc56lo ZH, A6, B1, ZH
-  macc56hi ZL, A6, B1, ZL
-  macc56lo ZH, A7, B0, ZH
-  macc56hi ZL, A7, B0, ZL
+  madd56lu ZH, A0, B7, ZH
+  madd56hu ZL, A0, B7, x0
+  madd56lu ZH, A1, B6, ZH
+  madd56hu ZL, A1, B6, ZL
+  madd56lu ZH, A2, B5, ZH
+  madd56hu ZL, A2, B5, ZL
+  madd56lu ZH, A3, B4, ZH
+  madd56hu ZL, A3, B4, ZL
+  madd56lu ZH, A4, B3, ZH
+  madd56hu ZL, A4, B3, ZL
+  madd56lu ZH, A5, B2, ZH
+  madd56hu ZL, A5, B2, ZL
+  madd56lu ZH, A6, B1, ZH
+  madd56hu ZL, A6, B1, ZL
+  madd56lu ZH, A7, B0, ZH
+  madd56hu ZL, A7, B0, ZL
   sd       ZH, 56(a0)
 .endm
 
 .macro COMPUTE_R8
-  macc56lo ZL, A1, B7, ZL
-  macc56hi ZH, A1, B7, x0
-  macc56lo ZL, A2, B6, ZL
-  macc56hi ZH, A2, B6, ZH
-  macc56lo ZL, A3, B5, ZL
-  macc56hi ZH, A3, B5, ZH
-  macc56lo ZL, A4, B4, ZL
-  macc56hi ZH, A4, B4, ZH
-  macc56lo ZL, A5, B3, ZL
-  macc56hi ZH, A5, B3, ZH
-  macc56lo ZL, A6, B2, ZL
-  macc56hi ZH, A6, B2, ZH
-  macc56lo ZL, A7, B1, ZL
-  macc56hi ZH, A7, B1, ZH
+  madd56lu ZL, A1, B7, ZL
+  madd56hu ZH, A1, B7, x0
+  madd56lu ZL, A2, B6, ZL
+  madd56hu ZH, A2, B6, ZH
+  madd56lu ZL, A3, B5, ZL
+  madd56hu ZH, A3, B5, ZH
+  madd56lu ZL, A4, B4, ZL
+  madd56hu ZH, A4, B4, ZH
+  madd56lu ZL, A5, B3, ZL
+  madd56hu ZH, A5, B3, ZH
+  madd56lu ZL, A6, B2, ZL
+  madd56hu ZH, A6, B2, ZH
+  madd56lu ZL, A7, B1, ZL
+  madd56hu ZH, A7, B1, ZH
   sd       ZL, 64(a0)
 .endm
 
 .macro COMPUTE_R9
-  macc56lo ZH, A2, B7, ZH
-  macc56hi ZL, A2, B7, x0
-  macc56lo ZH, A3, B6, ZH
-  macc56hi ZL, A3, B6, ZL
-  macc56lo ZH, A4, B5, ZH
-  macc56hi ZL, A4, B5, ZL
-  macc56lo ZH, A5, B4, ZH
-  macc56hi ZL, A5, B4, ZL
-  macc56lo ZH, A6, B3, ZH
-  macc56hi ZL, A6, B3, ZL
-  macc56lo ZH, A7, B2, ZH
-  macc56hi ZL, A7, B2, ZL
+  madd56lu ZH, A2, B7, ZH
+  madd56hu ZL, A2, B7, x0
+  madd56lu ZH, A3, B6, ZH
+  madd56hu ZL, A3, B6, ZL
+  madd56lu ZH, A4, B5, ZH
+  madd56hu ZL, A4, B5, ZL
+  madd56lu ZH, A5, B4, ZH
+  madd56hu ZL, A5, B4, ZL
+  madd56lu ZH, A6, B3, ZH
+  madd56hu ZL, A6, B3, ZL
+  madd56lu ZH, A7, B2, ZH
+  madd56hu ZL, A7, B2, ZL
   sd       ZH, 72(a0)
 .endm
 
 .macro COMPUTE_R10
-  macc56lo ZL, A3, B7, ZL
-  macc56hi ZH, A3, B7, x0
-  macc56lo ZL, A4, B6, ZL
-  macc56hi ZH, A4, B6, ZH
-  macc56lo ZL, A5, B5, ZL
-  macc56hi ZH, A5, B5, ZH
-  macc56lo ZL, A6, B4, ZL
-  macc56hi ZH, A6, B4, ZH
-  macc56lo ZL, A7, B3, ZL
-  macc56hi ZH, A7, B3, ZH
+  madd56lu ZL, A3, B7, ZL
+  madd56hu ZH, A3, B7, x0
+  madd56lu ZL, A4, B6, ZL
+  madd56hu ZH, A4, B6, ZH
+  madd56lu ZL, A5, B5, ZL
+  madd56hu ZH, A5, B5, ZH
+  madd56lu ZL, A6, B4, ZL
+  madd56hu ZH, A6, B4, ZH
+  madd56lu ZL, A7, B3, ZL
+  madd56hu ZH, A7, B3, ZH
   sd       ZL, 80(a0)
 .endm
 
 .macro COMPUTE_R11
-  macc56lo ZH, A4, B7, ZH
-  macc56hi ZL, A4, B7, x0
-  macc56lo ZH, A5, B6, ZH
-  macc56hi ZL, A5, B6, ZL
-  macc56lo ZH, A6, B5, ZH
-  macc56hi ZL, A6, B5, ZL
-  macc56lo ZH, A7, B4, ZH
-  macc56hi ZL, A7, B4, ZL
+  madd56lu ZH, A4, B7, ZH
+  madd56hu ZL, A4, B7, x0
+  madd56lu ZH, A5, B6, ZH
+  madd56hu ZL, A5, B6, ZL
+  madd56lu ZH, A6, B5, ZH
+  madd56hu ZL, A6, B5, ZL
+  madd56lu ZH, A7, B4, ZH
+  madd56hu ZL, A7, B4, ZL
   sd       ZH, 88(a0)
 .endm
 
 .macro COMPUTE_R12
-  macc56lo ZL, A5, B7, ZL
-  macc56hi ZH, A5, B7, x0
-  macc56lo ZL, A6, B6, ZL
-  macc56hi ZH, A6, B6, ZH
-  macc56lo ZL, A7, B5, ZL
-  macc56hi ZH, A7, B5, ZH
+  madd56lu ZL, A5, B7, ZL
+  madd56hu ZH, A5, B7, x0
+  madd56lu ZL, A6, B6, ZL
+  madd56hu ZH, A6, B6, ZH
+  madd56lu ZL, A7, B5, ZL
+  madd56hu ZH, A7, B5, ZH
   sd       ZL, 96(a0)
 .endm
 
 .macro COMPUTE_R13
-  macc56lo ZH, A6, B7, ZH
-  macc56hi ZL, A6, B7, x0
-  macc56lo ZH, A7, B6, ZH
-  macc56hi ZL, A7, B6, ZL
+  madd56lu ZH, A6, B7, ZH
+  madd56hu ZL, A6, B7, x0
+  madd56lu ZH, A7, B6, ZH
+  madd56hu ZL, A7, B6, ZL
   sd       ZH,104(a0)
 .endm
 
 .macro COMPUTE_R14
-  macc56lo ZL, A7, B7, ZL
-  macc56hi ZH, A7, B7, x0
+  madd56lu ZL, A7, B7, ZL
+  madd56hu ZH, A7, B7, x0
   sd       ZL,112(a0)
 .endm
 

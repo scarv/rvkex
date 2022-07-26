@@ -24,7 +24,7 @@
   - [x] full-radix    ISE-assisted   sikep434
 
 
-  Furthermore, we plan to design several different ISEs and then discuss different trade-offs. 
+  Furthermore, we plan to design general-use ISE (for big number arithmetic) and specific-use ISE (for SIKE) then discuss different trade-offs. 
 
 - Since SIKE is relatively costly (compared to other PQC KEMs), it makes more sense to target more computing-powerful `rv64` instead of `rv32` in this project. Some details and arguments about the performance of SIKE can be found on page 36 of [3]. 
 
@@ -34,13 +34,15 @@
 ├── bin                       - scripts (e.g., environment configuration)
 ├── doc                       - documentation (e.g., encoding and design)
 ├── src                       - source code
+│   ├── hw                    - hardware part
 │   ├── sikep434              - sikep434 implementation
 │   │   ├── full-radix            - radix-2^64 implementation
 │   │   └── reduced-radix         - radix-2^56 implementation
 │   └── x25519                - x25519 implementations
 │       ├── full-radix            - radix-2^64 implementation
 │       └── reduced-radix         - radix-2^51 implementation
-├── sw-toolchain              - scripts to install RISC-V sw toolchains 
+├── hw-toolchain              - scripts to install RISC-V hardware toolchains 
+├── sw-toolchain              - scripts to install RISC-V software toolchains 
 └── work                      - working directory for build
 ```
 
@@ -82,12 +84,6 @@
   ```sh
   make sw-run ALG=x25519 RADIX=reduced TYPE=RV64_TYPE2 MODE=debug 
   ```
-
-## TODO 
-
-- [x] further save `ld` instructions (regarding modulus) in field/integer subtraction/addition of sike
-- [ ] add custom instructions for additions/subtractions in sike
-
 
 ## References and links
 

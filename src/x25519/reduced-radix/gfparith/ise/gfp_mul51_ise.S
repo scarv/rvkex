@@ -51,27 +51,27 @@
 
 .macro MULTIPLY_B0
   ld        A_,  0(a1)
-  macc51lo  R0, A_, B0, x0
-  macc51hi  R1, A_, B0, x0
+  madd51lu  R0, A_, B0, x0
+  madd51hu  R1, A_, B0, x0
   ld        A_,  8(a1)
-  macc51lo  R1, A_, B0, R1
-  macc51hi  R2, A_, B0, x0
+  madd51lu  R1, A_, B0, R1
+  madd51hu  R2, A_, B0, x0
   ld        A_, 16(a1)
-  macc51lo  R2, A_, B0, R2
-  macc51hi  R3, A_, B0, x0
+  madd51lu  R2, A_, B0, R2
+  madd51hu  R3, A_, B0, x0
   ld        A_, 24(a1)
-  macc51lo  R3, A_, B0, R3
-  macc51hi  R4, A_, B0, x0
+  madd51lu  R3, A_, B0, R3
+  madd51hu  R4, A_, B0, x0
   ld        A_, 32(a1)
-  macc51lo  R4, A_, B0, R4
-  macc51hi  R5, A_, B0, x0
+  madd51lu  R4, A_, B0, R4
+  madd51hu  R5, A_, B0, x0
 .endm
 
 // carry propagation 
 
 .macro CARRY_PROPAGATION
-  macc51lo  R0, R5, M0, R0
-  sraadd    R1, R1, R0, 51
+  madd51lu  R0, R5, M0, R0
+  sraiadd   R1, R1, R0, 51
   and       R0, R0, M1
 .endm 
 

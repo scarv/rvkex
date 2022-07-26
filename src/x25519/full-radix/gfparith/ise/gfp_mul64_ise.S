@@ -62,17 +62,17 @@
   mul    T1, A0, B0
   mulhu  T0, A0, B0
 
-  macclo R1, A1, B0, T0 
+  maddlu R1, A1, B0, T0 
   sltu   T0, R1, T0 
-  macchi T0, A1, B0, T0 
+  maddhu T0, A1, B0, T0 
 
-  macclo R2, A2, B0, T0 
+  maddlu R2, A2, B0, T0 
   sltu   T0, R2, T0 
-  macchi T0, A2, B0, T0  
+  maddhu T0, A2, B0, T0  
 
-  macclo R3, A3, B0, T0 
+  maddlu R3, A3, B0, T0 
   sltu   T0, R3, T0 
-  macchi R4, A3, B0, T0  
+  maddhu R4, A3, B0, T0  
 .endm
 
 // final reduction 
@@ -84,7 +84,7 @@
   slli   R3, R3, 1
   srli   R3, R3, 1
   li     M0, 19
-  macclo R0, R4, M0, T1 
+  maddlu R0, R4, M0, T1 
   sltu   T0, R0, T1 
   add    R1, R1, T0 
   sltu   T0, R1, T0 

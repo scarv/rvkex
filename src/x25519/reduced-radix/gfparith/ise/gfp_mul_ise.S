@@ -66,76 +66,76 @@
 
 .macro MULTIPLY_A0
   ld        A_,  0(a1)
-  macc51lo  R0, A_, B0, x0
-  macc51hi  R1, A_, B0, x0
-  macc51lo  R1, A_, B1, R1
-  macc51hi  R2, A_, B1, x0
-  macc51lo  R2, A_, B2, R2
-  macc51hi  R3, A_, B2, x0
-  macc51lo  R3, A_, B3, R3
-  macc51hi  R4, A_, B3, x0
-  macc51lo  R4, A_, B4, R4
-  macc51hi  R5, A_, B4, x0 
+  madd51lu  R0, A_, B0, x0
+  madd51hu  R1, A_, B0, x0
+  madd51lu  R1, A_, B1, R1
+  madd51hu  R2, A_, B1, x0
+  madd51lu  R2, A_, B2, R2
+  madd51hu  R3, A_, B2, x0
+  madd51lu  R3, A_, B3, R3
+  madd51hu  R4, A_, B3, x0
+  madd51lu  R4, A_, B4, R4
+  madd51hu  R5, A_, B4, x0 
 .endm
 
 .macro MULTIPLY_A1
   ld        A_,  8(a1)
   mul       B4, B4, M0
-  macc51lo  R1, A_, B0, R1
-  macc51hi  R2, A_, B0, R2
-  macc51lo  R2, A_, B1, R2
-  macc51hi  R3, A_, B1, R3
-  macc51lo  R3, A_, B2, R3
-  macc51hi  R4, A_, B2, R4
-  macc51lo  R4, A_, B3, R4
-  macc51hi  R5, A_, B3, R5
-  macc51lo  R0, A_, B4, R0
-  macc51hi  R1, A_, B4, R1
+  madd51lu  R1, A_, B0, R1
+  madd51hu  R2, A_, B0, R2
+  madd51lu  R2, A_, B1, R2
+  madd51hu  R3, A_, B1, R3
+  madd51lu  R3, A_, B2, R3
+  madd51hu  R4, A_, B2, R4
+  madd51lu  R4, A_, B3, R4
+  madd51hu  R5, A_, B3, R5
+  madd51lu  R0, A_, B4, R0
+  madd51hu  R1, A_, B4, R1
 .endm 
 
 .macro MULTIPLY_A2
   ld        A_, 16(a1)
   mul       B3, B3, M0
-  macc51lo  R2, A_, B0, R2
-  macc51hi  R3, A_, B0, R3
-  macc51lo  R3, A_, B1, R3
-  macc51hi  R4, A_, B1, R4
-  macc51lo  R4, A_, B2, R4
-  macc51hi  R5, A_, B2, R5
-  macc51lo  R0, A_, B3, R0
-  macc51hi  R1, A_, B3, R1
-  macc51lo  R1, A_, B4, R1
-  macc51hi  R2, A_, B4, R2
+  madd51lu  R2, A_, B0, R2
+  madd51hu  R3, A_, B0, R3
+  madd51lu  R3, A_, B1, R3
+  madd51hu  R4, A_, B1, R4
+  madd51lu  R4, A_, B2, R4
+  madd51hu  R5, A_, B2, R5
+  madd51lu  R0, A_, B3, R0
+  madd51hu  R1, A_, B3, R1
+  madd51lu  R1, A_, B4, R1
+  madd51hu  R2, A_, B4, R2
 .endm
 
 .macro MULTIPLY_A3
   ld        A_, 24(a1)
   mul       B2, B2, M0
-  macc51lo  R3, A_, B0, R3
-  macc51hi  R4, A_, B0, R4
-  macc51lo  R4, A_, B1, R4
-  macc51hi  R5, A_, B1, R5
-  macc51lo  R0, A_, B2, R0
-  macc51hi  R1, A_, B2, R1
-  macc51lo  R1, A_, B3, R1
-  macc51hi  R2, A_, B3, R2
-  macc51lo  R2, A_, B4, R2
-  macc51hi  R3, A_, B4, R3
+  madd51lu  R3, A_, B0, R3
+  madd51hu  R4, A_, B0, R4
+  madd51lu  R4, A_, B1, R4
+  madd51hu  R5, A_, B1, R5
+  madd51lu  R0, A_, B2, R0
+  madd51hu  R1, A_, B2, R1
+  madd51lu  R1, A_, B3, R1
+  madd51hu  R2, A_, B3, R2
+  madd51lu  R2, A_, B4, R2
+  madd51hu  R3, A_, B4, R3
 .endm
 
 .macro MULTIPLY_A4
   ld        A_, 32(a1)
   mul       B1, B1, M0
-  macc51lo  R4, A_, B0, R4
-  macc51hi  R5, A_, B0, R5
-  macc51lo  R0, A_, B1, R0
-  macc51hi  R1, A_, B1, R1
-  macc51lo  R1, A_, B2, R1
-  macc51hi  R2, A_, B2, R2
-  macc51lo  R2, A_, B3, R2
-  macc51hi  R3, A_, B3, R3
-  macc51lo  R3, A_, B4, R3
-  macc51hi  R4, A_, B4, R4
+  madd51lu  R4, A_, B0, R4
+  madd51hu  R5, A_, B0, R5
+  madd51lu  R0, A_, B1, R0
+  madd51hu  R1, A_, B1, R1
+  madd51lu  R1, A_, B2, R1
+  madd51hu  R2, A_, B2, R2
+  madd51lu  R2, A_, B3, R2
+  madd51hu  R3, A_, B3, R3
+  madd51lu  R3, A_, B4, R3
+  madd51hu  R4, A_, B4, R4
 .endm
 
 // carry propagation 
@@ -144,17 +144,17 @@
   li        M1, 0x7FFFFFFFFFFFFULL
   mul       R5, R5, M0
   add       R0, R0, R5
-  sraadd    R1, R1, R0, 51
+  sraiadd   R1, R1, R0, 51
   and       B0, R0, M1
-  sraadd    R2, R2, R1, 51
+  sraiadd   R2, R2, R1, 51
   and       B1, R1, M1 
-  sraadd    R3, R3, R2, 51
+  sraiadd   R3, R3, R2, 51
   and       B2, R2, M1
-  sraadd    R4, R4, R3, 51
+  sraiadd   R4, R4, R3, 51
   and       B3, R3, M1
   srl       R5, R4,     51
   and       B4, R4, M1
-  macc51lo  B0, R5, M0, B0
+  madd51lu  B0, R5, M0, B0
 .endm 
 
 

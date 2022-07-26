@@ -78,8 +78,8 @@
 // carry propagation
 
 .macro _PROPAGATE_CARRY A, B 
-  sraadd \B, \B, \A, 56
-  and    \A, \A, M0
+  sraiadd \B, \B, \A, 56
+  and     \A, \A, M0
 .endm
 
 .macro CARRY_PROPAGATION

@@ -20,14 +20,14 @@
 - `RV64_RDCD_TYPE2`: RISC-V base ISA + general-use ISE shown below. 
 
 ```
-  sraadd   rd, rs1, rs2, imm {
+  sraiadd  rd, rs1, rs2, imm {
     x       <- GPR[rs1]
     y       <- GPR[rs2]
     r       <- x + EXTS(y >> imm)
     GPR[rd] <- r
   }
 
-  macc51lo rd, rs1, rs2, rs3 {
+  madd51lu rd, rs1, rs2, rs3 {
     x       <- GPR[rs1]
     y       <- GPR[rs2]
     z       <- GPR[rs3]
@@ -36,7 +36,7 @@
     GPR[rd] <- r
   }
 
-  macc51hi rd, rs1, rs2, rs3 {
+  madd51hu rd, rs1, rs2, rs3 {
     x       <- GPR[rs1]
     y       <- GPR[rs2]
     z       <- GPR[rs3]
@@ -45,7 +45,7 @@
     GPR[rd] <- r
   }
 
-  macc56lo rd, rs1, rs2, rs3 {
+  madd56lu rd, rs1, rs2, rs3 {
     x       <- GPR[rs1]
     y       <- GPR[rs2]
     z       <- GPR[rs3]
@@ -54,7 +54,7 @@
     GPR[rd] <- r
   }
 
-  macc56hi rd, rs1, rs2, rs3 {
+  madd56hu rd, rs1, rs2, rs3 {
     x       <- GPR[rs1]
     y       <- GPR[rs2]
     z       <- GPR[rs3]
@@ -212,7 +212,7 @@
 - `RV64_FULL_TYPE2`: base ISA + general-use ISE shown below. 
 
 ```
-  macclo   rd, rs1, rs2, rs3 {
+  maddlu   rd, rs1, rs2, rs3 {
     x       <- GPR[rs1]
     y       <- GPR[rs2]
     z       <- GPR[rs3]
@@ -221,7 +221,7 @@
     GPR[rd] <- r
   }
 
-  macchi   rd, rs1, rs2, rs3 {
+  maddhu   rd, rs1, rs2, rs3 {
     x       <- GPR[rs1]
     y       <- GPR[rs2]
     z       <- GPR[rs3]

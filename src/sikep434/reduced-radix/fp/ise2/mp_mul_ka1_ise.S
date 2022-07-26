@@ -66,44 +66,44 @@
 
 .macro MUL_4X4_PS R0, R1, R2, R3, R4, R5, R6, R7, A0, A1, A2, A3, B0, B1, B2, B3
   // compute R0 R1
-  macc56lo \R0, \A0, \B0,  x0
-  macc56hi \R1, \A0, \B0,  x0
+  madd56lu \R0, \A0, \B0,  x0
+  madd56hu \R1, \A0, \B0,  x0
   // compute R1 R2
-  macc56lo \R1, \A0, \B1, \R1
-  macc56hi \R2, \A0, \B1,  x0
-  macc56lo \R1, \A1, \B0, \R1
-  macc56hi \R2, \A1, \B0, \R2
+  madd56lu \R1, \A0, \B1, \R1
+  madd56hu \R2, \A0, \B1,  x0
+  madd56lu \R1, \A1, \B0, \R1
+  madd56hu \R2, \A1, \B0, \R2
   // compute R2 R3
-  macc56lo \R2, \A0, \B2, \R2
-  macc56hi \R3, \A0, \B2,  x0
-  macc56lo \R2, \A1, \B1, \R2
-  macc56hi \R3, \A1, \B1, \R3
-  macc56lo \R2, \A2, \B0, \R2
-  macc56hi \R3, \A2, \B0, \R3
+  madd56lu \R2, \A0, \B2, \R2
+  madd56hu \R3, \A0, \B2,  x0
+  madd56lu \R2, \A1, \B1, \R2
+  madd56hu \R3, \A1, \B1, \R3
+  madd56lu \R2, \A2, \B0, \R2
+  madd56hu \R3, \A2, \B0, \R3
   // compute R3 R4
-  macc56lo \R3, \A0, \B3, \R3
-  macc56hi \R4, \A0, \B3,  x0
-  macc56lo \R3, \A1, \B2, \R3
-  macc56hi \R4, \A1, \B2, \R4
-  macc56lo \R3, \A2, \B1, \R3
-  macc56hi \R4, \A2, \B1, \R4
-  macc56lo \R3, \A3, \B0, \R3
-  macc56hi \R4, \A3, \B0, \R4
+  madd56lu \R3, \A0, \B3, \R3
+  madd56hu \R4, \A0, \B3,  x0
+  madd56lu \R3, \A1, \B2, \R3
+  madd56hu \R4, \A1, \B2, \R4
+  madd56lu \R3, \A2, \B1, \R3
+  madd56hu \R4, \A2, \B1, \R4
+  madd56lu \R3, \A3, \B0, \R3
+  madd56hu \R4, \A3, \B0, \R4
   // compute R4 R5
-  macc56lo \R4, \A1, \B3, \R4
-  macc56hi \R5, \A1, \B3,  x0
-  macc56lo \R4, \A2, \B2, \R4
-  macc56hi \R5, \A2, \B2, \R5
-  macc56lo \R4, \A3, \B1, \R4
-  macc56hi \R5, \A3, \B1, \R5
+  madd56lu \R4, \A1, \B3, \R4
+  madd56hu \R5, \A1, \B3,  x0
+  madd56lu \R4, \A2, \B2, \R4
+  madd56hu \R5, \A2, \B2, \R5
+  madd56lu \R4, \A3, \B1, \R4
+  madd56hu \R5, \A3, \B1, \R5
   // compute R5 R6
-  macc56lo \R5, \A2, \B3, \R5
-  macc56hi \R6, \A2, \B3,  x0
-  macc56lo \R5, \A3, \B2, \R5
-  macc56hi \R6, \A3, \B2, \R6
+  madd56lu \R5, \A2, \B3, \R5
+  madd56hu \R6, \A2, \B3,  x0
+  madd56lu \R5, \A3, \B2, \R5
+  madd56hu \R6, \A3, \B2, \R6
   // compute R6 R7
-  macc56lo \R6, \A3, \B3, \R6
-  macc56hi \R7, \A3, \B3,  x0
+  madd56lu \R6, \A3, \B3, \R6
+  madd56hu \R7, \A3, \B3,  x0
 .endm
 
 

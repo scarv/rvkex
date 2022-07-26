@@ -122,19 +122,19 @@
 // carry propagation
 
 .macro GET_SIGN 
-  sraadd T_, R1, R0, 56
-  sraadd T_, R2, T_, 56
-  sraadd T_, R3, T_, 56
-  sraadd T_, R4, T_, 56
-  sraadd T_, R5, T_, 56
-  sraadd T_, R6, T_, 56
-  sraadd T_, R7, T_, 56
-  srai   T_, T_, 63
+  sraiadd T_, R1, R0, 56
+  sraiadd T_, R2, T_, 56
+  sraiadd T_, R3, T_, 56
+  sraiadd T_, R4, T_, 56
+  sraiadd T_, R5, T_, 56
+  sraiadd T_, R6, T_, 56
+  sraiadd T_, R7, T_, 56
+  srai    T_, T_, 63
 .endm
 
 .macro _PROPAGATE_CARRY A, B 
-  sraadd \B, \B, \A, 56
-  and    \A, \A, M0
+  sraiadd \B, \B, \A, 56
+  and     \A, \A, M0
 .endm
 
 .macro CARRY_PROPAGATION 

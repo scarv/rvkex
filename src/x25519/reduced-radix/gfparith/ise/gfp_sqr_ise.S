@@ -59,54 +59,54 @@
 // interleaved multiplication and reduction (based on operand-scanning)
 
 .macro MULTIPLY_A0
-  macc51lo  R0, A0, A0, x0
-  macc51hi  R1, A0, A0, x0
+  madd51lu  R0, A0, A0, x0
+  madd51hu  R1, A0, A0, x0
   add       A0, A0, A0
-  macc51lo  R1, A0, A1, R1
-  macc51hi  R2, A0, A1, x0
-  macc51lo  R2, A0, A2, R2
-  macc51hi  R3, A0, A2, x0
-  macc51lo  R3, A0, A3, R3
-  macc51hi  R4, A0, A3, x0
-  macc51lo  R4, A0, A4, R4
-  macc51hi  R5, A0, A4, x0 
+  madd51lu  R1, A0, A1, R1
+  madd51hu  R2, A0, A1, x0
+  madd51lu  R2, A0, A2, R2
+  madd51hu  R3, A0, A2, x0
+  madd51lu  R3, A0, A3, R3
+  madd51hu  R4, A0, A3, x0
+  madd51lu  R4, A0, A4, R4
+  madd51hu  R5, A0, A4, x0 
 .endm
 
 .macro MULTIPLY_A1
   mul       A0, A4, M0
-  macc51lo  R2, A1, A1, R2
-  macc51hi  R3, A1, A1, R3
+  madd51lu  R2, A1, A1, R2
+  madd51hu  R3, A1, A1, R3
   add       A1, A1, A1
-  macc51lo  R3, A1, A2, R3
-  macc51hi  R4, A1, A2, R4
-  macc51lo  R4, A1, A3, R4
-  macc51hi  R5, A1, A3, R5
-  macc51lo  R0, A1, A0, R0
-  macc51hi  R1, A1, A0, R1  
+  madd51lu  R3, A1, A2, R3
+  madd51hu  R4, A1, A2, R4
+  madd51lu  R4, A1, A3, R4
+  madd51hu  R5, A1, A3, R5
+  madd51lu  R0, A1, A0, R0
+  madd51hu  R1, A1, A0, R1  
 .endm
 
 .macro MULTIPLY_A2
   mul       A1, A3, M0
-  macc51lo  R4, A2, A2, R4
-  macc51hi  R5, A2, A2, R5
+  madd51lu  R4, A2, A2, R4
+  madd51hu  R5, A2, A2, R5
   add       A2, A2, A2 
-  macc51lo  R0, A2, A1, R0
-  macc51hi  R1, A2, A1, R1
-  macc51lo  R1, A2, A0, R1
-  macc51hi  R2, A2, A0, R2
+  madd51lu  R0, A2, A1, R0
+  madd51hu  R1, A2, A1, R1
+  madd51lu  R1, A2, A0, R1
+  madd51hu  R2, A2, A0, R2
 .endm
 
 .macro MULTIPLY_A3
-  macc51lo  R1, A3, A1, R1
-  macc51hi  R2, A3, A1, R2
+  madd51lu  R1, A3, A1, R1
+  madd51hu  R2, A3, A1, R2
   add       A3, A3, A3 
-  macc51lo  R2, A3, A0, R2
-  macc51hi  R3, A3, A0, R3
+  madd51lu  R2, A3, A0, R2
+  madd51hu  R3, A3, A0, R3
 .endm
 
 .macro MULTIPLY_A4
-  macc51lo  R3, A4, A0, R3
-  macc51hi  R4, A4, A0, R4
+  madd51lu  R3, A4, A0, R3
+  madd51hu  R4, A4, A0, R4
 .endm
 
 // carry propagation 
@@ -114,17 +114,17 @@
 .macro CARRY_PROPAGATION
   mul       R5, R5, M0
   add       R0, R0, R5
-  sraadd    R1, R1, R0, 51
+  sraiadd   R1, R1, R0, 51
   and       A0, R0, M1
-  sraadd    R2, R2, R1, 51
+  sraiadd   R2, R2, R1, 51
   and       A1, R1, M1 
-  sraadd    R3, R3, R2, 51
+  sraiadd   R3, R3, R2, 51
   and       A2, R2, M1
-  sraadd    R4, R4, R3, 51
+  sraiadd   R4, R4, R3, 51
   and       A3, R3, M1 
   srl       R5, R4,     51
   and       A4, R4, M1
-  macc51lo  A0, R5, M0, A0
+  madd51lu  A0, R5, M0, A0
 .endm 
 
 

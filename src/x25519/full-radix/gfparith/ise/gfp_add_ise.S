@@ -100,7 +100,7 @@
   slli   R3, R3, 1
   srli   R3, R3, 1
   li     M0, 19
-  macclo T1, R4, M0, R0
+  maddlu T1, R4, M0, R0
   sltu   T0, T1, T0 
   add    R1, R1, T0 
   sltu   T0, R1, T0 

@@ -75,7 +75,7 @@
 // first loop of Montgomery reduction (based on product-scanning)
 
 .macro _PROPAGATE_CARRY A, B 
-  sraadd \B, \B, \A, 56
+  sraiadd \B, \B, \A, 56
   and    \A, \A, M0
 .endm
 
@@ -86,53 +86,53 @@
 .endm
 
 .macro COMPUTE_A3
-  macc56lo A3, A0, P3, A3
-  macc56hi A4, A0, P3, A4
+  madd56lu A3, A0, P3, A3
+  madd56hu A4, A0, P3, A4
   _PROPAGATE_CARRY A3, A4
 .endm
 
 .macro COMPUTE_A4
-  macc56lo A4, A0, P4, A4
-  macc56hi A5, A0, P4, A5
-  macc56lo A4, A1, P3, A4
-  macc56hi A5, A1, P3, A5
+  madd56lu A4, A0, P4, A4
+  madd56hu A5, A0, P4, A5
+  madd56lu A4, A1, P3, A4
+  madd56hu A5, A1, P3, A5
   _PROPAGATE_CARRY A4, A5
 .endm
 
 .macro COMPUTE_A5
-  macc56lo A5, A0, P5, A5
-  macc56hi A6, A0, P5, A6
-  macc56lo A5, A1, P4, A5
-  macc56hi A6, A1, P4, A6
-  macc56lo A5, A2, P3, A5
-  macc56hi A6, A2, P3, A6
+  madd56lu A5, A0, P5, A5
+  madd56hu A6, A0, P5, A6
+  madd56lu A5, A1, P4, A5
+  madd56hu A6, A1, P4, A6
+  madd56lu A5, A2, P3, A5
+  madd56hu A6, A2, P3, A6
   _PROPAGATE_CARRY A5, A6
 .endm
 
 .macro COMPUTE_A6
-  macc56lo A6, A0, P6, A6
-  macc56hi A7, A0, P6, A7
-  macc56lo A6, A1, P5, A6
-  macc56hi A7, A1, P5, A7
-  macc56lo A6, A2, P4, A6
-  macc56hi A7, A2, P4, A7
-  macc56lo A6, A3, P3, A6
-  macc56hi A7, A3, P3, A7
+  madd56lu A6, A0, P6, A6
+  madd56hu A7, A0, P6, A7
+  madd56lu A6, A1, P5, A6
+  madd56hu A7, A1, P5, A7
+  madd56lu A6, A2, P4, A6
+  madd56hu A7, A2, P4, A7
+  madd56lu A6, A3, P3, A6
+  madd56hu A7, A3, P3, A7
   _PROPAGATE_CARRY A6, A7
 .endm
 
 .macro COMPUTE_A7
   ld       ZL, 64(a1)
-  macc56lo A7, A0, P7, A7
-  macc56hi ZL, A0, P7, ZL
-  macc56lo A7, A1, P6, A7
-  macc56hi ZL, A1, P6, ZL
-  macc56lo A7, A2, P5, A7
-  macc56hi ZL, A2, P5, ZL
-  macc56lo A7, A3, P4, A7
-  macc56hi ZL, A3, P4, ZL
-  macc56lo A7, A4, P3, A7
-  macc56hi ZL, A4, P3, ZL
+  madd56lu A7, A0, P7, A7
+  madd56hu ZL, A0, P7, ZL
+  madd56lu A7, A1, P6, A7
+  madd56hu ZL, A1, P6, ZL
+  madd56lu A7, A2, P5, A7
+  madd56hu ZL, A2, P5, ZL
+  madd56lu A7, A3, P4, A7
+  madd56hu ZL, A3, P4, ZL
+  madd56lu A7, A4, P3, A7
+  madd56hu ZL, A4, P3, ZL
   _PROPAGATE_CARRY A7, ZL
 .endm
 
@@ -140,92 +140,92 @@
 
 .macro COMPUTE_R0
   ld       ZH, 72(a1)
-  macc56lo ZL, A1, P7, ZL
-  macc56hi ZH, A1, P7, ZH
-  macc56lo ZL, A2, P6, ZL
-  macc56hi ZH, A2, P6, ZH
-  macc56lo ZL, A3, P5, ZL
-  macc56hi ZH, A3, P5, ZH
-  macc56lo ZL, A4, P4, ZL
-  macc56hi ZH, A4, P4, ZH
-  macc56lo ZL, A5, P3, ZL
-  macc56hi ZH, A5, P3, ZH
+  madd56lu ZL, A1, P7, ZL
+  madd56hu ZH, A1, P7, ZH
+  madd56lu ZL, A2, P6, ZL
+  madd56hu ZH, A2, P6, ZH
+  madd56lu ZL, A3, P5, ZL
+  madd56hu ZH, A3, P5, ZH
+  madd56lu ZL, A4, P4, ZL
+  madd56hu ZH, A4, P4, ZH
+  madd56lu ZL, A5, P3, ZL
+  madd56hu ZH, A5, P3, ZH
   _PROPAGATE_CARRY ZL, ZH
   sd       ZL,  0(a0)
 .endm
 
 .macro COMPUTE_R1
   ld       ZL, 80(a1)
-  macc56lo ZH, A2, P7, ZH
-  macc56hi ZL, A2, P7, ZL
-  macc56lo ZH, A3, P6, ZH
-  macc56hi ZL, A3, P6, ZL
-  macc56lo ZH, A4, P5, ZH
-  macc56hi ZL, A4, P5, ZL
-  macc56lo ZH, A5, P4, ZH
-  macc56hi ZL, A5, P4, ZL
-  macc56lo ZH, A6, P3, ZH
-  macc56hi ZL, A6, P3, ZL
+  madd56lu ZH, A2, P7, ZH
+  madd56hu ZL, A2, P7, ZL
+  madd56lu ZH, A3, P6, ZH
+  madd56hu ZL, A3, P6, ZL
+  madd56lu ZH, A4, P5, ZH
+  madd56hu ZL, A4, P5, ZL
+  madd56lu ZH, A5, P4, ZH
+  madd56hu ZL, A5, P4, ZL
+  madd56lu ZH, A6, P3, ZH
+  madd56hu ZL, A6, P3, ZL
   _PROPAGATE_CARRY ZH, ZL
   sd       ZH,  8(a0)
 .endm
 
 .macro COMPUTE_R2
   ld       ZH, 88(a1)
-  macc56lo ZL, A3, P7, ZL
-  macc56hi ZH, A3, P7, ZH
-  macc56lo ZL, A4, P6, ZL
-  macc56hi ZH, A4, P6, ZH
-  macc56lo ZL, A5, P5, ZL
-  macc56hi ZH, A5, P5, ZH
-  macc56lo ZL, A6, P4, ZL
-  macc56hi ZH, A6, P4, ZH
-  macc56lo ZL, A7, P3, ZL
-  macc56hi ZH, A7, P3, ZH
+  madd56lu ZL, A3, P7, ZL
+  madd56hu ZH, A3, P7, ZH
+  madd56lu ZL, A4, P6, ZL
+  madd56hu ZH, A4, P6, ZH
+  madd56lu ZL, A5, P5, ZL
+  madd56hu ZH, A5, P5, ZH
+  madd56lu ZL, A6, P4, ZL
+  madd56hu ZH, A6, P4, ZH
+  madd56lu ZL, A7, P3, ZL
+  madd56hu ZH, A7, P3, ZH
   _PROPAGATE_CARRY ZL, ZH
   sd       ZL, 16(a0)
 .endm
 
 .macro COMPUTE_R3
   ld       ZL, 96(a1)
-  macc56lo ZH, A4, P7, ZH
-  macc56hi ZL, A4, P7, ZL
-  macc56lo ZH, A5, P6, ZH
-  macc56hi ZL, A5, P6, ZL
-  macc56lo ZH, A6, P5, ZH
-  macc56hi ZL, A6, P5, ZL
-  macc56lo ZH, A7, P4, ZH
-  macc56hi ZL, A7, P4, ZL
+  madd56lu ZH, A4, P7, ZH
+  madd56hu ZL, A4, P7, ZL
+  madd56lu ZH, A5, P6, ZH
+  madd56hu ZL, A5, P6, ZL
+  madd56lu ZH, A6, P5, ZH
+  madd56hu ZL, A6, P5, ZL
+  madd56lu ZH, A7, P4, ZH
+  madd56hu ZL, A7, P4, ZL
   _PROPAGATE_CARRY ZH, ZL
   sd       ZH, 24(a0)
 .endm
 
 .macro COMPUTE_R4
   ld       ZH,104(a1)
-  macc56lo ZL, A5, P7, ZL
-  macc56hi ZH, A5, P7, ZH
-  macc56lo ZL, A6, P6, ZL
-  macc56hi ZH, A6, P6, ZH
-  macc56lo ZL, A7, P5, ZL
-  macc56hi ZH, A7, P5, ZH
+  madd56lu ZL, A5, P7, ZL
+  madd56hu ZH, A5, P7, ZH
+  madd56lu ZL, A6, P6, ZL
+  madd56hu ZH, A6, P6, ZH
+  madd56lu ZL, A7, P5, ZL
+  madd56hu ZH, A7, P5, ZH
   _PROPAGATE_CARRY ZL, ZH
   sd       ZL, 32(a0)
 .endm
 
 .macro COMPUTE_R5
   ld       ZL,112(a1)
-  macc56lo ZH, A6, P7, ZH
-  macc56hi ZL, A6, P7, ZL
-  macc56lo ZH, A7, P6, ZH
-  macc56hi ZL, A7, P6, ZL
+  madd56lu ZH, A6, P7, ZH
+  madd56hu ZL, A6, P7, ZL
+  madd56lu ZH, A7, P6, ZH
+  madd56hu ZL, A7, P6, ZL
   _PROPAGATE_CARRY ZH, ZL
   sd       ZH, 40(a0)
 .endm
 
 .macro COMPUTE_R6
   ld       ZH,120(a1)
-  macc56lo ZL, A7, P7, ZL
-  macc56hi ZH, A7, P7, ZH
+  madd56lu ZL, A7, P7, ZL
+  madd56hu ZH, A7, P7, ZH
   _PROPAGATE_CARRY ZL, ZH
   sd       ZL, 48(a0)
 .endm

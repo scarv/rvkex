@@ -72,9 +72,9 @@
 
 // accu: H M L -> H M T 
 .macro _ACCU_AIAJ   L, M, H, T, A, B 
-  macclo \T, \A, \B, \L
+  maddlu \T, \A, \B, \L
   sltu   \L, \T, \L
-  macchi \L, \A, \B, \L                 // no carry-out
+  maddhu \L, \A, \B, \L                 // no carry-out
   add    \M, \M, \L
   sltu   \L, \M, \L
   add    \H, \H, \L
@@ -129,9 +129,9 @@
   mul   T2, A0, A3 
   mulhu T3, A0, A3
 
-  macclo T0, A1, A2, T2
+  maddlu T0, A1, A2, T2
   sltu   T1, T0, T2 
-  macchi T1, A1, A2, T1
+  maddhu T1, A1, A2, T1
   add    T1, T1, T3 
   sltu   T2, T1, T3
 
@@ -198,9 +198,9 @@
 .endm
 
 .macro COMPUTE_R6
-  macclo R6, A3, A3, T1
+  maddlu R6, A3, A3, T1
   sltu   T1, R6, T1 
-  macchi R7, A3, A3, R7
+  maddhu R7, A3, A3, R7
 .endm
 
 .macro COMPUTE_R7 
@@ -212,27 +212,27 @@
 .macro REDUCTION
   li     M0, 38 
 
-  macclo A0, R4, M0, R0
+  maddlu A0, R4, M0, R0
   sltu   T0, A0, R0
-  macchi A1, R4, M0, T0                 // no carry-out
+  maddhu A1, R4, M0, T0                 // no carry-out
 
-  macclo T0, R5, M0, A1 
+  maddlu T0, R5, M0, A1 
   sltu   T1, T0, A1 
-  macchi A2, R5, M0, T1                 // no carry-out
+  maddhu A2, R5, M0, T1                 // no carry-out
   add    A1, T0, R1 
   sltu   T0, A1, T0 
   add    A2, A2, T0
 
-  macclo T0, R6, M0, A2 
+  maddlu T0, R6, M0, A2 
   sltu   T1, T0, A2 
-  macchi A3, R6, M0, T1                 // no carry-out
+  maddhu A3, R6, M0, T1                 // no carry-out
   add    A2, T0, R2 
   sltu   T0, A2, T0 
   add    A3, A3, T0  
  
-  macclo T0, R7, M0, A3 
+  maddlu T0, R7, M0, A3 
   sltu   T1, T0, A3 
-  macchi A4, R7, M0, T1                 // no carry-out
+  maddhu A4, R7, M0, T1                 // no carry-out
   add    A3, T0, R3 
   sltu   T0, A3, T0 
   add    A4, A4, T0 
@@ -247,7 +247,7 @@
   slli   A4, A4, 1
   or     A3, A3, A4 
   li     M0, 19
-  macclo R0, A3, M0, A0
+  maddlu R0, A3, M0, A0
   sltu   R1, R0, A0 
   add    R1, R1, A1 
   sltu   R2, R1, A1 

@@ -86,7 +86,7 @@
 .endm
 
 .macro _PROPAGATE_CARRY A, B 
-  sraadd \B, \B, \A, 56
+  sraiadd \B, \B, \A, 56
   and    \A, \A, M0
 .endm
 

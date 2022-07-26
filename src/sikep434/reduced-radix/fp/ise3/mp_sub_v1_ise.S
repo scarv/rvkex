@@ -1,4 +1,6 @@
 // void mp_sub_p2_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void mp_sub_p4_v1_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void fpneg_v1_ise(uint64_t *r);
 // radix-2^56
 
 
@@ -109,6 +111,7 @@ mp_sub_p2_v1_ise:
   STORE_R
   EPILOGUE
 
+
 .global mp_sub_p4_v1_ise
 
 mp_sub_p4_v1_ise:
@@ -117,3 +120,32 @@ mp_sub_p4_v1_ise:
   CARRY_PROPAGATION
   STORE_R
   EPILOGUE
+
+
+// modular negation using ISE
+
+.macro _SUBTRACT R, imm
+  ld    A_, 8*\imm(a0)
+  sike.add.p434x2.sub56 \R, x0, A_, \imm
+.endm
+
+.macro SUBTRACTION
+  _SUBTRACT R0, 0
+  _SUBTRACT R1, 1
+  _SUBTRACT R2, 2
+  _SUBTRACT R3, 3
+  _SUBTRACT R4, 4
+  _SUBTRACT R5, 5
+  _SUBTRACT R6, 6
+  _SUBTRACT R7, 7
+.endm
+
+.global fpneg_v1_ise 
+
+fpneg_v1_ise:
+  PROLOGUE
+  SUBTRACTION
+  CARRY_PROPAGATION
+  STORE_R
+  EPILOGUE
+

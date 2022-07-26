@@ -1,5 +1,5 @@
 // void fpsub_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
-// radix-56
+// radix-2^56
 
 
 #include "ise2.h"

@@ -66,14 +66,16 @@
   ```
 
 - Build and evaluate the (different) software 
-
   ```sh
-  make sw-run ALG=[x25519/sikep434] RADIX=[full/reduced] TYPE=RV64_TYPE[1/2]
+  make sw-run ALG=[x25519/sikep434] RADIX=[full/reduced] TYPE=RV64_TYPE[1/2/3]
   ```
+  - `RV64_TYPE1`: pure-software implementation; 
+  - `RV64_TYPE2`: ISE-assited implementation using general-use ISE; 
+  - `RV64_TYPE3`: ISE-assited implementation using general-use ISE *plus* specific-use ISE.
 
 - Build and run the KAT test for SIKE 
   ```sh 
-  make sw-kat ALG=sikep434 RADIX=[full/reduced] TYPE=RV64_TYPE[1/2]
+  make sw-kat ALG=sikep434 RADIX=[full/reduced] TYPE=RV64_TYPE[1/2/3]
   ```
 
 - Enable the debug mode (add `MODE=debug`), e.g.,

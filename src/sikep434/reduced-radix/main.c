@@ -414,6 +414,24 @@ void test_fp()
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif 
 #endif
+
+#if RV64_TYPE3 
+  printf("- fp sub v1 ise:");
+
+  LOAD_CACHE(fpsub_v1_ise(r56, a56, b56), 100);
+  MEASURE_CYCLES(fpsub_v1_ise(r56, a56, b56), 1000);
+  printf("      #cycle = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x3DFB6D6B76F10517037258C12C9346F043068EB39E5CF72FA646E4E8888877777777888888887\
+          77777778888888877777777888888886
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif 
+#endif
+
   printf("");
 
   // ---------------------------------------------------------------------------
@@ -489,6 +507,27 @@ void test_fp()
           FEDCBA9876543210FEDCBA987654320F
   memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
   fpneg_v0_ise(r56);
+  mpi56_carry_prop(r56);
+  mpi_conv_56to64(r64, r56);
+  mpi64_print("  r  = 0x", r64, 7);
+  memset(r56, 0, sizeof(uint64_t)*NLMB56); 
+#endif
+#endif
+
+#if RV64_TYPE3 
+  printf("- fp neg v1 ise:");
+
+  memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
+
+  LOAD_CACHE(fpneg_v1_ise(r56), 100);
+  MEASURE_CYCLES(fpneg_v1_ise(r56), 1000);
+  printf("      #cycle = %lld\n", diff_cycles);
+
+#if DEBUG
+  // r := 0x122D6C4831899D8D57A4579DE72BDF6697388D9058F58FA5FA78E3C543210FEDCBA9876543210\
+          FEDCBA9876543210FEDCBA987654320F
+  memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
+  fpneg_v1_ise(r56);
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
   mpi64_print("  r  = 0x", r64, 7);

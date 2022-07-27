@@ -16,6 +16,7 @@
 #define R5 a5
 #define R6 a6
 #define R7 a7
+#define R8 a2
 
 // operand "a"
 #define A_ t3
@@ -33,7 +34,7 @@
 // prologue + epilogue 
 
 .macro PROLOGUE
-  la    a2, P434
+  la    a2, P503
   li    M0, 0xFFFFFFFFFFFFFFULL
 .endm
 
@@ -53,6 +54,7 @@
   sd    R5, 40(a0)
   sd    R6, 48(a0)
   sd    R7, 56(a0)
+  sd    R8, 64(a0)
 .endm
 
 // arithmetic computation
@@ -65,7 +67,7 @@
 
 .macro _COMPUTE_R R, imm
   ld    A_, 8*\imm(a1)
-  ld    P_, 8*(\imm-2)(a2)
+  ld    P_, 8*\imm-24(a2)
   and   P_, P_, T_
   add   \R, A_, P_
 .endm
@@ -78,11 +80,13 @@
   add   R1, A_, P_
   ld    A_, 16(a1)
   add   R2, A_, P_
-  _COMPUTE_R R3, 3
+  ld    A_, 24(a1)
+  add   R3, A_, P_
   _COMPUTE_R R4, 4
   _COMPUTE_R R5, 5
   _COMPUTE_R R6, 6
   _COMPUTE_R R7, 7
+  _COMPUTE_R R8, 8
 .endm
 
 .macro _PROPAGATE_CARRY A, B 
@@ -98,6 +102,7 @@
   _PROPAGATE_CARRY R4, R5
   _PROPAGATE_CARRY R5, R6
   _PROPAGATE_CARRY R6, R7
+  _PROPAGATE_CARRY R7, R8
 .endm
 
 .macro _RIGHT_SHIFT A, B
@@ -115,7 +120,8 @@
   _RIGHT_SHIFT R4, R5
   _RIGHT_SHIFT R5, R6
   _RIGHT_SHIFT R6, R7
-  srai   R7, R7,  1
+  _RIGHT_SHIFT R7, R8
+  srai   R8, R8,  1
 .endm
 
 
@@ -140,12 +146,13 @@ fpdiv2_v0_ise:
 .section .data 
 .balign 8
 
-P434:
+P503:
 .dword 0xFFFFFFFFFFFFFF                 // P0 
 // .dword 0xFFFFFFFFFFFFFF              // P1
 // .dword 0xFFFFFFFFFFFFFF              // P2
-.dword 0xE2FFFFFFFFFFFF                 // P3
-.dword 0x58AEA3FDC1767A                 // P4
-.dword 0x20567BC65C7831                 // P5
-.dword 0x446CFC5FD681C5                 // P6
-.dword 0x0002341F271773                 // P7
+// .dword 0xFFFFFFFFFFFFFF              // P3
+.dword 0x11E7A0ABFFFFFF                 // P4
+.dword 0x7DAF13085BDA22                 // P5
+.dword 0xD01B9BF6C87B7E                 // P6
+.dword 0x6045C6BDDA77A4                 // P7
+.dword 0x4066F541811E1E                 // P8

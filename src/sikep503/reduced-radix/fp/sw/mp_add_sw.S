@@ -1,9 +1,6 @@
-// void mp_add_v0_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
+// void mp_add_v1_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // radix-2^56
-// no reduction
-
-
-#include "ise2.h"
+// no reduction, (no carry propagation)
 
 
 // registers
@@ -17,12 +14,16 @@
 #define R5 t5
 #define R6 t6
 #define R7 a7
+#define R8 a3
 
 // operand "a"
 #define A_ a4
 
 // operand "b"
 #define B_ a5
+
+// temp "t"
+#define T_ a4
 
 // constants and masks
 #define M0 a6
@@ -48,6 +49,7 @@
   sd    R5, 40(a0)
   sd    R6, 48(a0)
   sd    R7, 56(a0)
+  sd    R8, 64(a0)
 .endm
 
 // arithmetic computation
@@ -67,38 +69,16 @@
   _COMPUTE_R R5, 5
   _COMPUTE_R R6, 6
   _COMPUTE_R R7, 7
-.endm
-
-// carry propagation
-
-.macro _PROPAGATE_CARRY A, B 
-  sraiadd \B, \B, \A, 56
-  and     \A, \A, M0
-.endm
-
-.macro CARRY_PROPAGATION
-  li    M0, 0xFFFFFFFFFFFFFFULL 
-  _PROPAGATE_CARRY R0, R1
-  _PROPAGATE_CARRY R1, R2
-  _PROPAGATE_CARRY R2, R3
-  _PROPAGATE_CARRY R3, R4
-  _PROPAGATE_CARRY R4, R5
-  _PROPAGATE_CARRY R5, R6
-  _PROPAGATE_CARRY R6, R7
+  _COMPUTE_R R8, 8
 .endm
 
 
-// integer addition using ISE
+// v1: no carry propagation 
 
-.section .text
+.global mp_add_v1_sw
 
-// v0: conventional one
-
-.global mp_add_v0_ise
-
-mp_add_v0_ise:
+mp_add_v1_sw:
   PROLOGUE
   ADDITION
-  CARRY_PROPAGATION
   STORE_R
   EPILOGUE

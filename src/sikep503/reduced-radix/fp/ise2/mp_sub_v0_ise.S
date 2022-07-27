@@ -18,6 +18,7 @@
 #define R5 t5
 #define R6 t6
 #define R7 a7
+#define R8 a3
 
 // operand "a"
 #define A_ a4
@@ -52,6 +53,7 @@
   sd    R5, 40(a0)
   sd    R6, 48(a0)
   sd    R7, 56(a0)
+  sd    R8, 64(a0)
 .endm
 
 // arithmetic computation
@@ -59,7 +61,7 @@
 .macro _COMPUTE_R R, imm
   ld    A_, 8*\imm(a1)
   ld    B_, 8*\imm(a2)
-  ld    P_, 8*\imm-16(a3)
+  ld    P_, 8*\imm-24(a3)
   add   \R, A_, P_
   sub   \R, \R, B_
 .endm
@@ -79,11 +81,15 @@
   ld    B_, 16(a2)
   add   R2, A_, P_
   sub   R2, R2, B_
-  _COMPUTE_R R3, 3
+  ld    A_, 24(a1)
+  ld    B_, 24(a2)
+  add   R3, A_, P_
+  sub   R3, R3, B_
   _COMPUTE_R R4, 4
   _COMPUTE_R R5, 5
   _COMPUTE_R R6, 6
   _COMPUTE_R R7, 7
+  _COMPUTE_R R8, 8
 .endm
 
 // carry propagation
@@ -102,6 +108,7 @@
   _PROPAGATE_CARRY R4, R5
   _PROPAGATE_CARRY R5, R6
   _PROPAGATE_CARRY R6, R7
+  _PROPAGATE_CARRY R7, R8
 .endm
 
 
@@ -115,7 +122,7 @@
 
 mp_sub_p2_v0_ise:
   PROLOGUE
-  la a3, P434X2
+  la a3, P503X2
   COMPUTE_R 1
   CARRY_PROPAGATION
   STORE_R
@@ -126,7 +133,7 @@ mp_sub_p2_v0_ise:
 
 mp_sub_p4_v0_ise:
   PROLOGUE
-  la a3, P434X4
+  la a3, P503X4
   COMPUTE_R 3
   CARRY_PROPAGATION
   STORE_R
@@ -137,7 +144,7 @@ mp_sub_p4_v0_ise:
 
 .macro _SUBTRACT R, imm
   ld    A_, 8*\imm(a0)
-  ld    P_, 8*\imm-16(a3)
+  ld    P_, 8*\imm-24(a3)
   sub   \R, P_, A_
 .endm
 
@@ -150,18 +157,20 @@ mp_sub_p4_v0_ise:
   sub   R1, P_, A_
   ld    A_, 16(a0)
   sub   R2, P_, A_
-  _SUBTRACT R3, 3
+  ld    A_, 24(a0)
+  sub   R3, P_, A_
   _SUBTRACT R4, 4
   _SUBTRACT R5, 5
   _SUBTRACT R6, 6
   _SUBTRACT R7, 7
+  _SUBTRACT R8, 8
 .endm
 
 .global fpneg_v0_ise
 
 fpneg_v0_ise:
   PROLOGUE
-  la a3, P434X2
+  la a3, P503X2
   SUBTRACTION
   CARRY_PROPAGATION
   STORE_R
@@ -171,22 +180,24 @@ fpneg_v0_ise:
 .section .data 
 .balign 8
 
-P434X2:
+P503X2:
 .dword 0xFFFFFFFFFFFFFE                 // P0
-// .dword 0xFFFFFFFFFFFFFF              // P1
-// .dword 0xFFFFFFFFFFFFFF              // P2
-.dword 0xC5FFFFFFFFFFFF                 // P3
-.dword 0xB15D47FB82ECF5                 // P4
-.dword 0x40ACF78CB8F062                 // P5
-.dword 0x88D9F8BFAD038A                 // P6
-.dword 0x0004683E4E2EE6                 // P7
+// .dword 0xFFFFFFFFFFFFFF              // P1 
+// .dword 0xFFFFFFFFFFFFFF              // P2 
+// .dword 0xFFFFFFFFFFFFFF              // P3
+.dword 0x23CF4157FFFFFF                 // P4
+.dword 0xFB5E2610B7B444                 // P5
+.dword 0xA03737ED90F6FC                 // P6
+.dword 0xC08B8D7BB4EF49                 // P7
+.dword 0x80CDEA83023C3C                 // P8
 
-P434X4:
+P503X4:
 .dword 0xFFFFFFFFFFFFFC                 // P0
-// .dword 0xFFFFFFFFFFFFFF              // P1
-// .dword 0xFFFFFFFFFFFFFF              // P2
-.dword 0x8BFFFFFFFFFFFF                 // P3
-.dword 0x62BA8FF705D9EB                 // P4
-.dword 0x8159EF1971E0C5                 // P5
-.dword 0x11B3F17F5A0714                 // P6
-.dword 0x0008D07C9C5DCD                 // P7
+// .dword 0xFFFFFFFFFFFFFF              // P1 
+// .dword 0xFFFFFFFFFFFFFF              // P2 
+// .dword 0xFFFFFFFFFFFFFF              // P3
+.dword 0x479E82AFFFFFFF                 // P4
+.dword 0xF6BC4C216F6888                 // P5
+.dword 0x406E6FDB21EDF9                 // P6
+.dword 0x81171AF769DE93                 // P7
+.dword 0x1019BD506047879                // P8

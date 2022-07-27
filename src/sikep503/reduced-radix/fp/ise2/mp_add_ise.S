@@ -17,6 +17,7 @@
 #define R5 t5
 #define R6 t6
 #define R7 a7
+#define R8 a3
 
 // operand "a"
 #define A_ a4
@@ -48,6 +49,7 @@
   sd    R5, 40(a0)
   sd    R6, 48(a0)
   sd    R7, 56(a0)
+  sd    R8, 64(a0)
 .endm
 
 // arithmetic computation
@@ -67,6 +69,7 @@
   _COMPUTE_R R5, 5
   _COMPUTE_R R6, 6
   _COMPUTE_R R7, 7
+  _COMPUTE_R R8, 8
 .endm
 
 // carry propagation
@@ -85,6 +88,7 @@
   _PROPAGATE_CARRY R4, R5
   _PROPAGATE_CARRY R5, R6
   _PROPAGATE_CARRY R6, R7
+  _PROPAGATE_CARRY R7, R8
 .endm
 
 

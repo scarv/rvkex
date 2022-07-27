@@ -25,7 +25,6 @@
 #define CRYPTO_BYTES            16
 #define CRYPTO_CIPHERTEXTBYTES  346    // CRYPTO_PUBLICKEYBYTES + MSG_BYTES bytes  
 
-
 #define NWORDS_FIELD            7
 
 #endif

@@ -13,16 +13,23 @@
 
 ## Implementations 
 
-- We plan to develop 4 types of implementation for each of pre-quantum X25519 [1] and post-quantum SIKE [2]:
-  - [x] reduced-radix pure-software  x25519
-  - [x] reduced-radix ISE-assisted   x25519
+- We plan to develop 4 types of implementation for each of pre-quantum X25519 [1] and post-quantum SIKEp434 [2]:
   - [x] full-radix    pure-software  x25519
   - [x] full-radix    ISE-assisted   x25519
-  - [x] reduced-radix pure-software  sikep434
-  - [x] reduced-radix ISE-assisted   sikep434
+  - [x] reduced-radix pure-software  x25519
+  - [x] reduced-radix ISE-assisted   x25519
   - [x] full-radix    pure-software  sikep434
   - [x] full-radix    ISE-assisted   sikep434
+  - [x] reduced-radix pure-software  sikep434
+  - [x] reduced-radix ISE-assisted   sikep434
 
+- Based on our experimental results, we plan to develop 2 types of implementation for other parameter sets of SIKE:
+  - [ ] full-radix    pure-software  sikep503
+  - [x] reduced-radix ISE-assisted   sikep503
+  - [ ] full-radix    pure-software  sikep610
+  - [ ] reduced-radix ISE-assisted   sikep610
+  - [ ] full-radix    pure-software  sikep751
+  - [ ] reduced-radix ISE-assisted   sikep751
 
   Furthermore, we plan to design general-use ISE (for big number arithmetic) and specific-use ISE (for SIKE) then discuss different trade-offs. 
 

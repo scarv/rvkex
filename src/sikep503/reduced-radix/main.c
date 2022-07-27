@@ -4,6 +4,7 @@
 #include "fpx.h"
 #include "curve.h"
 #include "sidh.h"
+#include "sike.h"
 
 
 // macros for measuring CPU cycles

@@ -43,11 +43,14 @@
 ├── src                       - source code
 │   ├── hw                    - hardware part
 │   ├── sikep434              - sikep434 implementation
-│   │   ├── full-radix            - radix-2^64 implementation
-│   │   └── reduced-radix         - radix-2^56 implementation
+│   │   ├── full-radix            - radix-2^64 (pure-sw + ise-assisted)
+│   │   └── reduced-radix         - radix-2^56 (pure-sw + ise-assisted)
+│   ├── sikep434              - sikep434 implementation
+│   │   ├── full-radix            - radix-2^64 (pure-sw)
+│   │   └── reduced-radix         - radix-2^56 (ise-assisted)
 │   └── x25519                - x25519 implementations
-│       ├── full-radix            - radix-2^64 implementation
-│       └── reduced-radix         - radix-2^51 implementation
+│       ├── full-radix            - radix-2^64 (pure-sw + ise-assisted)
+│       └── reduced-radix         - radix-2^51 (pure-sw + ise-assisted)
 ├── hw-toolchain              - scripts to install RISC-V hardware toolchains 
 ├── sw-toolchain              - scripts to install RISC-V software toolchains 
 └── work                      - working directory for build

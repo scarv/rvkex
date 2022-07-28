@@ -208,7 +208,7 @@ void EphemeralSecretAgreement_B(const unsigned char* PrivateKeyB, const unsigned
   get_A(PKB[0], PKB[1], PKB[2], A);
   mp_add_v1(A24minus[0], mont_R, mont_R); // A24minus = 2C
   mp2_add_v0(A24plus, A, A24minus);       // A24plus  = A+2C
-  mp2_sub_p2_v0(A24minus, A, A24minus);   // A24minus = A-2C
+  mp2_sub_p2(A24minus, A, A24minus);      // A24minus = A-2C
 
   // retrieve kernel point
   decode_to_digits(PrivateKeyB, SecretKeyB, SECRETKEY_B_BYTES, NWORDS_ORDER);

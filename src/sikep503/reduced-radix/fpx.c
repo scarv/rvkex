@@ -80,31 +80,31 @@ void fp2sqr_mont_v1(f2elm_t r, const f2elm_t a)
   fpmul_mont_v0(r[1], t3, a[1]);        // r1 = 2a0 * a1 mod 2p
 }
 
-void fp2add_v0(f2elm_t r, const f2elm_t a, const f2elm_t b)
+void fp2add(f2elm_t r, const f2elm_t a, const f2elm_t b)
 {
   fpadd(r[0], a[0], b[0]);
   fpadd(r[1], a[1], b[1]);
 }
 
-void fp2sub_v0(f2elm_t r, const f2elm_t a, const f2elm_t b)
+void fp2sub(f2elm_t r, const f2elm_t a, const f2elm_t b)
 {
   fpsub(r[0], a[0], b[0]);
   fpsub(r[1], a[1], b[1]);
 }
 
-void fp2neg_v0(f2elm_t r)
+void fp2neg(f2elm_t r)
 {
   fpneg(r[0]);
   fpneg(r[1]);  
 }
 
-void fp2div2_v0(f2elm_t r, const f2elm_t a)
+void fp2div2(f2elm_t r, const f2elm_t a)
 {
   fpdiv2(r[0], a[0]);
   fpdiv2(r[1], a[1]);
 }
 
-void fp2correction_v0(f2elm_t r)
+void fp2correction(f2elm_t r)
 {
   fpcorrection(r[0]);
   fpcorrection(r[1]);
@@ -124,16 +124,10 @@ void mp2_add_v1(f2elm_t r, const f2elm_t a, const f2elm_t b)
   mp_add_v1(r[1], a[1], b[1]);
 }
 
-void mp2_sub_p2_v0(f2elm_t r, const f2elm_t a, const f2elm_t b)
+void mp2_sub_p2(f2elm_t r, const f2elm_t a, const f2elm_t b)
 {
-  mp_sub_p2_v0(r[0], a[0], b[0]);
-  mp_sub_p2_v0(r[1], a[1], b[1]);
-}
-
-void mp2_sub_p2_v1(f2elm_t r, const f2elm_t a, const f2elm_t b)
-{
-  mp_sub_p2_v1(r[0], a[0], b[0]);
-  mp_sub_p2_v1(r[1], a[1], b[1]);
+  mp_sub_p2(r[0], a[0], b[0]);
+  mp_sub_p2(r[1], a[1], b[1]);
 }
 
 void to_mont(felm_t r, const felm_t a)

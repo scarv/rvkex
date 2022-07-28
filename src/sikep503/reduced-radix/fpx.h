@@ -12,24 +12,19 @@ void fp2mul_mont_v0(f2elm_t r, const f2elm_t a, const f2elm_t b);
 void fp2mul_mont_v1(f2elm_t r, const f2elm_t a, const f2elm_t b);
 void fp2sqr_mont_v0(f2elm_t r, const f2elm_t a);
 void fp2sqr_mont_v1(f2elm_t r, const f2elm_t a);
-void fp2add_v0(f2elm_t r, const f2elm_t a, const f2elm_t b);
-void fp2sub_v0(f2elm_t r, const f2elm_t a, const f2elm_t b);
-void fp2neg_v0(f2elm_t r);
-void fp2div2_v0(f2elm_t r, const f2elm_t a);
-void fp2correction_v0(f2elm_t r);
+void fp2add(f2elm_t r, const f2elm_t a, const f2elm_t b);
+void fp2sub(f2elm_t r, const f2elm_t a, const f2elm_t b);
+void fp2neg(f2elm_t r);
+void fp2div2(f2elm_t r, const f2elm_t a);
+void fp2correction(f2elm_t r);
 void fp2copy(f2elm_t r, const f2elm_t a);
 void fp2zero(f2elm_t r);
 void mp2_add_v0(f2elm_t r, const f2elm_t a, const f2elm_t b);
 void mp2_add_v1(f2elm_t r, const f2elm_t a, const f2elm_t b);
-void mp2_sub_p2_v0(f2elm_t r, const f2elm_t a, const f2elm_t b);
-void mp2_sub_p2_v1(f2elm_t r, const f2elm_t a, const f2elm_t b);
+void mp2_sub_p2(f2elm_t r, const f2elm_t a, const f2elm_t b);
 void fp2inv_mont(f2elm_t r);
 void to_fp2mont(f2elm_t r, const f2elm_t a);
 void from_fp2mont(f2elm_t r, const f2elm_t a);
-
-#define fp2div2    fp2div2_v0
-#define fp2add     fp2add_v0
-#define fp2sub     fp2sub_v0
 
 void fpmul_mont_v0(felm_t r, const felm_t a, const felm_t b);
 void fpsqr_mont_v0(felm_t r, const felm_t a);

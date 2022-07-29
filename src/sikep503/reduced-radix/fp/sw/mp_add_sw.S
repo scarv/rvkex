@@ -22,12 +22,6 @@
 // operand "b"
 #define B_ a5
 
-// temp "t"
-#define T_ a4
-
-// constants and masks
-#define M0 a6
-
 
 // prologue + epilogue 
 
@@ -73,9 +67,12 @@
 .endm
 
 
-// v1: no carry propagation 
+
+// integer addition
 
 .global mp_add_v1_sw
+
+// v1: no carry propagation 
 
 mp_add_v1_sw:
   PROLOGUE

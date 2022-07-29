@@ -27,7 +27,7 @@
   - [ ] full-radix    pure-software  sikep503
   - [x] reduced-radix ISE-assisted   sikep503
   - [ ] full-radix    pure-software  sikep610
-  - [ ] reduced-radix ISE-assisted   sikep610
+  - [x] reduced-radix ISE-assisted   sikep610
   - [ ] full-radix    pure-software  sikep751
   - [ ] reduced-radix ISE-assisted   sikep751
 
@@ -45,7 +45,13 @@
 │   ├── sikep434              - sikep434 implementation
 │   │   ├── full-radix            - radix-2^64 (pure-sw + ise-assisted)
 │   │   └── reduced-radix         - radix-2^56 (pure-sw + ise-assisted)
-│   ├── sikep434              - sikep434 implementation
+│   ├── sikep503              - sikep503 implementation
+│   │   ├── full-radix            - radix-2^64 (pure-sw)
+│   │   └── reduced-radix         - radix-2^56 (ise-assisted)
+│   ├── sikep610              - sikep610 implementation
+│   │   ├── full-radix            - radix-2^64 (pure-sw)
+│   │   └── reduced-radix         - radix-2^56 (ise-assisted)
+│   ├── sikep751              - sikep751 implementation
 │   │   ├── full-radix            - radix-2^64 (pure-sw)
 │   │   └── reduced-radix         - radix-2^56 (ise-assisted)
 │   └── x25519                - x25519 implementations

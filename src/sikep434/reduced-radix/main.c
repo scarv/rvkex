@@ -154,7 +154,6 @@ void test_fp()
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
 #endif 
 #endif
-  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -195,7 +194,6 @@ void test_fp()
   memset(r56, 0, sizeof(uint64_t)*NLMB56);
 #endif 
 #endif
-  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -267,8 +265,6 @@ void test_fp()
   memset(r56, 0, sizeof(uint64_t)*NLMB56);  
 #endif 
 #endif
-
-  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -418,8 +414,6 @@ void test_fp()
 #endif 
 #endif
 
-  printf("");
-
   // ---------------------------------------------------------------------------
 
 #if RV64_TYPE1
@@ -457,8 +451,6 @@ void test_fp()
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
 #endif
-
-  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -520,8 +512,6 @@ void test_fp()
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
 #endif
-
-  printf("");
 
   // ---------------------------------------------------------------------------
 
@@ -626,8 +616,6 @@ void test_fpx()
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
-  printf("");
-
   // ---------------------------------------------------------------------------
 
   printf("- fp2 sqr v0:");
@@ -672,8 +660,6 @@ void test_fpx()
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
-  printf("");
-
 // ---------------------------------------------------------------------------
 
   printf("- fp2 add:");
@@ -697,8 +683,6 @@ void test_fpx()
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
-  printf("");
-
   // ---------------------------------------------------------------------------
 
   printf("- fp2 sub:");
@@ -719,8 +703,6 @@ void test_fpx()
   mpi64_print("  r1 = 0x", r64, 7);
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
-
-  printf("");
 
 printf("**************************************************************************\n");
 }
@@ -822,8 +804,6 @@ void test_curve()
   memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
-  printf("");
-
   // ---------------------------------------------------------------------------   
 
   printf("- xTPL v0:");
@@ -891,8 +871,6 @@ void test_curve()
   mpi64_print("  ZQ1 = 0x", r64, 7);
   memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
-
-  printf("");
 
   // ---------------------------------------------------------------------------   
 
@@ -1034,8 +1012,6 @@ void test_curve()
   memset(&coeff[2][1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
-  printf("");
-
   // ---------------------------------------------------------------------------   
 
   printf("- eval_4_isog v0:");
@@ -1109,8 +1085,6 @@ void test_curve()
   mpi_conv_56to64(r64, P.Z[1]);
   mpi64_print("  ZP1 = 0x", r64, 7);
 #endif
-
-  printf("");
 
   // ---------------------------------------------------------------------------   
 
@@ -1291,8 +1265,6 @@ void test_curve()
   memset(&coeff[1][1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
-  printf("");
-
   // ---------------------------------------------------------------------------   
 
   printf("- eval_3_isog v0:");
@@ -1367,8 +1339,6 @@ void test_curve()
   mpi64_print("  ZP1 = 0x", r64, 7);
 #endif
 
-  printf("");
-
   // ---------------------------------------------------------------------------   
 
   printf("- xDBLADD v0:");
@@ -1378,7 +1348,6 @@ void test_curve()
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  //
   // XP0 = 0x191E5C0DCABCD87612E01FFB8946DB44D97B81EC18278EEED4E44D308ED1CF033DC2003\
            0DC52BEA77CA2E2BA551B2D3F58B2386D7FC8B
   // XP1 = 0xC662E62FEF6655FCA85F6A12F2F67B87F508BF6974E4EAA07401786BA7CFAEC5DCC28D6\
@@ -1446,7 +1415,6 @@ void test_curve()
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  //
   // XP0 = 0x191E5C0DCABCD87612E01FFB8946DB44D97B81EC18278EEED4E44D308ED1CF033DC2003\
            0DC52BEA77CA2E2BA551B2D3F58B2386D7FC8B
   // XP1 = 0xC662E62FEF6655FCA85F6A12F2F67B87F508BF6974E4EAA07401786BA7CFAEC5DCC28D6\

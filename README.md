@@ -85,7 +85,9 @@
 
 - Build and evaluate the (different) software 
   ```sh
-  make sw-run ALG=[x25519/sikep434] RADIX=[full/reduced] TYPE=RV64_TYPE[1/2/3]
+  make sw-run ALG=[x25519/sikep434]            RADIX=[full/reduced]   TYPE=RV64_TYPE[1/2/3]
+  make sw-run ALG=[sikep503/sikep610/sikep751] RADIX=full             TYPE=RV64_TYPE1
+  make sw-run ALG=[sikep503/sikep610/sikep751] RADIX=reduced          TYPE=RV64_TYPE[2/3]
   ```
   - `RV64_TYPE1`: pure-software implementation; 
   - `RV64_TYPE2`: ISE-assisted implementation using general-use ISE; 
@@ -93,13 +95,21 @@
 
 - Build and run the KAT test for SIKE 
   ```sh 
-  make sw-kat ALG=sikep434 RADIX=[full/reduced] TYPE=RV64_TYPE[1/2/3]
+  make sw-kat ALG=sikep434                     RADIX=[full/reduced] TYPE=RV64_TYPE[1/2/3]
+  make sw-kat ALG=[sikep503/sikep610/sikep751] RADIX=full           TYPE=RV64_TYPE1
+  make sw-kat ALG=[sikep503/sikep610/sikep751] RADIX=reduced        TYPE=RV64_TYPE[2/3]
   ```
 
 - Enable the debug mode (add `MODE=debug`), e.g.,
   ```sh
   make sw-run ALG=x25519 RADIX=reduced TYPE=RV64_TYPE2 MODE=debug 
   ```
+
+## TODO 
+
+- [ ] add TYPE3 for SIKEp503/610/751 (before this, need to know full-radix and reduced-radix which one is faster for SIKEp434 TYPE2/3)
+- [ ] add Karatsuba for SIKEp610/751 TYPE2 (before this, need to know PS and KA which one is faster for SIKEp434)
+
 
 ## References and links
 

@@ -54,16 +54,18 @@ void test_fp()
   uint64_t start_cycles, end_cycles, diff_cycles;
   int i;
 
-  // a := 0x0080456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF;
-  uint64_t a64[8] = { 0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL,
-                      0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL, 
-                      0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL, 
-                      0x0123456789ABCDEFULL, 0x0080456789ABCDEFULL, };
-  // b := 0x00805DEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF01234567;
-  uint64_t b64[8] = { 0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL,
-                      0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
-                      0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
-                      0x89ABCDEF01234567ULL, 0x00805DEF01234567ULL, };
+  // a := 0x0003456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF;
+  uint64_t a64[12] = { 0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL,
+                       0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL, 
+                       0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL, 
+                       0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL,
+                       0x0123456789ABCDEFULL, 0x0003456789ABCDEFULL };
+  // b := 0x000BCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF01234567;
+  uint64_t b64[12] = { 0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL,
+                       0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
+                       0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
+                       0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL,
+                       0x89ABCDEF01234567ULL, 0x000BCDEF01234567ULL };
   uint64_t a56[NLMB56], b56[NLMB56], z56[NLMB56*2], z64[NLMB56*2], r56[NLMB56], r64[NLMB56];
 
   mpi_conv_64to56(a56, a64);
@@ -79,13 +81,9 @@ void test_fp()
   printf("      #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r := 0x4051C4BCD08593FCF5775163FDF5012391452E0B2B646E4A2D130AB258D3DB70C8E0E75986434\
-          89764AEC400B3B2B5BE007CA0A7E12222E49C4A7D4F0E918FC5AAD0D1E08434FB719F02F53956C5\
-          8E4B033518922956212467673BEAFBE6B3FDCB995F43CE7746D72FCB829CA107D9B093FDA5F5739\
-          86C89F82FC94E4629
   mpi56_carry_prop_((int64_t *)z56);
   mpi_conv_56to64_(z64, z56, NLMB56*2, NLMB56*2);
-  mpi64_print("  r  = 0x", z64, 8*2);
+  mpi64_print("  r  = 0x", z64, 12*2);
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
 #endif 
 
@@ -100,23 +98,12 @@ void test_fp()
   printf("    #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r := 0x147173547FF63D0B52AB864DF1D570AF09061B91AC6FE5B8A6CCE68DD6D2D6BFF0C770842C494\
-          08C8AF46BF03037800688DADCB8D60EF
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
-  mpi64_print("  r  = 0x", r64, 8);
+  mpi64_print("  r  = 0x", r64, 12);
   memset(z56, 0, sizeof(uint64_t)*NLMB56*2);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);
 #endif 
-
-  // ---------------------------------------------------------------------------
-
-  // test vectors in [0, p) now
-  a64[7] = 0x0040456789ABCDEFULL;
-  b64[7] = 0x00405DEF01234567ULL;
-
-  mpi_conv_64to56(a56, a64);
-  mpi_conv_64to56(b56, b64);
 
   // ---------------------------------------------------------------------------
 
@@ -127,17 +114,13 @@ void test_fp()
   printf("      #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r := 0x80A3568ACF13568ACF13568ACF13568ACF13568ACF13568ACF13568ACF13568ACF13568ACF135\
-          68ACF13568ACF13568ACF13568ACF13568ACF13568ACF1356
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
-  mpi64_print("  r  = 0x", r64, 8);
-  // r := 0x401AD39178A508CB66CB425F8B97A554BA6B2D1D7DE5E765E1A109D057120433F258BE147AE14\
-          58BF258BE147AE1458BF258BE147AE1458BF258BE147AE147
+  mpi64_print("  r  = 0x", r64, 12);
   fpadd_v0_ise(r56, a56, r56);
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
-  mpi64_print("  r  = 0x", r64, 8);
+  mpi64_print("  r  = 0x", r64, 12);
   memset(r56, 0, sizeof(uint64_t)*NLMB56);  
 #endif 
 
@@ -150,11 +133,9 @@ void test_fp()
   printf("   #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r := 0x80B5630B8AC4C4380304F43D77D227AEAF65097F8583E59D882F2CCCAC57C8CF7777788888888\
-          7777777788888888777777778888888877777777888888886
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
-  mpi64_print("  r  = 0x", r64, 8);
+  mpi64_print("  r  = 0x", r64, 12);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
 
@@ -165,11 +146,9 @@ void test_fp()
   printf("   #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r := 0x101834D8E8D0100F88E926FF2671BC7E5E7529A76827F43C398E6E110D0270A27777778888888\
-          87777777788888888777777778888888877777777888888884
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
-  mpi64_print("  r  = 0x", r64, 8);
+  mpi64_print("  r  = 0x", r64, 12);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
 
@@ -180,11 +159,9 @@ void test_fp()
   printf("      #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r := 0x80B5630B8AC4C4380304F43D77D227AEAF65097F8583E59D882F2CCCAC57C8CF7777788888888\
-          7777777788888888777777778888888877777777888888886
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
-  mpi64_print("  r  = 0x", r64, 8);
+  mpi64_print("  r  = 0x", r64, 12);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif 
 
@@ -199,11 +176,9 @@ void test_fp()
   printf("      #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r := 0x40456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDE\
-          F0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
-  mpi64_print("  r  = 0x", r64, 8);
+  mpi64_print("  r  = 0x", r64, 12);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
 
@@ -218,13 +193,11 @@ void test_fp()
   printf("      #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r := 0x408882F9566E4DBF6848142B437BB13614A8296D512D6F24ED724CBA78015256DCBA987654321\
-          0FEDCBA9876543210FEDCBA9876543210FEDCBA987654320F
   memcpy(r56, a56, sizeof(uint64_t)*NLMB56);
   fpneg_v0_ise(r56);
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
-  mpi64_print("  r  = 0x", r64, 8);
+  mpi64_print("  r  = 0x", r64, 12);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
 
@@ -237,11 +210,9 @@ void test_fp()
   printf("     #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r := 0x40562E65967606B0B48612B211B95F8E5F9E18029525CF0A15D0A0D5DEDAC7D691A2B3C4D5E6F\
-          78091A2B3C4D5E6F78091A2B3C4D5E6F78091A2B3C4D5E6F7
   mpi56_carry_prop(r56);
   mpi_conv_56to64(r64, r56);
-  mpi64_print("  r  = 0x", r64, 8);
+  mpi64_print("  r  = 0x", r64, 12);
   memset(r56, 0, sizeof(uint64_t)*NLMB56); 
 #endif
 
@@ -254,16 +225,19 @@ void test_fpx()
   uint64_t start_cycles, end_cycles, diff_cycles;
   int i;
 
-  // a := 0x0080456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF;
-  uint64_t a64[8] = { 0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL,
-                      0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL, 
-                      0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL, 
-                      0x0123456789ABCDEFULL, 0x0080456789ABCDEFULL, };
-  // b := 0x00805DEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF01234567;
-  uint64_t b64[8] = { 0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL,
-                      0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
-                      0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
-                      0x89ABCDEF01234567ULL, 0x00805DEF01234567ULL, };
+  // a := 0x0003456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF;
+  uint64_t a64[12] = { 0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL,
+                       0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL, 
+                       0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL, 
+                       0x0123456789ABCDEFULL, 0x0123456789ABCDEFULL,
+                       0x0123456789ABCDEFULL, 0x0003456789ABCDEFULL };
+  // b := 0x000BCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF01234567;
+  uint64_t b64[12] = { 0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL,
+                       0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
+                       0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL, 
+                       0x89ABCDEF01234567ULL, 0x89ABCDEF01234567ULL,
+                       0x89ABCDEF01234567ULL, 0x000BCDEF01234567ULL };
+  
   uint64_t r56[NLMB56], r64[NLMB56];
   f2elm_t  r, a; 
 
@@ -280,17 +254,13 @@ void test_fpx()
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r0 = 0x2B66444AB09F099F6593851525756AC4E4B2531497B0CF33280383FF76843AF383052613F2FB2\
-          A8134BED63D64B2D0A35868EAC4767D50A174BFF1CD97156D
-  // r1 = 0x2D4C9E26B972298261D5BAF1D652E5C0E5C4B239B09959C4C995EC38405ADAEF455BAFACE54F1\
-          3B0DADB689F52C00547D258895E498ED387D4F5AB61FEF3B2
   mpi56_carry_prop(r[0]);
   mpi_conv_56to64(r64, r[0]);
-  mpi64_print("  r0 = 0x", r64, 8);
+  mpi64_print("  r0 = 0x", r64, 12);
   memset(r[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(r[1]);
   mpi_conv_56to64(r64, r[1]);
-  mpi64_print("  r1 = 0x", r64, 8);
+  mpi64_print("  r1 = 0x", r64, 12);
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -301,17 +271,13 @@ void test_fpx()
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r0 = 0x2B66444AB09F099F6593851525756AC4E4B2531497B0CF33280383FF76843AF383052613F2FB2\
-          A8134BED63D64B2D0A35868EAC4767D50A174BFF1CD97156D
-  // r1 = 0x2D4C9E26B972298261D5BAF1D652E5C0E5C4B239B09959C4C995EC38405ADAEF455BAFACE54F1\
-          3B0DADB689F52C00547D258895E498ED387D4F5AB61FEF3B2
   mpi56_carry_prop(r[0]);
   mpi_conv_56to64(r64, r[0]);
-  mpi64_print("  r0 = 0x", r64, 8);
+  mpi64_print("  r0 = 0x", r64, 12);
   memset(r[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(r[1]);
   mpi_conv_56to64(r64, r[1]);
-  mpi64_print("  r1 = 0x", r64, 8);
+  mpi64_print("  r1 = 0x", r64, 12);
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -324,17 +290,13 @@ void test_fpx()
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r0 = 0x2B66444AB09F099F6593851525756AC4E4B2531497B0CF33280383FF76843AF383052613F2FB2\
-          A8134BED63D64B2D0A35868EAC4767D50A174BFF1CD97156D
-  // r1 = 0x2D4C9E26B972298261D5BAF1D652E5C0E5C4B239B09959C4C995EC38405ADAEF455BAFACE54F1\
-          3B0DADB689F52C00547D258895E498ED387D4F5AB61FEF3B2
   mpi56_carry_prop(r[0]);
   mpi_conv_56to64(r64, r[0]);
-  mpi64_print("  r0 = 0x", r64, 8);
+  mpi64_print("  r0 = 0x", r64, 12);
   memset(r[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(r[1]);
   mpi_conv_56to64(r64, r[1]);
-  mpi64_print("  r1 = 0x", r64, 8);
+  mpi64_print("  r1 = 0x", r64, 12);
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -345,17 +307,13 @@ void test_fpx()
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r0 = 0x2B66444AB09F099F6593851525756AC4E4B2531497B0CF33280383FF76843AF383052613F2FB2\
-          A8134BED63D64B2D0A35868EAC4767D50A174BFF1CD97156D
-  // r1 = 0x2D4C9E26B972298261D5BAF1D652E5C0E5C4B239B09959C4C995EC38405ADAEF455BAFACE54F1\
-          3B0DADB689F52C00547D258895E498ED387D4F5AB61FEF3B2
   mpi56_carry_prop(r[0]);
   mpi_conv_56to64(r64, r[0]);
-  mpi64_print("  r0 = 0x", r64, 8);
+  mpi64_print("  r0 = 0x", r64, 12);
   memset(r[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(r[1]);
   mpi_conv_56to64(r64, r[1]);
-  mpi64_print("  r1 = 0x", r64, 8);
+  mpi64_print("  r1 = 0x", r64, 12);
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -368,17 +326,13 @@ void test_fpx()
   printf("            #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r0 = 0x7FBCE490555FA141BAFD535E68523DCB0E9D3E1C5AA07FDC35D31ACF33CC9CAA468ACF13579BD\
-          E02468ACF13579BDE02468ACF13579BDE02468ACF13579BE0
-  // r1 = 0x7FEDF37F444E9252CC0E624D57412EDC1FAE4D0B498F70ED46E429BE22BB8DBB579BDE02468AC\
-          F13579BDE02468ACF13579BDE02468ACF13579BDE02468AD0
   mpi56_carry_prop(r[0]);
   mpi_conv_56to64(r64, r[0]);
-  mpi64_print("  r0 = 0x", r64, 8);
+  mpi64_print("  r0 = 0x", r64, 12);
   memset(r[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(r[1]);
   mpi_conv_56to64(r64, r[1]);
-  mpi64_print("  r1 = 0x", r64, 8);
+  mpi64_print("  r1 = 0x", r64, 12);
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -391,15 +345,13 @@ void test_fpx()
   printf("            #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
-  // r0 = 0;
-  // r1 = 0;
   mpi56_carry_prop(r[0]);
   mpi_conv_56to64(r64, r[0]);
-  mpi64_print("  r0 = 0x", r64, 8);
+  mpi64_print("  r0 = 0x", r64, 12);
   memset(r[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(r[1]);
   mpi_conv_56to64(r64, r[1]);
-  mpi64_print("  r1 = 0x", r64, 8);
+  mpi64_print("  r1 = 0x", r64, 12);
   memset(r[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -446,19 +398,19 @@ void test_curve()
 #if DEBUG
   mpi56_carry_prop(Q.X[0]);
   mpi_conv_56to64(r64, Q.X[0]);
-  mpi64_print("  XQ0 = 0x", r64, 8);
+  mpi64_print("  XQ0 = 0x", r64, 12);
   memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.X[1]);
   mpi_conv_56to64(r64, Q.X[1]);
-  mpi64_print("  XQ1 = 0x", r64, 8);
+  mpi64_print("  XQ1 = 0x", r64, 12);
   memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.Z[0]);
   mpi_conv_56to64(r64, Q.Z[0]);
-  mpi64_print("  ZQ0 = 0x", r64, 8);
+  mpi64_print("  ZQ0 = 0x", r64, 12);
   memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.Z[1]);
   mpi_conv_56to64(r64, Q.Z[1]);
-  mpi64_print("  ZQ1 = 0x", r64, 8);
+  mpi64_print("  ZQ1 = 0x", r64, 12);
   memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -471,19 +423,19 @@ void test_curve()
 #if DEBUG
   mpi56_carry_prop(Q.X[0]);
   mpi_conv_56to64(r64, Q.X[0]);
-  mpi64_print("  XQ0 = 0x", r64, 8);
+  mpi64_print("  XQ0 = 0x", r64, 12);
   memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.X[1]);
   mpi_conv_56to64(r64, Q.X[1]);
-  mpi64_print("  XQ1 = 0x", r64, 8);
+  mpi64_print("  XQ1 = 0x", r64, 12);
   memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.Z[0]);
   mpi_conv_56to64(r64, Q.Z[0]);
-  mpi64_print("  ZQ0 = 0x", r64, 8);
+  mpi64_print("  ZQ0 = 0x", r64, 12);
   memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.Z[1]);
   mpi_conv_56to64(r64, Q.Z[1]);
-  mpi64_print("  ZQ1 = 0x", r64, 8);
+  mpi64_print("  ZQ1 = 0x", r64, 12);
   memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -498,19 +450,19 @@ void test_curve()
 #if DEBUG
   mpi56_carry_prop(Q.X[0]);
   mpi_conv_56to64(r64, Q.X[0]);
-  mpi64_print("  XQ0 = 0x", r64, 8);
+  mpi64_print("  XQ0 = 0x", r64, 12);
   memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.X[1]);
   mpi_conv_56to64(r64, Q.X[1]);
-  mpi64_print("  XQ1 = 0x", r64, 8);
+  mpi64_print("  XQ1 = 0x", r64, 12);
   memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.Z[0]);
   mpi_conv_56to64(r64, Q.Z[0]);
-  mpi64_print("  ZQ0 = 0x", r64, 8);
+  mpi64_print("  ZQ0 = 0x", r64, 12);
   memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.Z[1]);
   mpi_conv_56to64(r64, Q.Z[1]);
-  mpi64_print("  ZQ1 = 0x", r64, 8);
+  mpi64_print("  ZQ1 = 0x", r64, 12);
   memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -523,19 +475,19 @@ void test_curve()
 #if DEBUG
   mpi56_carry_prop(Q.X[0]);
   mpi_conv_56to64(r64, Q.X[0]);
-  mpi64_print("  XQ0 = 0x", r64, 8);
+  mpi64_print("  XQ0 = 0x", r64, 12);
   memset(&Q.X[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.X[1]);
   mpi_conv_56to64(r64, Q.X[1]);
-  mpi64_print("  XQ1 = 0x", r64, 8);
+  mpi64_print("  XQ1 = 0x", r64, 12);
   memset(&Q.X[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.Z[0]);
   mpi_conv_56to64(r64, Q.Z[0]);
-  mpi64_print("  ZQ0 = 0x", r64, 8);
+  mpi64_print("  ZQ0 = 0x", r64, 12);
   memset(&Q.Z[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(Q.Z[1]);
   mpi_conv_56to64(r64, Q.Z[1]);
-  mpi64_print("  ZQ1 = 0x", r64, 8);
+  mpi64_print("  ZQ1 = 0x", r64, 12);
   memset(&Q.Z[1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -550,43 +502,43 @@ void test_curve()
 #if DEBUG
   mpi56_carry_prop(A24plus[0]);
   mpi_conv_56to64(r64, A24plus[0]);
-  mpi64_print(" A240 = 0x", r64, 8);
+  mpi64_print(" A240 = 0x", r64, 12);
   memset(&A24plus[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24plus[1]);
   mpi_conv_56to64(r64, A24plus[1]);
-  mpi64_print(" A241 = 0x", r64, 8);
+  mpi64_print(" A241 = 0x", r64, 12);
   memset(&A24plus[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(C24[0]);
   mpi_conv_56to64(r64, C24[0]);
-  mpi64_print(" C240 = 0x", r64, 8);
+  mpi64_print(" C240 = 0x", r64, 12);
   memset(&C24[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(C24[1]);
   mpi_conv_56to64(r64, C24[1]);
-  mpi64_print(" C241 = 0x", r64, 8);
+  mpi64_print(" C241 = 0x", r64, 12);
   memset(&C24[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[0][0]);
   mpi_conv_56to64(r64, coeff[0][0]);
-  mpi64_print("  K00 = 0x", r64, 8);
+  mpi64_print("  K00 = 0x", r64, 12);
   memset(&coeff[0][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[0][1]);
   mpi_conv_56to64(r64, coeff[0][1]);
-  mpi64_print("  K01 = 0x", r64, 8);
+  mpi64_print("  K01 = 0x", r64, 12);
   memset(&coeff[0][1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[1][0]);
   mpi_conv_56to64(r64, coeff[1][0]);
-  mpi64_print("  K10 = 0x", r64, 8);
+  mpi64_print("  K10 = 0x", r64, 12);
   memset(&coeff[1][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[1][1]);
   mpi_conv_56to64(r64, coeff[1][1]);
-  mpi64_print("  K11 = 0x", r64, 8);
+  mpi64_print("  K11 = 0x", r64, 12);
   memset(&coeff[1][1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[2][0]);
   mpi_conv_56to64(r64, coeff[2][0]);
-  mpi64_print("  K20 = 0x", r64, 8);
+  mpi64_print("  K20 = 0x", r64, 12);
   memset(&coeff[2][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[2][1]);
   mpi_conv_56to64(r64, coeff[2][1]);
-  mpi64_print("  K21 = 0x", r64, 8);
+  mpi64_print("  K21 = 0x", r64, 12);
   memset(&coeff[2][1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -599,43 +551,43 @@ void test_curve()
 #if DEBUG
   mpi56_carry_prop(A24plus[0]);
   mpi_conv_56to64(r64, A24plus[0]);
-  mpi64_print(" A240 = 0x", r64, 8);
+  mpi64_print(" A240 = 0x", r64, 12);
   memset(&A24plus[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24plus[1]);
   mpi_conv_56to64(r64, A24plus[1]);
-  mpi64_print(" A241 = 0x", r64, 8);
+  mpi64_print(" A241 = 0x", r64, 12);
   memset(&A24plus[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(C24[0]);
   mpi_conv_56to64(r64, C24[0]);
-  mpi64_print(" C240 = 0x", r64, 8);
+  mpi64_print(" C240 = 0x", r64, 12);
   memset(&C24[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(C24[1]);
   mpi_conv_56to64(r64, C24[1]);
-  mpi64_print(" C241 = 0x", r64, 8);
+  mpi64_print(" C241 = 0x", r64, 12);
   memset(&C24[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[0][0]);
   mpi_conv_56to64(r64, coeff[0][0]);
-  mpi64_print("  K00 = 0x", r64, 8);
+  mpi64_print("  K00 = 0x", r64, 12);
   memset(&coeff[0][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[0][1]);
   mpi_conv_56to64(r64, coeff[0][1]);
-  mpi64_print("  K01 = 0x", r64, 8);
+  mpi64_print("  K01 = 0x", r64, 12);
   memset(&coeff[0][1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[1][0]);
   mpi_conv_56to64(r64, coeff[1][0]);
-  mpi64_print("  K10 = 0x", r64, 8);
+  mpi64_print("  K10 = 0x", r64, 12);
   memset(&coeff[1][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[1][1]);
   mpi_conv_56to64(r64, coeff[1][1]);
-  mpi64_print("  K11 = 0x", r64, 8);
+  mpi64_print("  K11 = 0x", r64, 12);
   memset(&coeff[1][1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[2][0]);
   mpi_conv_56to64(r64, coeff[2][0]);
-  mpi64_print("  K20 = 0x", r64, 8);
+  mpi64_print("  K20 = 0x", r64, 12);
   memset(&coeff[2][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[2][1]);
   mpi_conv_56to64(r64, coeff[2][1]);
-  mpi64_print("  K21 = 0x", r64, 8);
+  mpi64_print("  K21 = 0x", r64, 12);
   memset(&coeff[2][1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -659,16 +611,16 @@ void test_curve()
   // output
   mpi56_carry_prop(P.X[0]);
   mpi_conv_56to64(r64, P.X[0]);
-  mpi64_print("  XP0 = 0x", r64, 8);
+  mpi64_print("  XP0 = 0x", r64, 12);
   mpi56_carry_prop(P.X[1]);
   mpi_conv_56to64(r64, P.X[1]);
-  mpi64_print("  XP1 = 0x", r64, 8);
+  mpi64_print("  XP1 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[0]);
   mpi_conv_56to64(r64, P.Z[0]);
-  mpi64_print("  ZP0 = 0x", r64, 8);
+  mpi64_print("  ZP0 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[1]);
   mpi_conv_56to64(r64, P.Z[1]);
-  mpi64_print("  ZP1 = 0x", r64, 8);
+  mpi64_print("  ZP1 = 0x", r64, 12);
 #endif
 
   printf("- eval_4_isog v1:");
@@ -689,16 +641,16 @@ void test_curve()
   // output
   mpi56_carry_prop(P.X[0]);
   mpi_conv_56to64(r64, P.X[0]);
-  mpi64_print("  XP0 = 0x", r64, 8);
+  mpi64_print("  XP0 = 0x", r64, 12);
   mpi56_carry_prop(P.X[1]);
   mpi_conv_56to64(r64, P.X[1]);
-  mpi64_print("  XP1 = 0x", r64, 8);
+  mpi64_print("  XP1 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[0]);
   mpi_conv_56to64(r64, P.Z[0]);
-  mpi64_print("  ZP0 = 0x", r64, 8);
+  mpi64_print("  ZP0 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[1]);
   mpi_conv_56to64(r64, P.Z[1]);
-  mpi64_print("  ZP1 = 0x", r64, 8);
+  mpi64_print("  ZP1 = 0x", r64, 12);
 #endif
 
   // ---------------------------------------------------------------------------   
@@ -718,35 +670,35 @@ void test_curve()
 #if DEBUG
   mpi56_carry_prop(A24minus[0]);
   mpi_conv_56to64(r64, A24minus[0]);
-  mpi64_print("  A-0 = 0x", r64, 8);
+  mpi64_print("  A-0 = 0x", r64, 12);
   memset(&A24minus[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24minus[1]);
   mpi_conv_56to64(r64, A24minus[1]);
-  mpi64_print("  A-1 = 0x", r64, 8);
+  mpi64_print("  A-1 = 0x", r64, 12);
   memset(&A24minus[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24minus[0]);
   mpi_conv_56to64(r64, A24plus[0]);
-  mpi64_print("  A+0 = 0x", r64, 8);
+  mpi64_print("  A+0 = 0x", r64, 12);
   memset(&A24plus[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24plus[1]);
   mpi_conv_56to64(r64, A24plus[1]);
-  mpi64_print("  A+1 = 0x", r64, 8);
+  mpi64_print("  A+1 = 0x", r64, 12);
   memset(&A24plus[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[0][0]);
   mpi_conv_56to64(r64, coeff[0][0]);
-  mpi64_print("  K00 = 0x", r64, 8);
+  mpi64_print("  K00 = 0x", r64, 12);
   memset(&coeff[0][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[0][1]);
   mpi_conv_56to64(r64, coeff[0][1]);
-  mpi64_print("  K01 = 0x", r64, 8);
+  mpi64_print("  K01 = 0x", r64, 12);
   memset(&coeff[0][1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[1][0]);
   mpi_conv_56to64(r64, coeff[1][0]);
-  mpi64_print("  K10 = 0x", r64, 8);
+  mpi64_print("  K10 = 0x", r64, 12);
   memset(&coeff[1][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[1][1]);
   mpi_conv_56to64(r64, coeff[1][1]);
-  mpi64_print("  K11 = 0x", r64, 8);
+  mpi64_print("  K11 = 0x", r64, 12);
   memset(&coeff[1][1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -759,35 +711,35 @@ void test_curve()
 #if DEBUG
   mpi56_carry_prop(A24minus[0]);
   mpi_conv_56to64(r64, A24minus[0]);
-  mpi64_print("  A-0 = 0x", r64, 8);
+  mpi64_print("  A-0 = 0x", r64, 12);
   memset(&A24minus[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24minus[1]);
   mpi_conv_56to64(r64, A24minus[1]);
-  mpi64_print("  A-1 = 0x", r64, 8);
+  mpi64_print("  A-1 = 0x", r64, 12);
   memset(&A24minus[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24minus[0]);
   mpi_conv_56to64(r64, A24plus[0]);
-  mpi64_print("  A+0 = 0x", r64, 8);
+  mpi64_print("  A+0 = 0x", r64, 12);
   memset(&A24plus[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24plus[1]);
   mpi_conv_56to64(r64, A24plus[1]);
-  mpi64_print("  A+1 = 0x", r64, 8);
+  mpi64_print("  A+1 = 0x", r64, 12);
   memset(&A24plus[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[0][0]);
   mpi_conv_56to64(r64, coeff[0][0]);
-  mpi64_print("  K00 = 0x", r64, 8);
+  mpi64_print("  K00 = 0x", r64, 12);
   memset(&coeff[0][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[0][1]);
   mpi_conv_56to64(r64, coeff[0][1]);
-  mpi64_print("  K01 = 0x", r64, 8);
+  mpi64_print("  K01 = 0x", r64, 12);
   memset(&coeff[0][1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[1][0]);
   mpi_conv_56to64(r64, coeff[1][0]);
-  mpi64_print("  K10 = 0x", r64, 8);
+  mpi64_print("  K10 = 0x", r64, 12);
   memset(&coeff[1][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[1][1]);
   mpi_conv_56to64(r64, coeff[1][1]);
-  mpi64_print("  K11 = 0x", r64, 8);
+  mpi64_print("  K11 = 0x", r64, 12);
   memset(&coeff[1][1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -800,35 +752,35 @@ void test_curve()
 #if DEBUG
   mpi56_carry_prop(A24minus[0]);
   mpi_conv_56to64(r64, A24minus[0]);
-  mpi64_print("  A-0 = 0x", r64, 8);
+  mpi64_print("  A-0 = 0x", r64, 12);
   memset(&A24minus[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24minus[1]);
   mpi_conv_56to64(r64, A24minus[1]);
-  mpi64_print("  A-1 = 0x", r64, 8);
+  mpi64_print("  A-1 = 0x", r64, 12);
   memset(&A24minus[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24minus[0]);
   mpi_conv_56to64(r64, A24plus[0]);
-  mpi64_print("  A+0 = 0x", r64, 8);
+  mpi64_print("  A+0 = 0x", r64, 12);
   memset(&A24plus[0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(A24plus[1]);
   mpi_conv_56to64(r64, A24plus[1]);
-  mpi64_print("  A+1 = 0x", r64, 8);
+  mpi64_print("  A+1 = 0x", r64, 12);
   memset(&A24plus[1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[0][0]);
   mpi_conv_56to64(r64, coeff[0][0]);
-  mpi64_print("  K00 = 0x", r64, 8);
+  mpi64_print("  K00 = 0x", r64, 12);
   memset(&coeff[0][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[0][1]);
   mpi_conv_56to64(r64, coeff[0][1]);
-  mpi64_print("  K01 = 0x", r64, 8);
+  mpi64_print("  K01 = 0x", r64, 12);
   memset(&coeff[0][1], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[1][0]);
   mpi_conv_56to64(r64, coeff[1][0]);
-  mpi64_print("  K10 = 0x", r64, 8);
+  mpi64_print("  K10 = 0x", r64, 12);
   memset(&coeff[1][0], 0, sizeof(uint64_t)*NLMB56);
   mpi56_carry_prop(coeff[1][1]);
   mpi_conv_56to64(r64, coeff[1][1]);
-  mpi64_print("  K11 = 0x", r64, 8);
+  mpi64_print("  K11 = 0x", r64, 12);
   memset(&coeff[1][1], 0, sizeof(uint64_t)*NLMB56);
 #endif 
 
@@ -852,16 +804,16 @@ void test_curve()
   // output
   mpi56_carry_prop(P.X[0]);
   mpi_conv_56to64(r64, P.X[0]);
-  mpi64_print("  XP0 = 0x", r64, 8);
+  mpi64_print("  XP0 = 0x", r64, 12);
   mpi56_carry_prop(P.X[1]);
   mpi_conv_56to64(r64, P.X[1]);
-  mpi64_print("  XP1 = 0x", r64, 8);
+  mpi64_print("  XP1 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[0]);
   mpi_conv_56to64(r64, P.Z[0]);
-  mpi64_print("  ZP0 = 0x", r64, 8);
+  mpi64_print("  ZP0 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[1]);
   mpi_conv_56to64(r64, P.Z[1]);
-  mpi64_print("  ZP1 = 0x", r64, 8);
+  mpi64_print("  ZP1 = 0x", r64, 12);
 #endif
 
   printf("- eval_3_isog v1:");
@@ -882,16 +834,16 @@ void test_curve()
   // output
   mpi56_carry_prop(P.X[0]);
   mpi_conv_56to64(r64, P.X[0]);
-  mpi64_print("  XP0 = 0x", r64, 8);
+  mpi64_print("  XP0 = 0x", r64, 12);
   mpi56_carry_prop(P.X[1]);
   mpi_conv_56to64(r64, P.X[1]);
-  mpi64_print("  XP1 = 0x", r64, 8);
+  mpi64_print("  XP1 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[0]);
   mpi_conv_56to64(r64, P.Z[0]);
-  mpi64_print("  ZP0 = 0x", r64, 8);
+  mpi64_print("  ZP0 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[1]);
   mpi_conv_56to64(r64, P.Z[1]);
-  mpi64_print("  ZP1 = 0x", r64, 8);
+  mpi64_print("  ZP1 = 0x", r64, 12);
 #endif
 
   // ---------------------------------------------------------------------------   
@@ -923,28 +875,28 @@ void test_curve()
   // output
   mpi56_carry_prop(P.X[0]);
   mpi_conv_56to64(r64, P.X[0]);
-  mpi64_print("  XP0 = 0x", r64, 8);
+  mpi64_print("  XP0 = 0x", r64, 12);
   mpi56_carry_prop(P.X[1]);
   mpi_conv_56to64(r64, P.X[1]);
-  mpi64_print("  XP1 = 0x", r64, 8);
+  mpi64_print("  XP1 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[0]);
   mpi_conv_56to64(r64, P.Z[0]);
-  mpi64_print("  ZP0 = 0x", r64, 8);
+  mpi64_print("  ZP0 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[1]);
   mpi_conv_56to64(r64, P.Z[1]);
-  mpi64_print("  ZP1 = 0x", r64, 8);
+  mpi64_print("  ZP1 = 0x", r64, 12);
   mpi56_carry_prop(Q.X[0]);
   mpi_conv_56to64(r64, Q.X[0]);
-  mpi64_print("  XQ0 = 0x", r64, 8);
+  mpi64_print("  XQ0 = 0x", r64, 12);
   mpi56_carry_prop(Q.X[1]);
   mpi_conv_56to64(r64, Q.X[1]);
-  mpi64_print("  XQ1 = 0x", r64, 8);
+  mpi64_print("  XQ1 = 0x", r64, 12);
   mpi56_carry_prop(Q.Z[0]);
   mpi_conv_56to64(r64, Q.Z[0]);
-  mpi64_print("  ZQ0 = 0x", r64, 8);
+  mpi64_print("  ZQ0 = 0x", r64, 12);
   mpi56_carry_prop(Q.Z[1]);
   mpi_conv_56to64(r64, Q.Z[1]);
-  mpi64_print("  ZQ1 = 0x", r64, 8);
+  mpi64_print("  ZQ1 = 0x", r64, 12);
 #endif
 
   printf("- xDBLADD v1:");
@@ -974,28 +926,28 @@ void test_curve()
   // output
   mpi56_carry_prop(P.X[0]);
   mpi_conv_56to64(r64, P.X[0]);
-  mpi64_print("  XP0 = 0x", r64, 8);
+  mpi64_print("  XP0 = 0x", r64, 12);
   mpi56_carry_prop(P.X[1]);
   mpi_conv_56to64(r64, P.X[1]);
-  mpi64_print("  XP1 = 0x", r64, 8);
+  mpi64_print("  XP1 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[0]);
   mpi_conv_56to64(r64, P.Z[0]);
-  mpi64_print("  ZP0 = 0x", r64, 8);
+  mpi64_print("  ZP0 = 0x", r64, 12);
   mpi56_carry_prop(P.Z[1]);
   mpi_conv_56to64(r64, P.Z[1]);
-  mpi64_print("  ZP1 = 0x", r64, 8);
+  mpi64_print("  ZP1 = 0x", r64, 12);
   mpi56_carry_prop(Q.X[0]);
   mpi_conv_56to64(r64, Q.X[0]);
-  mpi64_print("  XQ0 = 0x", r64, 8);
+  mpi64_print("  XQ0 = 0x", r64, 12);
   mpi56_carry_prop(Q.X[1]);
   mpi_conv_56to64(r64, Q.X[1]);
-  mpi64_print("  XQ1 = 0x", r64, 8);
+  mpi64_print("  XQ1 = 0x", r64, 12);
   mpi56_carry_prop(Q.Z[0]);
   mpi_conv_56to64(r64, Q.Z[0]);
-  mpi64_print("  ZQ0 = 0x", r64, 8);
+  mpi64_print("  ZQ0 = 0x", r64, 12);
   mpi56_carry_prop(Q.Z[1]);
   mpi_conv_56to64(r64, Q.Z[1]);
-  mpi64_print("  ZQ1 = 0x", r64, 8);
+  mpi64_print("  ZQ1 = 0x", r64, 12);
 #endif
 
 printf("**************************************************************************\n");

@@ -28,9 +28,6 @@ sw-toolchain-clean :
 sw-run:
 	@make --directory="${REPO_HOME}/src/${ALG}/${RADIX}-radix" all
 
-sw-kat:
-	@make --directory="${REPO_HOME}/src/${ALG}/${RADIX}-radix" kat
-
 sw-clean:
 	@make --directory="${REPO_HOME}/src/${ALG}/${RADIX}-radix" clean
 

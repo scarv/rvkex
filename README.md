@@ -79,6 +79,10 @@
   make sw-run ALG=x25519 RADIX=reduced TYPE=RV64_TYPE2 MODE=debug 
   ```
 
+## TODO 
+
+- remove the final subtraction in fp mul 
+
 ## References and links
 
 [1] https://cr.yp.to/ecdh.html

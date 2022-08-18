@@ -66,11 +66,9 @@ void test_fp()
   MEASURE_CYCLES(uint_mul3_ps_sw(t, &a, &b), 1);
   printf("       #cycle = %lld\n", diff_cycles);
   
-  mpi64_print("  t  = 0x", t, LIMBS*2);
+  mpi64_print("  t = 0x", t, LIMBS*2);
 
-  printf("FP ARITH:\n");
-
-  printf("- uint mul ps sw:");
+  printf("- fp rdc mont sw:");
   MEASURE_CYCLES(fp_rdc_mont_sw(&r, t), 1);
   printf("       #cycle = %lld\n", diff_cycles);
   
@@ -146,6 +144,6 @@ void test_csidh()
 
 int main()
 {
-  test_fp();
+  // test_fp();
   test_csidh();
 }

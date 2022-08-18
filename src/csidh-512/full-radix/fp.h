@@ -39,8 +39,8 @@ void fp_add2(fp *x, fp const *y);
 void fp_sub2(fp *x, fp const *y);
 void fp_mul2(fp *x, fp const *y);
 
-void fp_add3(fp *x, fp const *y, fp const *z);
-void fp_sub3(fp *x, fp const *y, fp const *z);
+void fp_add3_c(fp *x, fp const *y, fp const *z);
+void fp_sub3_c(fp *x, fp const *y, fp const *z);
 void fp_mul3_c(fp *x, fp const *y, fp const *z);
 
 void fp_sq1(fp *x);
@@ -56,8 +56,15 @@ void reduce_once(fp *x);
 // assembly prototypes 
 extern void uint_mul3_ps_sw(uint64_t *r, const fp *a, const fp *b);
 extern void fp_rdc_mont_sw(fp *r, const uint64_t *a);
+extern void fp_add3_sw(fp *r, const fp *a, const fp *b);
+extern void fp_sub3_sw(fp *r, const fp *a, const fp *b);
+
 void fp_mul3_asm(fp *r, const fp *a, const fp *b);
+void fp_add3_asm(fp *r, const fp *a, const fp *b);
+void fp_sub3_asm(fp *r, const fp *a, const fp *b);
 
 #define fp_mul3 fp_mul3_asm
+#define fp_add3 fp_add3_asm
+#define fp_sub3 fp_sub3_asm
 
 #endif

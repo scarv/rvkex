@@ -32,7 +32,7 @@ void reduce_once(fp *x)
         *x = t;
 }
 
-void fp_add3(fp *x, fp const *y, fp const *z)
+void fp_add3_c(fp *x, fp const *y, fp const *z)
 {
     bool c = uint_add3((fp *) x, (fp *) y, (fp *) z);
     (void) c; assert(!c);
@@ -44,7 +44,7 @@ void fp_add2(fp *x, fp const *y)
     fp_add3(x, x, y);
 }
 
-void fp_sub3(fp *x, fp const *y, fp const *z)
+void fp_sub3_c(fp *x, fp const *y, fp const *z)
 {
     if (uint_sub3((fp *) x, (fp *) y, (fp *) z))
         uint_add3((fp *) x, (fp *) x, &p);

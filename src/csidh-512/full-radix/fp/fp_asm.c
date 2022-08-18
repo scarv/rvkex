@@ -14,3 +14,13 @@ void fp_mul3_asm(fp *r, const fp *a, const fp *b)
   fp_rdc_mont_sw(r, t);
   reduce_once(r);
 }
+
+void fp_add3_asm(fp *r, const fp *a, const fp *b)
+{
+  fp_add3_sw(r, a, b);
+}
+
+void fp_sub3_asm(fp *r, const fp *a, const fp *b)
+{
+  fp_sub3_sw(r, a, b);
+}

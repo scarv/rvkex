@@ -37,15 +37,6 @@ void priv_print(private_key const *k)
     printf("\x1b[0m");
 }
 
-void mpi64_print(const char *c, const uint64_t *a, int len)
-{
-  int i;
-
-  printf("%s", c);
-  for (i = len-1; i > 0; i--) printf("%016llX", a[i]);
-  printf("%016llX\n", a[0]);
-}
-
 void test_fp()
 {
   uint64_t start_cycles, end_cycles, diff_cycles;
@@ -62,19 +53,47 @@ void test_fp()
   printf("\n**************************************************************************\n");
   printf("FP ARITH:\n");
 
-  printf("- uint mul ps sw:");
-  MEASURE_CYCLES(uint_mul3_ps_sw(t, &a, &b), 1);
-  printf("       #cycle = %lld\n", diff_cycles);
-  
-  mpi64_print("  t = 0x", t, LIMBS*2);
+  printf("- fp add:");
+  LOAD_CACHE(fp_add3(&r, &a, &b), 1000);
+  MEASURE_CYCLES(fp_add3(&r, &a, &b), 10000);
+  printf("            #cycle = %lld\n", diff_cycles);
 
-  printf("- fp rdc mont sw:");
-  MEASURE_CYCLES(fp_rdc_mont_sw(&r, t), 1);
+  printf("- fp sub:");
+  LOAD_CACHE(fp_sub3(&r, &a, &b), 1000);
+  MEASURE_CYCLES(fp_sub3(&r, &a, &b), 10000);
+  printf("            #cycle = %lld\n", diff_cycles);
+
+  printf("- fp mul:");
+  LOAD_CACHE(fp_mul3(&r, &a, &b), 1000);
+  MEASURE_CYCLES(fp_mul3(&r, &a, &b), 10000);
+  printf("            #cycle = %lld\n", diff_cycles);
+
+  printf("- fp sqr:");
+  LOAD_CACHE(fp_sq2(&r, &a), 1000);
+  MEASURE_CYCLES(fp_sq2(&r, &a), 10000);
+  printf("            #cycle = %lld\n", diff_cycles);
+
+#if (RV64_TYPE1) | (RV64_TYPE2) | (RV64_TYPE3)
+  printf("- uint mul ps:");
+  LOAD_CACHE(uint_mul3_asm(t, &a, &b), 1000);
+  MEASURE_CYCLES(uint_mul3_asm(t, &a, &b), 10000);
   printf("       #cycle = %lld\n", diff_cycles);
-  
-  printf("  r = 0x");
-  uint_print(&r);
-  printf("\n");
+
+  printf("- uint sqr ps:");
+  LOAD_CACHE(uint_sqr2_asm(t, &a), 1000);
+  MEASURE_CYCLES(uint_sqr2_asm(t, &a), 10000);
+  printf("       #cycle = %lld\n", diff_cycles);
+
+  printf("- fp rdc mont:");
+  LOAD_CACHE(fp_rdc_mont_asm(&r, t), 1000);
+  MEASURE_CYCLES(fp_rdc_mont_asm(&r, t), 10000);
+  printf("       #cycle = %lld\n", diff_cycles);
+#endif
+
+  printf("- reduce once:");
+  LOAD_CACHE(reduce_once(&r), 1000);
+  MEASURE_CYCLES(reduce_once(&r), 10000);
+  printf("       #cycle = %lld\n", diff_cycles);
 
   printf("**************************************************************************\n");
 }
@@ -144,6 +163,6 @@ void test_csidh()
 
 int main()
 {
-  // test_fp();
+  test_fp();
   test_csidh();
 }

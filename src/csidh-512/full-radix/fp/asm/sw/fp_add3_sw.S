@@ -1,10 +1,11 @@
 // void fp_add3_sw(uint64_t *r, const uint64_t *a, const uint64_t *b);
 // radix-2^64
-
+// NOTE that due to the lack of carry flag on RISC-V, the `cswap-based` 
+// `reduce_once` is more efficient than `addition-based` version.
 
 // registers
 
-// result "r"
+// result `r`
 #define R0 s0
 #define R1 s1
 #define R2 s2
@@ -14,13 +15,13 @@
 #define R6 s6
 #define R7 s7 
 
-// operand "a"
+// operand `a`
 #define A_ t0
 
-// operand "b"
+// operand `b`
 #define B_ t1
 
-// modulus "p"
+// modulus `p`
 #define P0 t4
 #define P1 t5
 #define P2 t6
@@ -30,9 +31,10 @@
 #define P6 a6
 #define P7 a7
 
-// temp "t"
+// temporary value `t`
 #define T0 t2
 #define T1 t3
+#define T2 t0
 
 
 // prologue + epilogue 
@@ -65,7 +67,7 @@
 // load modulus + store result
 
 .macro LOAD_P
-  la    t0, P511
+  la    t0, P512
   ld    P0,  0(t0)
   ld    P1,  8(t0)
   ld    P2, 16(t0)
@@ -77,19 +79,19 @@
 .endm
 
 .macro STORE_R 
-  sd    R0,  0(a0)
-  sd    R1,  8(a0)
-  sd    R2, 16(a0)
-  sd    R3, 24(a0)
-  sd    R4, 32(a0)
-  sd    R5, 40(a0)
-  sd    R6, 48(a0)
-  sd    R7, 56(a0)
+  sd    P0,  0(a0)
+  sd    P1,  8(a0)
+  sd    P2, 16(a0)
+  sd    P3, 24(a0)
+  sd    P4, 32(a0)
+  sd    P5, 40(a0)
+  sd    P6, 48(a0)
+  sd    P7, 56(a0)
 .endm
 
 // arithmetic computation
 
-.macro _AI_ADD_BI R, imm
+.macro _A_ADD_B_I R, imm
   ld    A_, 8*\imm(a1)
   ld    B_, 8*\imm(a2) 
   add   \R, A_, B_
@@ -99,14 +101,14 @@
   or    T0, T0, T1 
 .endm
 
-.macro _A0_ADD_B0
+.macro _A_ADD_B_0
   ld    A_,  0(a1)
   ld    B_,  0(a2)
   add   R0, A_, B_
   sltu  T0, R0, A_
 .endm
 
-.macro _A7_ADD_B7
+.macro _A_ADD_B_7
   ld    A_, 56(a1)
   ld    B_, 56(a2)
   add   R7, A_, B_
@@ -114,67 +116,52 @@
 .endm
 
 .macro A_ADD_B 
-  _A0_ADD_B0
-  _AI_ADD_BI R1, 1
-  _AI_ADD_BI R2, 2
-  _AI_ADD_BI R3, 3
-  _AI_ADD_BI R4, 4
-  _AI_ADD_BI R5, 5
-  _AI_ADD_BI R6, 6
-  _A7_ADD_B7
+  _A_ADD_B_0
+  _A_ADD_B_I R1, 1
+  _A_ADD_B_I R2, 2
+  _A_ADD_B_I R3, 3
+  _A_ADD_B_I R4, 4
+  _A_ADD_B_I R5, 5
+  _A_ADD_B_I R6, 6
+  _A_ADD_B_7
 .endm
 
-.macro _RI_SUB_PI R, P
-  sltu  T1, \R, T0
-  sub   \R, \R, T0
-  sltu  T0, \R, \P 
-  sub   \R, \R, \P 
-  or    T0, T0, T1
+.macro _R_SUB_P R, P
+  sltu  T1, \R, \P
+  sub   \P, \R, \P
+  sltu  T2, \P, T0 
+  sub   \P, \P, T0
+  or    T0, T1, T2
 .endm
 
 .macro R_SUB_P 
-  sltu  T0, R0, P0
-  sub   R0, R0, P0
-  _RI_SUB_PI    R1, P1
-  _RI_SUB_PI    R2, P2
-  _RI_SUB_PI    R3, P3
-  _RI_SUB_PI    R4, P4
-  _RI_SUB_PI    R5, P5 
-  _RI_SUB_PI    R6, P6
-  _RI_SUB_PI    R7, P7
+  sltu  T0, R0, P0 
+  sub   P0, R0, P0
+  _R_SUB_P  R1, P1
+  _R_SUB_P  R2, P2
+  _R_SUB_P  R3, P3
+  _R_SUB_P  R4, P4
+  _R_SUB_P  R5, P5
+  _R_SUB_P  R6, P6
+  _R_SUB_P  R7, P7
 .endm
 
-.macro MASK_P
+.macro _CSWAP R, P
+  xor   \R, \R, \P
+  and   \R, \R, T0
+  xor   \P, \P, \R
+.endm
+
+.macro CSWAP 
   sub   T0, x0, T0
-  and   P0, P0, T0
-  and   P1, P1, T0
-  and   P2, P2, T0
-  and   P3, P3, T0
-  and   P4, P4, T0
-  and   P5, P5, T0
-  and   P6, P6, T0
-  and   P7, P7, T0
-.endm
-
-.macro _RI_ADD_PI R, P
-  add   \R, \R, T0 
-  sltu  T0, \R, T0 
-  add   \R, \R, \P
-  sltu  T1, \R, \P
-  or    T0, T0, T1
-.endm
-
-.macro ADD_MASK 
-  add  R0, R0, P0
-  sltu T0, R0, P0
-  _RI_ADD_PI   R1, P1 
-  _RI_ADD_PI   R2, P2
-  _RI_ADD_PI   R3, P3
-  _RI_ADD_PI   R4, P4
-  _RI_ADD_PI   R5, P5
-  _RI_ADD_PI   R6, P6
-  add  R7, R7, T0 
-  add  R7, R7, P7
+  _CSWAP    R0, P0
+  _CSWAP    R1, P1
+  _CSWAP    R2, P2
+  _CSWAP    R3, P3
+  _CSWAP    R4, P4
+  _CSWAP    R5, P5
+  _CSWAP    R6, P6
+  _CSWAP    R7, P7
 .endm
 
 
@@ -187,8 +174,7 @@ fp_add3_sw:
   LOAD_P
   A_ADD_B
   R_SUB_P
-  MASK_P
-  ADD_MASK
+  CSWAP 
   STORE_R
   EPILOGUE
 
@@ -197,12 +183,12 @@ fp_add3_sw:
 
 .balign 8 
 
-P511: 
-.dword 0x1b81b90533c6c87b               // P0 
+P512: 
+.dword 0x1b81b90533c6c87b               // P0
 .dword 0xc2721bf457aca835               // P1
 .dword 0x516730cc1f0b4f25               // P2
 .dword 0xa7aac6c567f35507               // P3
-.dword 0x5afbfcc69322c9cd               // P4 
+.dword 0x5afbfcc69322c9cd               // P4
 .dword 0xb42d083aedc88c42               // P5
 .dword 0xfc8ab0d15e3e4c4a               // P6
 .dword 0x65b48e8f740f89bf               // P7

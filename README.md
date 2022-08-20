@@ -18,8 +18,8 @@
   - [x] full-radix    ISE-assisted   x25519
   - [x] reduced-radix pure-software  x25519
   - [x] reduced-radix ISE-assisted   x25519
-  - [ ] full-radix    pure-software  csidh-512
-  - [ ] full-radix    ISE-assisted   csidh-512
+  - [x] full-radix    pure-software  csidh-512
+  - [x] full-radix    ISE-assisted   csidh-512
   - [ ] reduced-radix pure-software  csidh-512
   - [ ] reduced-radix ISE-assisted   csidh-512
 
@@ -71,17 +71,18 @@
   make sw-run ALG=[x25519/csidh-512] RADIX=[full/reduced] TYPE=RV64_TYPE[1/2/3]
   ```
   - `RV64_TYPE1`: pure-software implementation; 
-  - `RV64_TYPE2`: ISE-assisted implementation using general-use ISE; 
-  - `RV64_TYPE3`: ISE-assisted implementation using general-use ISE *plus* specific-use ISE.
+  - `RV64_TYPE2`: ISE-assisted  implementation using general-use ISE; 
+  - `RV64_TYPE3`: ISE-assisted  implementation using general-use ISE *plus* specific-use ISE.
+
+- Build and evaluate the original CSIDH-512 C implementation on RV64GC 
+  ```sh
+    make sw-run ALG=csidh-512 RADIX=full TYPE=RV64_TYPE0
+  ```
 
 - Enable the debug mode (add `MODE=debug`), e.g.,
   ```sh
   make sw-run ALG=x25519 RADIX=reduced TYPE=RV64_TYPE2 MODE=debug 
   ```
-
-## TODO 
-
-- remove the final subtraction in fp mul 
 
 ## References and links
 

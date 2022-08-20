@@ -25,7 +25,7 @@ void fp_set(fp *x, uint64_t y)
     fp_enc(x, (fp *) x);
 }
 
-void reduce_once(fp *x)
+void reduce_once_c(fp *x)
 {
     fp t;
     if (!uint_sub3(&t, x, &p))
@@ -114,7 +114,7 @@ void fp_mul2(fp *x, fp const *y)
     fp_mul3(x, x, y);
 }
 
-void fp_sq2(fp *x, fp const *y)
+void fp_sq2_c(fp *x, fp const *y)
 {
     if (fp_sq_counter) ++*fp_sq_counter;
     uint64_t *mulcnt = fp_mul_counter;

@@ -63,3 +63,21 @@
 .macro maddhu                rd, rs1, rs2, rs3            //                  => rrrr r01r rrrr rrrr r000 rrrr r111 1011
 .insn r4 CUSTOM_3, 0,      ( 1* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADDHU 0x0200007B
 .endm                                                     //                  => #define  MASK_MADDHU 0x0600707F
+
++=====================+=======================+==========+=====================+=========+=============+
+| class               | instruction           | format   | f7                  | f3      | custom      |
++=====================+=======================+==========+=====================+=========+=============+
+|                     |                       |          |                     |         |             |
+| RV64_FULL_TYPE2     | csidh.sub.p512        | 1R+I->1R | 0000 : imm3         | 2 = 010 | 3 = 1111011 |
+| RV64_FULL_TYPE2     | csidh.and.p512.add    | 2R+I->1R | 0001 : imm3         | 2 = 010 | 3 = 1111011 |
+|                     |                       |          |                     |         |             |
++=====================+=======================+==========+=====================+=========+=============+
+
+// modulus-related addition/subtraction for radix-2^64 CSIDH-512
+
+.macro csidh.sub.p512        rd, rs1,      imm            //                  => 0000 iiir rrrr rrrr r010 rrrr r111 1011
+.insn r  CUSTOM_3, 2, \imm+( 0* 8), \rd, \rs1, x0         //                  => #define MATCH_CSIDH_SUB_P512 0x0000207B
+.endm                                                     //                  => #define  MASK_CSIDH_SUB_P512 0xF000707F
+.macro csidh.and.p512.add    rd, rs1, rs2, imm            //                  => 0001 iiir rrrr rrrr r010 rrrr r111 1011
+.insn r  CUSTOM_3, 2, \imm+( 1* 8), \rd, \rs1, \rs2       //                  => #define MATCH_CSIDH_AND_P512_ADD 0x1000207B
+.endm                                                     //                  => #define  MASK_CSIDH_AND_P512_ADD 0xF000707F

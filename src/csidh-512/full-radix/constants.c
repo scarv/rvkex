@@ -57,3 +57,6 @@ const fp first_elligator_rand = {{
 
 const unsigned cost_ratio_inv_mul = 128; /* TODO figure out exactly */
 
+
+
+// p := 0x65b48e8f740f89bffc8ab0d15e3e4c4ab42d083aedc88c425afbfcc69322c9cda7aac6c567f35507516730cc1f0b4f25c2721bf457aca8351b81b90533c6c87b;

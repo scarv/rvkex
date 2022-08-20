@@ -4,12 +4,12 @@
 
 // regiters 
 
-// accumulator "z"
+// accumulator `z`
 #define Z0 t0
 #define Z1 t1
 #define Z2 t2
 
-// modulus "p"
+// modulus `p`
 #define P0 t4
 #define P1 t5
 #define P2 t6
@@ -19,7 +19,7 @@
 #define P6 a7
 #define P7 s0
 
-// operand "a"
+// operand `a`
 #define A0 s1
 #define A1 s2
 #define A2 s3
@@ -30,11 +30,11 @@
 #define A7 s8
 #define A_ t3
 
-// temp "t"
+// temporary value `t`
 #define T0 a4
 #define T1 a5
 
-// -p^-1 mod 2^64
+// Montgomery reduction constant `w = -p^-1 mod 2^64`
 #define W_ s9
 
 // prologue + epilogue 
@@ -83,7 +83,7 @@
 .endm 
 
 .macro LOAD_P
-  la    a4, P511
+  la    a4, P512
   ld    P0,  0(a4)
   ld    P1,  8(a4)
   ld    P2, 16(a4)
@@ -438,7 +438,7 @@ fp_rdc_mont_sw:
 
 .balign 8 
 
-P511: 
+P512: 
 .dword 0x1b81b90533c6c87b               // P0 
 .dword 0xc2721bf457aca835               // P1
 .dword 0x516730cc1f0b4f25               // P2

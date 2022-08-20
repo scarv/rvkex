@@ -90,6 +90,70 @@
 
 - `RV64_FULL_TYPE3`: base ISA + general-use ISE shown above + specific-use ISE shown below. 
 
+```
+  csidh.sub.p512       rd, rs1,      imm {
+    x       <- GPR[rs1]
+
+    if      ( imm == 0) {
+      r <-  x - 0x1b81b90533c6c87b;
+    }
+    else if ( imm == 1) {
+      r <-  x - 0xc2721bf457aca835;
+    }
+    else if ( imm == 2) {
+      r <-  x - 0x516730cc1f0b4f25;
+    }
+    else if ( imm == 3) {
+      r <- x - 0xa7aac6c567f35507;
+    }
+    else if ( imm == 4) {
+      r <- x - 0x5afbfcc69322c9cd;
+    }
+    else if ( imm == 5) {
+      r <- x - 0xb42d083aedc88c42;
+    }
+    else if ( imm == 6) {
+      r <- x - 0xfc8ab0d15e3e4c4a;
+    }
+    else if ( imm == 7) {
+      r <- x - 0x65b48e8f740f89bf;
+    }
+
+    GPR[rd] <- r
+  }
+
+  csidh.and.p512.add   rd, rs1, rs2, imm {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+
+    if      ( imm == 0) {
+      r <- ( x & 0x1b81b90533c6c87b ) + y;
+    }
+    else if ( imm == 1) {
+      r <- ( x & 0xc2721bf457aca835 ) + y;
+    }
+    else if ( imm == 2) {
+      r <- ( x & 0x516730cc1f0b4f25 ) + y;
+    }
+    else if ( imm == 3) {
+      r <- ( x & 0xa7aac6c567f35507 ) + y;
+    }
+    else if ( imm == 4) {
+      r <- ( x & 0x5afbfcc69322c9cd ) + y;
+    }
+    else if ( imm == 5) {
+      r <- ( x & 0xb42d083aedc88c42 ) + y;
+    }
+    else if ( imm == 6) {
+      r <- ( x & 0xfc8ab0d15e3e4c4a ) + y;
+    }
+    else if ( imm == 7) {
+      r <- ( x & 0x65b48e8f740f89bf ) + y;
+    }
+
+    GPR[rd] <- r
+  }
+```
 
 ## Discussion
 

@@ -2,80 +2,90 @@
 | class               | instruction           | format   | f7                  | f3      | custom      |
 +=====================+=======================+==========+=====================+=========+=============+
 |                     |                       |          |                     |         |             |
-| RV64_RDCD_TYPE2     | sraiadd               | 2R+I->1R | 1 : imm6            | 1 = 001 | 2 = 1011011 |
+| RV64_RDCD_TYPE2     | sraiadd               | 2R+I->1R | 1 : imm6            | 7 = 111 | 1 = 0101011 |
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
-// carry propagation for reduced-radix big number arithmetic
-.macro sraiadd               rd, rs1, rs2, imm            //                  => 1iii iiir rrrr rrrr r001 rrrr r101 1011
-.insn r  CUSTOM_2, 1, \imm+( 1*64), \rd, \rs1, \rs2       //                  => #define MATCH_SRAIADD  0x8000105B
+// carry propagation for reduced-radix large integer arithmetic
+.macro sraiadd               rd, rs1, rs2, imm            //                  => 1iii iiir rrrr rrrr r111 rrrr r010 1011
+.insn r  CUSTOM_1, 7, \imm+( 1*64), \rd, \rs1, \rs2       //                  => #define MATCH_SRAIADD  0x8000702B
 .endm                                                     //                  => #define  MASK_SRAIADD  0x8000707F
 
 +=====================+=======================+==========+=====================+=========+=============+
 | class               | instruction           | format   | f7                  | f3      | custom      |
 +=====================+=======================+==========+=====================+=========+=============+
 |                     |                       |          |                     |         |             |
-| RV64_RDCD_TYPE2     | madd51lu              | 3R  ->1R | rs3 : 00            | 0 = 000 | 2 = 1011011 |
-| RV64_RDCD_TYPE2     | madd51hu              | 3R  ->1R | rs3 : 01            | 0 = 000 | 2 = 1011011 |
+| RV64_RDCD_TYPE2     | madd51lu              | 3R  ->1R | rs3 : 00            | 7 = 111 | 2 = 1011011 |
+| RV64_RDCD_TYPE2     | madd51hu              | 3R  ->1R | rs3 : 01            | 7 = 111 | 2 = 1011011 |
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
-// multiply-add for radix-2^51 big number arithmetic
-.macro madd51lu              rd, rs1, rs2, rs3            //                  => rrrr r00r rrrr rrrr r000 rrrr r101 1011
-.insn r4 CUSTOM_2, 0,      ( 0* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADD51LU 0x0000005B
+// multiply-add for radix-2^51 large integer arithmetic
+.macro madd51lu              rd, rs1, rs2, rs3            //                  => rrrr r00r rrrr rrrr r111 rrrr r101 1011
+.insn r4 CUSTOM_2, 7,      ( 0* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADD51LU 0x0000705B
 .endm                                                     //                  => #define  MASK_MADD51LU 0x0600707F
-.macro madd51hu              rd, rs1, rs2, rs3            //                  => rrrr r01r rrrr rrrr r000 rrrr r101 1011
-.insn r4 CUSTOM_2, 0,      ( 1* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADD51HU 0x0200005B
+.macro madd51hu              rd, rs1, rs2, rs3            //                  => rrrr r01r rrrr rrrr r111 rrrr r101 1011
+.insn r4 CUSTOM_2, 7,      ( 1* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADD51HU 0x0200705B
 .endm                                                     //                  => #define  MASK_MADD51HU 0x0600707F
 
 +=====================+=======================+==========+=====================+=========+=============+
 | class               | instruction           | format   | f7                  | f3      | custom      |
 +=====================+=======================+==========+=====================+=========+=============+
 |                     |                       |          |                     |         |             |
-| RV64_RDCD_TYPE2     | madd57lu              | 3R  ->1R | rs3 : 10            | 0 = 000 | 2 = 1011011 |
-| RV64_RDCD_TYPE2     | madd57hu              | 3R  ->1R | rs3 : 11            | 0 = 000 | 2 = 1011011 |
+| RV64_RDCD_TYPE2     | madd57lu              | 3R  ->1R | rs3 : 10            | 7 = 111 | 2 = 1011011 |
+| RV64_RDCD_TYPE2     | madd57hu              | 3R  ->1R | rs3 : 11            | 7 = 111 | 2 = 1011011 |
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
-// multiply-add for radix-2^57 big number arithmetic
-.macro madd57lu              rd, rs1, rs2, rs3            //                  => rrrr r10r rrrr rrrr r000 rrrr r101 1011
-.insn r4 CUSTOM_2, 0,      ( 2* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADD57LU 0x0400005B
+// multiply-add for radix-2^57 large integer arithmetic
+.macro madd57lu              rd, rs1, rs2, rs3            //                  => rrrr r10r rrrr rrrr r111 rrrr r101 1011
+.insn r4 CUSTOM_2, 7,      ( 2* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADD57LU 0x0400705B
 .endm                                                     //                  => #define  MASK_MADD57LU 0x0600707F
-.macro madd57hu              rd, rs1, rs2, rs3            //                  => rrrr r11r rrrr rrrr r000 rrrr r101 1011
-.insn r4 CUSTOM_2, 0,      ( 3* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADD57HU 0x0600005B
+.macro madd57hu              rd, rs1, rs2, rs3            //                  => rrrr r11r rrrr rrrr r111 rrrr r101 1011
+.insn r4 CUSTOM_2, 7,      ( 3* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADD57HU 0x0600705B
 .endm                                                     //                  => #define  MASK_MADD57HU 0x0600707F
 
 +=====================+=======================+==========+=====================+=========+=============+
 | class               | instruction           | format   | f7                  | f3      | custom      |
 +=====================+=======================+==========+=====================+=========+=============+
 |                     |                       |          |                     |         |             |
-| RV64_FULL_TYPE2     | maddlu                | 3R  ->1R | rs3 : 00            | 0 = 000 | 3 = 1111011 |
-| RV64_FULL_TYPE2     | maddhu                | 3R  ->1R | rs3 : 01            | 0 = 000 | 3 = 1111011 |
+| RV64_FULL_TYPE2     | csidh.sub.p512        | 1R+I->1R |                     | 7 = 111 | 0 = 0001011 |
+| RV64_FULL_TYPE2     | csidh.and.p512.add    | 2R+I->1R |                     | 7 = 111 | 0 = 0001011 |
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
-// multiply-add for radix-2^64 big number arithmetic
-.macro maddlu                rd, rs1, rs2, rs3            //                  => rrrr r00r rrrr rrrr r000 rrrr r111 1011
-.insn r4 CUSTOM_3, 0,      ( 0* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADDLU 0x0000007B
+
++=====================+=======================+==========+=====================+=========+=============+
+| class               | instruction           | format   | f7                  | f3      | custom      |
++=====================+=======================+==========+=====================+=========+=============+
+|                     |                       |          |                     |         |             |
+| RV64_FULL_TYPE2     | maddlu                | 3R  ->1R | rs3 : 00            | 7 = 111 | 3 = 1111011 |
+| RV64_FULL_TYPE2     | maddhu                | 3R  ->1R | rs3 : 01            | 7 = 111 | 3 = 1111011 |
+|                     |                       |          |                     |         |             |
++=====================+=======================+==========+=====================+=========+=============+
+
+// multiply-add for radix-2^64 large integer arithmetic
+.macro maddlu                rd, rs1, rs2, rs3            //                  => rrrr r00r rrrr rrrr r111 rrrr r111 1011
+.insn r4 CUSTOM_3, 7,      ( 0* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADDLU 0x0000707B
 .endm                                                     //                  => #define  MASK_MADDLU 0x0600707F
-.macro maddhu                rd, rs1, rs2, rs3            //                  => rrrr r01r rrrr rrrr r000 rrrr r111 1011
-.insn r4 CUSTOM_3, 0,      ( 1* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADDHU 0x0200007B
+.macro maddhu                rd, rs1, rs2, rs3            //                  => rrrr r01r rrrr rrrr r111 rrrr r111 1011
+.insn r4 CUSTOM_3, 7,      ( 1* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADDHU 0x0200707B
 .endm                                                     //                  => #define  MASK_MADDHU 0x0600707F
 
 +=====================+=======================+==========+=====================+=========+=============+
 | class               | instruction           | format   | f7                  | f3      | custom      |
 +=====================+=======================+==========+=====================+=========+=============+
 |                     |                       |          |                     |         |             |
-| RV64_FULL_TYPE2     | csidh.sub.p512        | 1R+I->1R | 0000 : imm3         | 2 = 010 | 3 = 1111011 |
-| RV64_FULL_TYPE2     | csidh.and.p512.add    | 2R+I->1R | 0001 : imm3         | 2 = 010 | 3 = 1111011 |
+| RV64_FULL_TYPE2     | csidh.sub.p512        | 1R+I->1R | imm3 : 00 : 10      | 7 = 111 | 3 = 1111011 |
+| RV64_FULL_TYPE2     | csidh.and.p512.add    | 2R+I->1R | imm3 : 01 : 10      | 7 = 111 | 3 = 1111011 |
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
 // modulus-related addition/subtraction for radix-2^64 CSIDH-512
 
-.macro csidh.sub.p512        rd, rs1,      imm            //                  => 0000 iiir rrrr rrrr r010 rrrr r111 1011
-.insn r  CUSTOM_3, 2, \imm+( 0* 8), \rd, \rs1, x0         //                  => #define MATCH_CSIDH_SUB_P512 0x0000207B
-.endm                                                     //                  => #define  MASK_CSIDH_SUB_P512 0xF000707F
-.macro csidh.and.p512.add    rd, rs1, rs2, imm            //                  => 0001 iiir rrrr rrrr r010 rrrr r111 1011
-.insn r  CUSTOM_3, 2, \imm+( 1* 8), \rd, \rs1, \rs2       //                  => #define MATCH_CSIDH_AND_P512_ADD 0x1000207B
-.endm                                                     //                  => #define  MASK_CSIDH_AND_P512_ADD 0xF000707F
+.macro csidh.sub.p512        rd, rs1,      imm            //                  => iii0 010r rrrr rrrr r111 rrrr r111 1011
+.insn r  CUSTOM_3, 7, 16*\imm+( 2* 1), \rd, \rs1, x0      //                  => #define MATCH_CSIDH_SUB_P512 0x0400707B
+.endm                                                     //                  => #define  MASK_CSIDH_SUB_P512 0x1E00707F
+.macro csidh.and.p512.add    rd, rs1, rs2, imm            //                  => iii0 110r rrrr rrrr r111 rrrr r111 1011
+.insn r  CUSTOM_3, 7, 16*\imm+( 6* 1), \rd, \rs1, \rs2    //                  => #define MATCH_CSIDH_AND_P512_ADD 0x0C00707B
+.endm                                                     //                  => #define  MASK_CSIDH_AND_P512_ADD 0x1E00707F

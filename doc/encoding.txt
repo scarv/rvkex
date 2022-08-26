@@ -11,7 +11,6 @@
 .insn r  CUSTOM_2, 1, \imm+( 1*64), \rd, \rs1, \rs2       //                  => #define MATCH_SRAIADD  0x8000105B
 .endm                                                     //                  => #define  MASK_SRAIADD  0x8000707F
 
-
 +=====================+=======================+==========+=====================+=========+=============+
 | class               | instruction           | format   | f7                  | f3      | custom      |
 +=====================+=======================+==========+=====================+=========+=============+
@@ -28,7 +27,6 @@
 .macro madd51hu              rd, rs1, rs2, rs3            //                  => rrrr r01r rrrr rrrr r000 rrrr r101 1011
 .insn r4 CUSTOM_2, 0,      ( 1* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADD51HU 0x0200005B
 .endm                                                     //                  => #define  MASK_MADD51HU 0x0600707F
-
 
 +=====================+=======================+==========+=====================+=========+=============+
 | class               | instruction           | format   | f7                  | f3      | custom      |

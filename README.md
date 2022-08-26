@@ -20,7 +20,7 @@
   - [x] reduced-radix ISE-assisted   x25519
   - [x] full-radix    pure-software  csidh-512
   - [x] full-radix    ISE-assisted   csidh-512
-  - [ ] reduced-radix pure-software  csidh-512
+  - [x] reduced-radix pure-software  csidh-512
   - [ ] reduced-radix ISE-assisted   csidh-512
 
   Furthermore, we plan to design general-use ISE (for big number arithmetic) and specific-use ISE (for CSIDH-512) then discuss different trade-offs. 

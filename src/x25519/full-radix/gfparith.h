@@ -18,17 +18,17 @@ void gfp_sub_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 #endif 
 
 #if RV64_TYPE2
-#define gfp_mul   gfp_mul_ise
-#define gfp_sqr   gfp_sqr_ise
-#define gfp_mul64 gfp_mul64_ise
-#define gfp_sub   gfp_sub_ise
-#define gfp_add   gfp_add_ise
+#define gfp_mul         gfp_mul_ise
+#define gfp_sqr(r, a)   gfp_mul_ise(r, a, a)
+#define gfp_mul64       gfp_mul64_ise
+#define gfp_sub         gfp_sub_ise
+#define gfp_add         gfp_add_ise
 #elif RV64_TYPE1
-#define gfp_mul   gfp_mul_sw
-#define gfp_sqr   gfp_sqr_sw
-#define gfp_mul64 gfp_mul64_sw
-#define gfp_sub   gfp_sub_sw
-#define gfp_add   gfp_add_sw
+#define gfp_mul         gfp_mul_sw
+#define gfp_sqr         gfp_sqr_sw
+#define gfp_mul64       gfp_mul64_sw
+#define gfp_sub         gfp_sub_sw
+#define gfp_add         gfp_add_sw
 #endif 
 
 void gfp_inv(uint64_t *r, const uint64_t *a);

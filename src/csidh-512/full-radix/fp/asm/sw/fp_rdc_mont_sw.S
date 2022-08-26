@@ -2,7 +2,7 @@
 // radix-2^64, product-scanning
 
 
-// regiters 
+// registers 
 
 // accumulator `z`
 #define Z0 t0
@@ -439,11 +439,11 @@ fp_rdc_mont_sw:
 .balign 8 
 
 P512: 
-.dword 0x1b81b90533c6c87b               // P0 
+.dword 0x1b81b90533c6c87b               // P0
 .dword 0xc2721bf457aca835               // P1
 .dword 0x516730cc1f0b4f25               // P2
 .dword 0xa7aac6c567f35507               // P3
-.dword 0x5afbfcc69322c9cd               // P4 
+.dword 0x5afbfcc69322c9cd               // P4
 .dword 0xb42d083aedc88c42               // P5
 .dword 0xfc8ab0d15e3e4c4a               // P6
 .dword 0x65b48e8f740f89bf               // P7

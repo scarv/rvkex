@@ -1,7 +1,5 @@
 // void reduce_once_ad_ise(uint64_t *a)
 // radix-2^64
-// NOTE that due to the lack of carry flag on RISC-V, the `cswap-based` 
-// `reduce_once` is more efficient than `addition-based` version.
 
 
 #include "ise3.h"

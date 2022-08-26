@@ -20,9 +20,9 @@
   end_cycles = rdtsc();                            \
   diff_cycles = (end_cycles-start_cycles)/(ITER)
 
-void uint_print(fp const *x)
+void uint_print(u64 const *x)
 {
-    for (size_t i = 8*LIMBS-1; i < 8*LIMBS; --i)
+    for (size_t i = 8*8-1; i < 8*8; --i)
         printf("%02hhx", i[(unsigned char *) x->c]);
 }
 
@@ -37,46 +37,63 @@ void priv_print(private_key const *k)
     printf("\x1b[0m");
 }
 
+static void mpi64_print(const char *c, const uint64_t *a, int len)
+{
+  int i;
+
+  printf("%s", c);
+  for (i = len-1; i > 0; i--) printf("%016llX", a[i]);
+  printf("%016llX\n", a[0]);
+}
+
 void test_fp()
 {
   uint64_t start_cycles, end_cycles, diff_cycles;
   int i;
 
-  fp a, b, r;
+  u64 a64, b64, r64;
+  fp  a, b, r;
   uint64_t t[2*LIMBS];
 
-  for (i = 0; i < LIMBS; i++) { 
-    a.c[i] = 0x0123456789ABCDEFULL;
-    b.c[i] = 0x89ABCDEF01234567ULL;
+  for (i = 0; i < 8; i++) { 
+    a64.c[i] = 0x0123456789ABCDEFULL;
+    b64.c[i] = 0x89ABCDEF01234567ULL;
   }
+  b64.c[7] = 0x59ABCDEF01234567ULL;
+
+  mpi_conv_64to57(a.c, a64.c, LIMBS, 8);
+  mpi_conv_64to57(b.c, b64.c, LIMBS, 8);
 
   printf("\n**************************************************************************\n");
   printf("FP ARITH:\n");
 
   printf("- fp add:");
-  LOAD_CACHE(fp_add3(&r, &a, &b), 1000);
-  MEASURE_CYCLES(fp_add3(&r, &a, &b), 10000);
+  LOAD_CACHE(fp_add3(&r, &a, &b), 100);
+  MEASURE_CYCLES(fp_add3(&r, &a, &b), 1000);
   printf("            #cycle = %lld\n", diff_cycles);
 
   printf("- fp sub:");
-  LOAD_CACHE(fp_sub3(&r, &a, &b), 1000);
-  MEASURE_CYCLES(fp_sub3(&r, &a, &b), 10000);
+  LOAD_CACHE(fp_sub3(&r, &a, &b), 100);
+  MEASURE_CYCLES(fp_sub3(&r, &a, &b), 1000);
   printf("            #cycle = %lld\n", diff_cycles);
 
   printf("- fp mul:");
-  LOAD_CACHE(fp_mul3(&r, &a, &b), 1000);
-  MEASURE_CYCLES(fp_mul3(&r, &a, &b), 10000);
+  LOAD_CACHE(fp_mul3(&r, &a, &b), 100);
+  MEASURE_CYCLES(fp_mul3(&r, &a, &b), 1000);
   printf("            #cycle = %lld\n", diff_cycles);
 
+  // mpi_conv_57to64(r64.c, r.c, 8, 9);
+  // mpi64_print("r = ", r64.c, 8);
+
   printf("- fp sqr:");
-  LOAD_CACHE(fp_sq2(&r, &a), 1000);
-  MEASURE_CYCLES(fp_sq2(&r, &a), 10000);
+  LOAD_CACHE(fp_sq2(&r, &a), 100);
+  MEASURE_CYCLES(fp_sq2(&r, &a), 1000);
   printf("            #cycle = %lld\n", diff_cycles);
 
 #if (RV64_TYPE1) | (RV64_TYPE2) | (RV64_TYPE3)
   printf("- uint mul ps:");
-  LOAD_CACHE(uint_mul3_asm(t, &a, &b), 1000);
-  MEASURE_CYCLES(uint_mul3_asm(t, &a, &b), 10000);
+  LOAD_CACHE(uint_mul3_asm(t, &a, &b), 100);
+  MEASURE_CYCLES(uint_mul3_asm(t, &a, &b), 1000);
   printf("       #cycle = %lld\n", diff_cycles);
 
   printf("- uint sqr ps:");
@@ -96,6 +113,7 @@ void test_fp()
   printf("       #cycle = %lld\n", diff_cycles);
 
   printf("**************************************************************************\n");
+
 }
 
 void test_csidh()
@@ -104,10 +122,11 @@ void test_csidh()
     int i;
 
     bool ret; (void) ret;
+    clock_t t0, t1;
 
     private_key priv_alice, priv_bob;
-    public_key pub_alice, pub_bob;
-    public_key shared_alice, shared_bob;
+    public_key_u64 pub_alice, pub_bob;
+    public_key_u64 shared_alice, shared_bob;
 
     printf("\n");
 
@@ -122,14 +141,14 @@ void test_csidh()
     printf("\n\n");
 
 
-    MEASURE_CYCLES(ret = csidh(&pub_alice, &base, &priv_alice), 1);
+    MEASURE_CYCLES(ret = csidh(&pub_alice, (public_key_u64 *)&base, &priv_alice), 1);
     assert(ret);
     printf("Alice's public key    (%lld cc):\n  ", diff_cycles);
     uint_print(&pub_alice.A);
     printf("\n\n");
 
 
-    MEASURE_CYCLES(ret = csidh(&pub_bob, &base, &priv_bob), 1);
+    MEASURE_CYCLES(ret = csidh(&pub_bob, (public_key_u64 *)&base, &priv_bob), 1);
     assert(ret);
     printf("Bob's public key      (%lld cc):\n  ", diff_cycles);
     uint_print(&pub_bob.A);
@@ -151,7 +170,7 @@ void test_csidh()
 
 
     printf("    ");
-    if (memcmp(&shared_alice, &shared_bob, sizeof(public_key)))
+    if (memcmp(&shared_alice, &shared_bob, sizeof(public_key_u64)))
         printf("\x1b[31mNOT EQUAL!\x1b[0m\n");
     else
         printf("\x1b[32mequal.\x1b[0m\n");

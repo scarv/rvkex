@@ -5,7 +5,7 @@
 #include "ise2.h"
 
 
-// regiters 
+// registers 
 
 // accumulator `z`
 #define Z0 t0

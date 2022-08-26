@@ -49,11 +49,22 @@
 | class               | instruction           | format   | f7                  | f3      | custom      |
 +=====================+=======================+==========+=====================+=========+=============+
 |                     |                       |          |                     |         |             |
-| RV64_FULL_TYPE2     | csidh.sub.p512        | 1R+I->1R |                     | 7 = 111 | 0 = 0001011 |
-| RV64_FULL_TYPE2     | csidh.and.p512.add    | 2R+I->1R |                     | 7 = 111 | 0 = 0001011 |
+| RV64_RDCD_TYPE2     | csidh.sub.P512.57     | 1R+I->1R | 000 : imm4          | 7 = 111 | 0 = 0001011 |
+| RV64_RDCD_TYPE2     | csidh.and.p512.add57  | 2R+I->1R | 001 : imm4          | 7 = 111 | 0 = 0001011 |
+| RV64_RDCD_TYPE2     | csidh.sub.P512.add57  | 2R+I->1R | 010 : imm4          | 7 = 111 | 0 = 0001011 |
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
+// modulus-related addition/subtraction for radix-2^57 CSIDH-512
+.macro csidh.sub.p512.57     rd, rs1,      imm            //                  => 000i iiir rrrr rrrr r111 rrrr r000 1011
+.insn r  CUSTOM_0, 7, \imm+( 0*16), \rd, \rs1, x0         //                  => #define MATCH_CSIDH_SUB_P512_57 0x0000700B
+.endm                                                     //                  => #define  MASK_CSIDH_SUB_P512_57 0xE000707F
+.macro csidh.and.p512.add57   rd, rs1, rs2  imm           //                  => 001i iiir rrrr rrrr r111 rrrr r000 1011
+.insn r  CUSTOM_0, 7, \imm+( 1*16), \rd, \rs1, \rs2       //                  => #define MATCH_CSIDH_AND_P512_ADD57 0x2000700B
+.endm                                                     //                  => #define  MASK_CSIDH_AND_P512_ADD57 0xE000707F
+.macro csidh.sub.p512.add57   rd, rs1, rs2  imm           //                  => 010i iiir rrrr rrrr r111 rrrr r000 1011
+.insn r  CUSTOM_0, 7, \imm+( 2*16), \rd, \rs1, \rs2       //                  => #define MATCH_CSIDH_SUB_P512_ADD57 0x4000700B
+.endm                                                     //                  => #define  MASK_CSIDH_SUB_P512_ADD57 0xE000707F
 
 +=====================+=======================+==========+=====================+=========+=============+
 | class               | instruction           | format   | f7                  | f3      | custom      |

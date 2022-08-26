@@ -21,7 +21,7 @@
   - [x] full-radix    pure-software  csidh-512
   - [x] full-radix    ISE-assisted   csidh-512
   - [x] reduced-radix pure-software  csidh-512
-  - [ ] reduced-radix ISE-assisted   csidh-512
+  - [x] reduced-radix ISE-assisted   csidh-512
 
   Furthermore, we plan to design general-use ISE (for big number arithmetic) and specific-use ISE (for CSIDH-512) then discuss different trade-offs. 
 
@@ -68,16 +68,13 @@
 
 - Build and evaluate the (different) software 
   ```sh
-  make sw-run ALG=[x25519/csidh-512] RADIX=[full/reduced] TYPE=RV64_TYPE[1/2/3]
+  make sw-run ALG=x25519    RADIX=[full/reduced] TYPE=RV64_TYPE[1/2]
+  make sw-run ALG=csidh-512 RADIX=[full/reduced] TYPE=RV64_TYPE[0/1/2/3]
   ```
-  - `RV64_TYPE1`: pure-software implementation; 
-  - `RV64_TYPE2`: ISE-assisted  implementation using general-use ISE; 
-  - `RV64_TYPE3`: ISE-assisted  implementation using general-use ISE *plus* specific-use ISE.
-
-- Build and evaluate the original CSIDH-512 C implementation on RV64GC 
-  ```sh
-    make sw-run ALG=csidh-512 RADIX=full TYPE=RV64_TYPE0
-  ```
+  - `RV64_TYPE0`: reference       C implementation; 
+  - `RV64_TYPE1`: pure-software ASM implementation; 
+  - `RV64_TYPE2`: ISE-assisted  ASM implementation using general-use ISE; 
+  - `RV64_TYPE3`: ISE-assisted  ASM implementation using general-use ISE *plus* specific-use ISE.
 
 - Enable the debug mode (add `MODE=debug`), e.g.,
   ```sh

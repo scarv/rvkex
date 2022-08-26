@@ -66,6 +66,112 @@
 
 - `RV64_RDCD_TYPE3`: base ISA + general-use ISE shown above + specific-use ISE shown below. 
 
+```
+  csidh.sub.p512.57    rd, rs1,      imm {
+    x       <- GPR[rs1]
+
+    if      ( imm == 0 ) {
+      r <- x - 0x181B90533C6C87B;
+    }
+    else if ( imm == 1 ) {
+      r <- x - 0x10DFA2BD6541A8D;
+    }
+    else if ( imm == 2 ) {
+      r <- x - 0x03307C2D3C9709C;
+    }
+    else if ( imm == 3 ) {
+      r <- x - 0x0ACFE6AA0EA2CE6;
+    }
+    else if ( imm == 4 ) {
+      r <- x - 0x1322C9CDA7AAC6C;
+    }
+    else if ( imm == 5 ) {
+      r <- x - 0x0446212D7DFE634;
+    }
+    else if ( imm == 6 ) {
+      r <- x - 0x1312AD0B420EBB7;
+    }
+    else if ( imm == 7 ) {
+      r <- x - 0x17FF91561A2BC7C;
+    }
+    else if ( imm == 8 ) {
+      r <- x - 0x065B48E8F740F89;
+    }
+
+    GPR[rd] <- r
+  }
+
+  csidh.and.p512.add57 rd, rs1, rs2, imm {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+
+    if      ( imm == 0 ) {
+      r <- ( x & 0x181B90533C6C87B ) + y;
+    }
+    else if ( imm == 1 ) {
+      r <- ( x & 0x10DFA2BD6541A8D ) + y;
+    }
+    else if ( imm == 2 ) {
+      r <- ( x & 0x03307C2D3C9709C ) + y;
+    }
+    else if ( imm == 3 ) {
+      r <- ( x & 0x0ACFE6AA0EA2CE6 ) + y;
+    }
+    else if ( imm == 4 ) {
+      r <- ( x & 0x1322C9CDA7AAC6C ) + y;
+    }
+    else if ( imm == 5 ) {
+      r <- ( x & 0x0446212D7DFE634 ) + y;
+    }
+    else if ( imm == 6 ) {
+      r <- ( x & 0x1312AD0B420EBB7 ) + y;
+    }
+    else if ( imm == 7 ) {
+      r <- ( x & 0x17FF91561A2BC7C ) + y;
+    }
+    else if ( imm == 8 ) {
+      r <- ( x & 0x065B48E8F740F89 ) + y;
+    }
+
+    GPR[rd] <- r
+  }
+
+  csidh.sub.p512.add57 rd, rs1, rs2, imm {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+
+    if      ( imm == 0 ) {
+      r <- x - 0x181B90533C6C87B + y;
+    }
+    else if ( imm == 1 ) {
+      r <- x - 0x10DFA2BD6541A8D + y;
+    }
+    else if ( imm == 2 ) {
+      r <- x - 0x03307C2D3C9709C + y;
+    }
+    else if ( imm == 3 ) {
+      r <- x - 0x0ACFE6AA0EA2CE6 + y;
+    }
+    else if ( imm == 4 ) {
+      r <- x - 0x1322C9CDA7AAC6C + y;
+    }
+    else if ( imm == 5 ) {
+      r <- x - 0x0446212D7DFE634 + y;
+    }
+    else if ( imm == 6 ) {
+      r <- x - 0x1312AD0B420EBB7 + y;
+    }
+    else if ( imm == 7 ) {
+      r <- x - 0x17FF91561A2BC7C + y;
+    }
+    else if ( imm == 8 ) {
+      r <- x - 0x065B48E8F740F89 + y;
+    }
+
+    GPR[rd] <- r
+  }
+```
+
 - `RV64_FULL_TYPE2`: base ISA + general-use ISE shown below. 
 
 ```
@@ -94,28 +200,28 @@
   csidh.sub.p512       rd, rs1,      imm {
     x       <- GPR[rs1]
 
-    if      ( imm == 0) {
-      r <-  x - 0x1b81b90533c6c87b;
+    if      ( imm == 0 ) {
+      r <- x - 0x1b81b90533c6c87b;
     }
-    else if ( imm == 1) {
-      r <-  x - 0xc2721bf457aca835;
+    else if ( imm == 1 ) {
+      r <- x - 0xc2721bf457aca835;
     }
-    else if ( imm == 2) {
-      r <-  x - 0x516730cc1f0b4f25;
+    else if ( imm == 2 ) {
+      r <- x - 0x516730cc1f0b4f25;
     }
-    else if ( imm == 3) {
+    else if ( imm == 3 ) {
       r <- x - 0xa7aac6c567f35507;
     }
-    else if ( imm == 4) {
+    else if ( imm == 4 ) {
       r <- x - 0x5afbfcc69322c9cd;
     }
-    else if ( imm == 5) {
+    else if ( imm == 5 ) {
       r <- x - 0xb42d083aedc88c42;
     }
-    else if ( imm == 6) {
+    else if ( imm == 6 ) {
       r <- x - 0xfc8ab0d15e3e4c4a;
     }
-    else if ( imm == 7) {
+    else if ( imm == 7 ) {
       r <- x - 0x65b48e8f740f89bf;
     }
 
@@ -126,28 +232,28 @@
     x       <- GPR[rs1]
     y       <- GPR[rs2]
 
-    if      ( imm == 0) {
+    if      ( imm == 0 ) {
       r <- ( x & 0x1b81b90533c6c87b ) + y;
     }
-    else if ( imm == 1) {
+    else if ( imm == 1 ) {
       r <- ( x & 0xc2721bf457aca835 ) + y;
     }
-    else if ( imm == 2) {
+    else if ( imm == 2 ) {
       r <- ( x & 0x516730cc1f0b4f25 ) + y;
     }
-    else if ( imm == 3) {
+    else if ( imm == 3 ) {
       r <- ( x & 0xa7aac6c567f35507 ) + y;
     }
-    else if ( imm == 4) {
+    else if ( imm == 4 ) {
       r <- ( x & 0x5afbfcc69322c9cd ) + y;
     }
-    else if ( imm == 5) {
+    else if ( imm == 5 ) {
       r <- ( x & 0xb42d083aedc88c42 ) + y;
     }
-    else if ( imm == 6) {
+    else if ( imm == 6 ) {
       r <- ( x & 0xfc8ab0d15e3e4c4a ) + y;
     }
-    else if ( imm == 7) {
+    else if ( imm == 7 ) {
       r <- ( x & 0x65b48e8f740f89bf ) + y;
     }
 

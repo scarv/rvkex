@@ -54,17 +54,10 @@ void test_fp()
   fp a, b, r;
   uint64_t t[2*LIMBS];
 
-  // for (i = 0; i < LIMBS; i++) { 
-  //   a.c[i] = 0x0123456789ABCDEFULL;
-  //   b.c[i] = 0x89ABCDEF01234567ULL;
-  // }
-
   for (i = 0; i < LIMBS; i++) { 
-    a.c[i] = 0xFFFFFFFFFFFFFFFFULL;
-    b.c[i] = 0xFFFFFFFFFFFFFFFFULL;
+    a.c[i] = 0x0123456789ABCDEFULL;
+    b.c[i] = 0x89ABCDEF01234567ULL;
   }
-  a.c[7] = 0x5FFFFFFFFFFFFFFFULL;
-  b.c[7] = 0x5FFFFFFFFFFFFFFFULL;
 
   printf("\n**************************************************************************\n");
   printf("FP ARITH:\n");
@@ -95,14 +88,10 @@ void test_fp()
   MEASURE_CYCLES(uint_mul3_ps_sw(t, &a, &b), 10000);
   printf("       #cycle = %lld\n", diff_cycles);
 
-  mpi64_print("PS = ", t, 16);
-
   printf("- uint mul ka:");
   LOAD_CACHE(uint_mul3_ka_sw(t, &a, &b), 1000);
   MEASURE_CYCLES(uint_mul3_ka_sw(t, &a, &b), 10000);
   printf("       #cycle = %lld\n", diff_cycles);
-
-  mpi64_print("KA = ", t, 16);
 
 #elif (RV64_TYPE2) | (RV64_TYPE3)
   printf("- uint mul:");

@@ -53,7 +53,7 @@ void test_fp()
 
   u64 a64, b64, r64;
   fp  a, b, r;
-  uint64_t t[2*LIMBS];
+  uint64_t t[2*LIMBS], z[2*LIMBS];
 
   for (i = 0; i < 8; i++) { 
     a64.c[i] = 0x0123456789ABCDEFULL;
@@ -82,18 +82,26 @@ void test_fp()
   MEASURE_CYCLES(fp_mul3(&r, &a, &b), 1000);
   printf("            #cycle = %lld\n", diff_cycles);
 
-  // mpi_conv_57to64(r64.c, r.c, 8, 9);
-  // mpi64_print("r = ", r64.c, 8);
-
   printf("- fp sqr:");
   LOAD_CACHE(fp_sq2(&r, &a), 100);
   MEASURE_CYCLES(fp_sq2(&r, &a), 1000);
   printf("            #cycle = %lld\n", diff_cycles);
 
-#if (RV64_TYPE1) | (RV64_TYPE2) | (RV64_TYPE3)
+#if   (RV64_TYPE1)
+  printf("- uint mul ps:");
+  LOAD_CACHE(uint_mul3_ps_sw(t, &a, &b), 1000);
+  MEASURE_CYCLES(uint_mul3_ps_sw(t, &a, &b), 10000);
+  printf("       #cycle = %lld\n", diff_cycles);
+
+  printf("- uint mul ka:");
+  LOAD_CACHE(uint_mul3_ka_sw(t, &a, &b), 1000);
+  MEASURE_CYCLES(uint_mul3_ka_sw(t, &a, &b), 10000);
+  printf("       #cycle = %lld\n", diff_cycles);
+
+#elif (RV64_TYPE2) | (RV64_TYPE3)
   printf("- uint mul:");
-  LOAD_CACHE(uint_mul3_asm(t, &a, &b), 100);
-  MEASURE_CYCLES(uint_mul3_asm(t, &a, &b), 1000);
+  LOAD_CACHE(uint_mul3_asm(t, &a, &b), 1000);
+  MEASURE_CYCLES(uint_mul3_asm(t, &a, &b), 10000);
   printf("          #cycle = %lld\n", diff_cycles);
 
   printf("- uint sqr:");

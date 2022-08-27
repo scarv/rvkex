@@ -61,8 +61,11 @@ void fp_sqr2_asm(fp *r, const fp *a);
 
 #if   (RV64_TYPE1) 
 extern void uint_mul3_ps_sw(uint64_t *z, const fp *a, const fp *b);
+extern void uint_mul3_ka_sw(uint64_t *z, const fp *a, const fp *b);
 extern void uint_sqr2_ps_sw(uint64_t *z, const fp *a);
-extern void fp_rdc_mont_sw(fp *r, const uint64_t *a);
+// extern void fp_rdc_mont_sw(fp *r, const uint64_t *a);
+extern void fp_rdc_mont_4ps_sw(fp *r, const uint64_t *a);
+extern void fp_rdc_mont_4ka_sw(fp *r, const uint64_t *a);
 extern void reduce_once_ad_sw(fp *a);
 extern void reduce_once_cs_sw(fp *a);
 extern void fp_add3_sw(fp *r, const fp *a, const fp *b);
@@ -102,29 +105,34 @@ extern void fp_sub3_ise3(fp *r, const fp *a, const fp *b);
 #if   (RV64_TYPE1)
 #define fp_add3_asm       fp_add3_sw
 #define fp_sub3_asm       fp_sub3_sw
-#define fp_rdc_mont_asm   fp_rdc_mont_sw
-// mul and sqr are `product-scanning`
-#define uint_mul3_asm     uint_mul3_ps_sw
+#define fp_rdc_mont_asm   fp_rdc_mont_4ps_sw
+// mul: `product-scanning` or `Karatsuba`
+#define uint_mul3_asm     uint_mul3_ka_sw
+#define fp_rdc_4mul_asm   fp_rdc_mont_4ka_sw
+// sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_sw
-// reduce_once is `addition-based`
+#define fp_rdc_4sqr_asm   fp_rdc_mont_4ps_sw
+// reduce_once: `cswap-based`
 #define reduce_once_asm   reduce_once_cs_sw
 #elif (RV64_TYPE2)
 #define fp_add3_asm       fp_add3_ise2
 #define fp_sub3_asm       fp_sub3_ise2
 #define fp_rdc_mont_asm   fp_rdc_mont_ise
-// mul and sqr are `product-scanning`
+// mul: `product-scanning`
 #define uint_mul3_asm     uint_mul3_ps_ise
+// sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_ise
-// reduce_once is `addition-based`
+// reduce_once: `cswap-based`
 #define reduce_once_asm   reduce_once_cs_ise2
 #elif (RV64_TYPE3)
 #define fp_add3_asm       fp_add3_ise3
 #define fp_sub3_asm       fp_sub3_ise3
 #define fp_rdc_mont_asm   fp_rdc_mont_ise
-// mul and sqr are `product-scanning`
+// mul: `product-scanning`
 #define uint_mul3_asm     uint_mul3_ps_ise
+// sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_ise
-// reduce_once is `addition-based`
+// reduce_once: `addition-based`
 #define reduce_once_asm   reduce_once_ad_ise3
 #endif
 

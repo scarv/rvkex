@@ -100,28 +100,31 @@ extern void fp_sub3_ise(fp *r, const fp *a, const fp *b);
 #define fp_add3_asm       fp_add3_sw
 #define fp_sub3_asm       fp_sub3_sw
 #define fp_rdc_mont_asm   fp_rdc_mont_sw
-// mul and sqr are `product-scanning`
+// mul: `product-scanning` or `Karatsuba`
 #define uint_mul3_asm     uint_mul3_ps_sw
+// sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_sw
-// reduce_once is `addition-based`
+// reduce_once: `cswap-based`
 #define reduce_once_asm   reduce_once_cs_sw
 #elif (RV64_TYPE2)
 #define fp_add3_asm       fp_add3_sw
 #define fp_sub3_asm       fp_sub3_sw
 #define fp_rdc_mont_asm   fp_rdc_mont_ise
-// mul and sqr are `product-scanning`
+// mul: `product-scanning` 
 #define uint_mul3_asm     uint_mul3_ps_ise
+// sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_ise
-// reduce_once is `addition-based`
+// reduce_once: `cswap-based`
 #define reduce_once_asm   reduce_once_cs_sw
 #elif (RV64_TYPE3)
 #define fp_add3_asm       fp_add3_ise
 #define fp_sub3_asm       fp_sub3_ise
 #define fp_rdc_mont_asm   fp_rdc_mont_ise
-// mul and sqr are `product-scanning`
+// mul: `product-scanning` 
 #define uint_mul3_asm     uint_mul3_ps_ise
+// sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_ise
-// reduce_once is `addition-based`
+// reduce_once: `addition-based`
 #define reduce_once_asm   reduce_once_ad_ise
 #endif
 

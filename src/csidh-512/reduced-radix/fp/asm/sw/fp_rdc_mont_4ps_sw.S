@@ -1,4 +1,4 @@
-// void fp_rdc_mont_sw(uint64_t *r, const uint64_t *a);
+// void fp_rdc_mont_4ps_sw(uint64_t *r, const uint64_t *a);
 // radix-2^57, product-scanning
 
 // integer multiplication uses Product-Scanning or Karatsuba
@@ -531,9 +531,9 @@
 
 .section .text
 
-.global fp_rdc_mont_sw
+.global fp_rdc_mont_4ps_sw
 
-fp_rdc_mont_sw:
+fp_rdc_mont_4ps_sw:
   PROLOGUE
   LOAD_A
   LOAD_P

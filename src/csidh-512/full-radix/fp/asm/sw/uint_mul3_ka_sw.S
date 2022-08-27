@@ -4,7 +4,7 @@
 
 // registers
 
-// temporary value "t"
+// temporary value `t`
 #define T0 a6
 #define T1 a7
 

@@ -91,15 +91,15 @@ void test_fp()
   printf("            #cycle = %lld\n", diff_cycles);
 
 #if (RV64_TYPE1) | (RV64_TYPE2) | (RV64_TYPE3)
-  printf("- uint mul ps:");
+  printf("- uint mul:");
   LOAD_CACHE(uint_mul3_asm(t, &a, &b), 100);
   MEASURE_CYCLES(uint_mul3_asm(t, &a, &b), 1000);
-  printf("       #cycle = %lld\n", diff_cycles);
+  printf("          #cycle = %lld\n", diff_cycles);
 
-  printf("- uint sqr ps:");
+  printf("- uint sqr:");
   LOAD_CACHE(uint_sqr2_asm(t, &a), 1000);
   MEASURE_CYCLES(uint_sqr2_asm(t, &a), 10000);
-  printf("       #cycle = %lld\n", diff_cycles);
+  printf("          #cycle = %lld\n", diff_cycles);
 
   printf("- fp rdc mont:");
   LOAD_CACHE(fp_rdc_mont_asm(&r, t), 1000);

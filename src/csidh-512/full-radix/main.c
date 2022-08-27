@@ -37,6 +37,15 @@ void priv_print(private_key const *k)
     printf("\x1b[0m");
 }
 
+static void mpi64_print(const char *c, const uint64_t *a, int len)
+{
+  int i;
+
+  printf("%s", c);
+  for (i = len-1; i > 0; i--) printf("%016llX", a[i]);
+  printf("%016llX\n", a[0]);
+}
+
 void test_fp()
 {
   uint64_t start_cycles, end_cycles, diff_cycles;
@@ -45,10 +54,17 @@ void test_fp()
   fp a, b, r;
   uint64_t t[2*LIMBS];
 
+  // for (i = 0; i < LIMBS; i++) { 
+  //   a.c[i] = 0x0123456789ABCDEFULL;
+  //   b.c[i] = 0x89ABCDEF01234567ULL;
+  // }
+
   for (i = 0; i < LIMBS; i++) { 
-    a.c[i] = 0x0123456789ABCDEFULL;
-    b.c[i] = 0x89ABCDEF01234567ULL;
+    a.c[i] = 0xFFFFFFFFFFFFFFFFULL;
+    b.c[i] = 0xFFFFFFFFFFFFFFFFULL;
   }
+  a.c[7] = 0x5FFFFFFFFFFFFFFFULL;
+  b.c[7] = 0x5FFFFFFFFFFFFFFFULL;
 
   printf("\n**************************************************************************\n");
   printf("FP ARITH:\n");
@@ -73,16 +89,31 @@ void test_fp()
   MEASURE_CYCLES(fp_sq2(&r, &a), 10000);
   printf("            #cycle = %lld\n", diff_cycles);
 
-#if (RV64_TYPE1) | (RV64_TYPE2) | (RV64_TYPE3)
+#if   (RV64_TYPE1)
   printf("- uint mul ps:");
-  LOAD_CACHE(uint_mul3_asm(t, &a, &b), 1000);
-  MEASURE_CYCLES(uint_mul3_asm(t, &a, &b), 10000);
+  LOAD_CACHE(uint_mul3_ps_sw(t, &a, &b), 1000);
+  MEASURE_CYCLES(uint_mul3_ps_sw(t, &a, &b), 10000);
   printf("       #cycle = %lld\n", diff_cycles);
 
-  printf("- uint sqr ps:");
+  mpi64_print("PS = ", t, 16);
+
+  printf("- uint mul ka:");
+  LOAD_CACHE(uint_mul3_ka_sw(t, &a, &b), 1000);
+  MEASURE_CYCLES(uint_mul3_ka_sw(t, &a, &b), 10000);
+  printf("       #cycle = %lld\n", diff_cycles);
+
+  mpi64_print("KA = ", t, 16);
+
+#elif (RV64_TYPE2) | (RV64_TYPE3)
+  printf("- uint mul:");
+  LOAD_CACHE(uint_mul3_asm(t, &a, &b), 1000);
+  MEASURE_CYCLES(uint_mul3_asm(t, &a, &b), 10000);
+  printf("          #cycle = %lld\n", diff_cycles);
+
+  printf("- uint sqr:");
   LOAD_CACHE(uint_sqr2_asm(t, &a), 1000);
   MEASURE_CYCLES(uint_sqr2_asm(t, &a), 10000);
-  printf("       #cycle = %lld\n", diff_cycles);
+  printf("          #cycle = %lld\n", diff_cycles);
 
   printf("- fp rdc mont:");
   LOAD_CACHE(fp_rdc_mont_asm(&r, t), 1000);

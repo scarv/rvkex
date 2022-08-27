@@ -43,7 +43,7 @@
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi  sp, sp, -80
+  addi  sp, sp, -72
   sd    s0,   0(sp)
   sd    s1,   8(sp)
   sd    s2,  16(sp)
@@ -53,7 +53,6 @@
   sd    s6,  48(sp)
   sd    s7,  56(sp)
   sd    s8,  64(sp)
-  sd    s9,  72(sp)
   li    M_, 0x1FFFFFFFFFFFFFFULL
   li    W_, 0x0C1301F632E294DULL
 .endm
@@ -68,8 +67,7 @@
   ld    s6,  48(sp)
   ld    s7,  56(sp)
   ld    s8,  64(sp)
-  ld    s9,  72(sp)
-  addi  sp, sp, 80
+  addi  sp, sp, 72
   ret 
 .endm
 
@@ -103,9 +101,7 @@
 // first loop of Montgomery reduction (based on product-scanning)
 
 .macro _PROPAGATE_CARRY A, B 
-  # sraiadd  \B, \B, \A, 57
-  srli     s9, \A, 57
-  add      \B, \B, s9
+  sraiadd  \B, \B, \A, 57
   and      \A, \A, M_
 .endm
 
@@ -114,8 +110,7 @@
   madd57lu A0, Z0, W_, x0
   madd57lu Z0, A0, P0, Z0 
   madd57hu Z1, A0, P0, A1
-  _PROPAGATE_CARRY Z0, Z1
-  # sraiadd  Z1, Z1, Z0, 57
+  sraiadd  Z1, Z1, Z0, 57
 .endm
 
 .macro COMPUTE_A1 
@@ -124,8 +119,7 @@
   madd57lu A1, Z1, W_, x0
   madd57lu Z1, A1, P0, Z1
   madd57hu Z0, A1, P0, Z0
-  _PROPAGATE_CARRY Z1, Z0
-  # sraiadd  Z0, Z0, Z1, 57
+  sraiadd  Z0, Z0, Z1, 57
 .endm
 
 .macro COMPUTE_A2
@@ -136,8 +130,7 @@
   madd57lu A2, Z0, W_, x0
   madd57lu Z0, A2, P0, Z0
   madd57hu Z1, A2, P0, Z1
-  _PROPAGATE_CARRY Z0, Z1
-  # sraiadd  Z1, Z1, Z0, 57
+  sraiadd  Z1, Z1, Z0, 57
 .endm
 
 .macro COMPUTE_A3
@@ -150,8 +143,7 @@
   madd57lu A3, Z1, W_, x0
   madd57lu Z1, A3, P0, Z1
   madd57hu Z0, A3, P0, Z0
-  _PROPAGATE_CARRY Z1, Z0
-  # sraiadd  Z0, Z0, Z1, 57
+  sraiadd  Z0, Z0, Z1, 57
 .endm
 
 .macro COMPUTE_A4
@@ -166,8 +158,7 @@
   madd57lu A4, Z0, W_, x0
   madd57lu Z0, A4, P0, Z0
   madd57hu Z1, A4, P0, Z1
-  _PROPAGATE_CARRY Z0, Z1
-  # sraiadd  Z1, Z1, Z0, 57
+  sraiadd  Z1, Z1, Z0, 57
 .endm
 
 .macro COMPUTE_A5
@@ -184,7 +175,7 @@
   madd57lu A5, Z1, W_, x0
   madd57lu Z1, A5, P0, Z1
   madd57hu Z0, A5, P0, Z0
-  _PROPAGATE_CARRY Z1, Z0
+  sraiadd  Z0, Z0, Z1, 57
 .endm
 
 .macro COMPUTE_A6
@@ -203,7 +194,7 @@
   madd57lu A6, Z0, W_, x0
   madd57lu Z0, A6, P0, Z0
   madd57hu Z1, A6, P0, Z1
-  _PROPAGATE_CARRY Z0, Z1
+  sraiadd  Z1, Z1, Z0, 57
 .endm
 
 .macro COMPUTE_A7
@@ -224,7 +215,7 @@
   madd57lu A7, Z1, W_, x0
   madd57lu Z1, A7, P0, Z1
   madd57hu Z0, A7, P0, Z0
-  _PROPAGATE_CARRY Z1, Z0
+  sraiadd  Z0, Z0, Z1, 57
 .endm
 
 .macro COMPUTE_A8
@@ -248,7 +239,7 @@
   madd57lu A8, Z0, W_, x0
   madd57lu Z0, A8, P0, Z0
   madd57hu Z1, A8, P0, Z1
-  _PROPAGATE_CARRY Z0, Z1
+  sraiadd  Z1, Z1, Z0, 57
 .endm
 
 // second loop of Montgomery reduction (based on product-scanning) 

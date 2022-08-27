@@ -66,6 +66,7 @@ extern void fp_add3_sw(fp *r, const fp *a, const fp *b);
 extern void fp_sub3_sw(fp *r, const fp *a, const fp *b); 
 #elif (RV64_TYPE2)
 extern void uint_mul3_ps_ise(uint64_t *r, const fp *a, const fp *b);
+extern void uint_mul3_ka_ise(uint64_t *r, const fp *a, const fp *b);
 extern void uint_sqr2_ps_ise(uint64_t *r, const fp *a);
 extern void fp_rdc_mont_ise(fp *r, const uint64_t *a);
 extern void reduce_once_cs_sw(fp *a);
@@ -101,7 +102,7 @@ extern void fp_sub3_ise(fp *r, const fp *a, const fp *b);
 #define fp_sub3_asm       fp_sub3_sw
 #define fp_rdc_mont_asm   fp_rdc_mont_sw
 // mul: `product-scanning` or `Karatsuba`
-#define uint_mul3_asm     uint_mul3_ps_sw
+#define uint_mul3_asm     uint_mul3_ka_sw
 // sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_sw
 // reduce_once: `cswap-based`
@@ -110,7 +111,7 @@ extern void fp_sub3_ise(fp *r, const fp *a, const fp *b);
 #define fp_add3_asm       fp_add3_sw
 #define fp_sub3_asm       fp_sub3_sw
 #define fp_rdc_mont_asm   fp_rdc_mont_ise
-// mul: `product-scanning` 
+// mul: `product-scanning` or `Karatsuba`
 #define uint_mul3_asm     uint_mul3_ps_ise
 // sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_ise

@@ -115,8 +115,8 @@
 .endm
 
 .macro COMPUTE_R0
-  mul    Z0, A0, B0
-  mulhu  Z1, A0, B0
+  maddlu Z0, A0, B0, x0
+  maddhu Z1, A0, B0, x0
   sd     Z0,  0(a0)
 .endm
 

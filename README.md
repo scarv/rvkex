@@ -25,7 +25,7 @@
 
   Furthermore, we plan to design general-use ISE (for large integer arithmetic) and specific-use ISE (for CSIDH-512) then discuss different trade-offs. 
 
-- Since CSIDH is relatively costly (compared to other PQC KEMs), it makes more sense to target more computing-powerful `rv64` instead of `rv32` in this project. 
+- Since CSIDH is costly, it makes more sense to target more computing-powerful `rv64` instead of `rv32` in this project. 
 
 ## Organization 
 

@@ -98,7 +98,18 @@ void test_fp()
   MEASURE_CYCLES(uint_mul3_ka_sw(t, &a, &b), 10000);
   printf("       #cycle = %lld\n", diff_cycles);
 
-#elif (RV64_TYPE2) | (RV64_TYPE3)
+#elif (RV64_TYPE2)
+  printf("- uint mul ps:");
+  LOAD_CACHE(uint_mul3_ps_ise(t, &a, &b), 1000);
+  MEASURE_CYCLES(uint_mul3_ps_ise(t, &a, &b), 10000);
+  printf("       #cycle = %lld\n", diff_cycles);
+
+  printf("- uint mul ka:");
+  LOAD_CACHE(uint_mul3_ka_ise(t, &a, &b), 1000);
+  MEASURE_CYCLES(uint_mul3_ka_ise(t, &a, &b), 10000);
+  printf("       #cycle = %lld\n", diff_cycles);
+
+#elif (RV64_TYPE3)
   printf("- uint mul:");
   LOAD_CACHE(uint_mul3_asm(t, &a, &b), 1000);
   MEASURE_CYCLES(uint_mul3_asm(t, &a, &b), 10000);

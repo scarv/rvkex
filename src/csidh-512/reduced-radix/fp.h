@@ -72,6 +72,7 @@ extern void fp_add3_sw(fp *r, const fp *a, const fp *b);
 extern void fp_sub3_sw(fp *r, const fp *a, const fp *b); 
 #elif (RV64_TYPE2)
 extern void uint_mul3_ps_ise(uint64_t *r, const fp *a, const fp *b);
+extern void uint_mul3_ka_ise(uint64_t *r, const fp *a, const fp *b);
 extern void uint_sqr2_ps_ise(uint64_t *r, const fp *a);
 extern void fp_rdc_mont_ise(fp *r, const uint64_t *a);
 extern void reduce_once_cs_ise2(fp *a);

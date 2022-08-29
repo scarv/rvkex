@@ -7,6 +7,7 @@
 #include <assert.h>
 
 #include "fp.h"
+#include "mont.h"
 #include "csidh.h"
 #include "rdtsc.h"
 
@@ -132,7 +133,33 @@ void test_fp()
   printf("       #cycle = %lld\n", diff_cycles);
 
   printf("**************************************************************************\n");
+}
 
+void test_curve()
+{
+  uint64_t start_cycles, end_cycles, diff_cycles;
+  int i;
+
+  proj R, S, Q, P, A = { 0 }, PQ = { 0 };
+
+  printf("\n**************************************************************************\n");
+  printf("CURVE ARITH:\n");
+
+  printf("- xDBL:");
+  LOAD_CACHE(xDBL(&Q, &P, &A), 100);
+  MEASURE_CYCLES(xDBL(&Q, &P, &A), 1000);
+  printf("              #cycle = %lld\n", diff_cycles);
+
+  printf("- xADD:");
+  LOAD_CACHE(xADD(&S, &P, &Q, &PQ), 100);
+  MEASURE_CYCLES(xADD(&S, &P, &Q, &PQ), 1000);
+  printf("              #cycle = %lld\n", diff_cycles);
+
+  printf("- xDBLADD:");
+  LOAD_CACHE(xDBLADD(&R, &S, &P, &Q, &PQ, &A), 100);
+  MEASURE_CYCLES(xDBLADD(&R, &S, &P, &Q, &PQ, &A), 1000);
+  printf("           #cycle = %lld\n", diff_cycles);
+  printf("**************************************************************************\n");
 }
 
 void test_csidh()
@@ -202,5 +229,6 @@ void test_csidh()
 int main()
 {
   test_fp();
+  test_curve();
   test_csidh();
 }

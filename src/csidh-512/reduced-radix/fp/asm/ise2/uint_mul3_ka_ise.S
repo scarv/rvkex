@@ -8,7 +8,7 @@
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi  sp,  sp, -136
+  addi  sp,  sp, -104
   sd    s0,   0(sp)
   sd    s1,   8(sp)
   sd    s2,  16(sp)
@@ -36,7 +36,7 @@
   ld    s9,  72(sp)
   ld    s10, 80(sp)
   ld    s11, 88(sp)
-  addi  sp,  sp, 136 
+  addi  sp,  sp, 104 
   ret 
 .endm
 

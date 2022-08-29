@@ -7,7 +7,7 @@
 
 // registers 
 
-// result "r"
+// result `r`
 #define R0 a6
 #define R1 a7
 #define R2 a1 
@@ -17,24 +17,24 @@
 #define R6 s2
 #define R7 s3
 
-// operand "b" 
+// operand `b` 
 #define B0 t0 
 #define B1 t1
 #define B2 t2 
 #define B3 t3
 
-// operand "a"
+// operand `a`
 #define A0 t4 
 #define A1 t5 
 #define A2 t6 
 #define A3 a3
 #define A4 t0
 
-// temp "t"
+// temporary value `t`
 #define T0 a4
 #define T1 a5
 
-// constants 
+// constant `m` 
 #define M0 t1
 
 
@@ -82,8 +82,17 @@
 
 // integer multiplication (based on product-scanning)
 
-// accu: L M H -> T M H 
+// L != 0, M = 0, H = 0
+// L M H -> T M H
 .macro _ACCU_AIBJ_0 L, M, H, T, A, B 
+  maddlu \T, \A, \B, \L
+  sltu   \L, \T, \L
+  maddhu \M, \A, \B, \L                 // no carry-out
+.endm
+
+// L != 0, M != 0, H = 0
+// L M H -> T M H
+.macro _ACCU_AIBJ_1 L, M, H, T, A, B 
   maddlu \T, \A, \B, \L
   sltu   \L, \T, \L
   maddhu \L, \A, \B, \L                 // no carry-out
@@ -91,8 +100,9 @@
   sltu   \H, \M, \L
 .endm
 
-// accu: L M H -> T M H
-.macro _ACCU_AIBJ_1 L, M, H, T, A, B 
+// L != 0, M != 0, H != 0
+// L M H -> T M H 
+.macro _ACCU_AIBJ_2 L, M, H, T, A, B 
   maddlu \T, \A, \B, \L
   sltu   \L, \T, \L
   maddhu \L, \A, \B, \L                 // no carry-out
@@ -107,34 +117,32 @@
 .endm
 
 .macro COMPUTE_R1 
-  maddlu T0, A0, B1, R1
-  sltu   R1, T0, R1
-  maddhu R2, A0, B1, R1                 // accu: R1 R2    -> T0 R2
-  _ACCU_AIBJ_0   T0, R2, R3, R1, A1, B0 // accu: T0 R2 R3 -> R1 R2 R3  
+  _ACCU_AIBJ_0   R1, R2, R3, T0, A0, B1 // accu: R1 R2    -> T0 R2
+  _ACCU_AIBJ_1   T0, R2, R3, R1, A1, B0 // accu: T0 R2 R3 -> R1 R2 R3  
 .endm
 
 .macro COMPUTE_R2 
-  _ACCU_AIBJ_0   R2, R3, R4, T0, A0, B2 // accu: R2 R3 R4 -> T0 R3 R4
-  _ACCU_AIBJ_1   T0, R3, R4, T1, A1, B1 // accu: T0 R3 R4 -> T1 R3 R4
-  _ACCU_AIBJ_1   T1, R3, R4, R2, A2, B0 // accu: T1 R3 R4 -> R2 R3 R4
+  _ACCU_AIBJ_1   R2, R3, R4, T0, A0, B2 // accu: R2 R3 R4 -> T0 R3 R4
+  _ACCU_AIBJ_2   T0, R3, R4, T1, A1, B1 // accu: T0 R3 R4 -> T1 R3 R4
+  _ACCU_AIBJ_2   T1, R3, R4, R2, A2, B0 // accu: T1 R3 R4 -> R2 R3 R4
 .endm
 
 .macro COMPUTE_R3
-  _ACCU_AIBJ_0   R3, R4, R5, T0, A0, B3 // accu: R3 R4 R5 -> T0 R4 R5
-  _ACCU_AIBJ_1   T0, R4, R5, R3, A1, B2 // accu: T0 R4 R5 -> R3 R4 R5
-  _ACCU_AIBJ_1   R3, R4, R5, T0, A2, B1 // accu: R3 R4 R5 -> T0 R4 R5
-  _ACCU_AIBJ_1   T0, R4, R5, R3, A3, B0 // accu: T0 R4 R5 -> R3 R4 R5
+  _ACCU_AIBJ_1   R3, R4, R5, T0, A0, B3 // accu: R3 R4 R5 -> T0 R4 R5
+  _ACCU_AIBJ_2   T0, R4, R5, R3, A1, B2 // accu: T0 R4 R5 -> R3 R4 R5
+  _ACCU_AIBJ_2   R3, R4, R5, T0, A2, B1 // accu: R3 R4 R5 -> T0 R4 R5
+  _ACCU_AIBJ_2   T0, R4, R5, R3, A3, B0 // accu: T0 R4 R5 -> R3 R4 R5
 .endm
 
 .macro COMPUTE_R4 
-  _ACCU_AIBJ_0   R4, R5, T1, T0, A1, B3 // accu: R4 R5 R6 -> T0 R5 T1
-  _ACCU_AIBJ_1   T0, R5, T1, R6, A2, B2 // accu: T0 R5 R6 -> R6 R5 T1
-  _ACCU_AIBJ_1   R6, R5, T1, R4, A3, B1 // accu: R6 R5 R6 -> R4 R5 T1
+  _ACCU_AIBJ_1   R4, R5, T1, T0, A1, B3 // accu: R4 R5 R6 -> T0 R5 T1
+  _ACCU_AIBJ_2   T0, R5, T1, R6, A2, B2 // accu: T0 R5 R6 -> R6 R5 T1
+  _ACCU_AIBJ_2   R6, R5, T1, R4, A3, B1 // accu: R6 R5 R6 -> R4 R5 T1
 .endm
 
 .macro COMPUTE_R5 
-  _ACCU_AIBJ_0   R5, T1, R7, T0, A2, B3 // accu: R5 T1 R7 -> T0 T1 R7
-  _ACCU_AIBJ_1   T0, T1, R7, R5, A3, B2 // accu: T0 T1 R7 -> R5 T1 R7
+  _ACCU_AIBJ_1   R5, T1, R7, T0, A2, B3 // accu: R5 T1 R7 -> T0 T1 R7
+  _ACCU_AIBJ_2   T0, T1, R7, R5, A3, B2 // accu: T0 T1 R7 -> R5 T1 R7
 .endm
 
 .macro COMPUTE_R6 

@@ -4,27 +4,28 @@
 
 // registers 
 
-// result "r"
+// result `r`
 #define R0 a3
 #define R1 a4
 #define R2 a5
 #define R3 a6
 #define R4 a7
 
-// operand "b"
+// operand `b`
 #define B0 a2 
 
-// operand "a"
+// operand `a`
 #define A0 t0 
 #define A1 t1
 #define A2 t2 
 #define A3 t3
 
-// temp "t"
+// temporary value `t`
 #define T0 t4
 #define T1 t5
+#define T2 a1
 
-// constants 
+// constant `m`
 #define M0 t6
 
 
@@ -81,19 +82,19 @@
 // final reduction 
 
 .macro FINAL_REDC
-  srli  T0, R3, 63
-  slli  R4, R4, 1
-  or    R4, R4, T0 
-  slli  R3, R3, 1
+  srli  T2, R3, 63
+  slli  R3, R3, 1 
   srli  R3, R3, 1
-  li    M0, 19
-  mul   T0, R4, M0
+  slli  T1, T1, 1
+  or    T2, T1, T2 
+  li    M0, 19 
+  mul   T0, T2, M0 
   add   R0, R0, T0 
   sltu  T0, R0, T0 
   add   R1, R1, T0 
   sltu  T0, R1, T0 
   add   R2, R2, T0 
-  sltu  T0, R2, T0 
+  sltu  T0, R2, T0
   add   R3, R3, T0 
 .endm
 

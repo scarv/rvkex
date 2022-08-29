@@ -23,7 +23,7 @@
   - [x] reduced-radix pure-software  csidh-512
   - [x] reduced-radix ISE-assisted   csidh-512
 
-  Furthermore, we plan to design general-use ISE (for big number arithmetic) and specific-use ISE (for CSIDH-512) then discuss different trade-offs. 
+  Furthermore, we plan to design general-use ISE (for large integer arithmetic) and specific-use ISE (for CSIDH-512) then discuss different trade-offs. 
 
 - Since CSIDH is relatively costly (compared to other PQC KEMs), it makes more sense to target more computing-powerful `rv64` instead of `rv32` in this project. 
 
@@ -36,7 +36,7 @@
 │   ├── hw                    - hardware part
 │   ├── csidh-512             - csidh-512 implementations
 │   │   ├── full-radix            - radix-2^64 (pure-sw + ise-assisted)
-│   │   └── reduced-radix         - radix-2^56 (pure-sw + ise-assisted)
+│   │   └── reduced-radix         - radix-2^57 (pure-sw + ise-assisted)
 │   └── x25519                - x25519 implementations
 │       ├── full-radix            - radix-2^64 (pure-sw + ise-assisted)
 │       └── reduced-radix         - radix-2^51 (pure-sw + ise-assisted)

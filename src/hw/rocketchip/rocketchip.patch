@@ -27,7 +27,7 @@ index d6423ada0..a0189775e 100644
  .SECONDARY: $(firrtl) $(verilog)
  
 diff --git a/src/main/scala/rocket/ALU.scala b/src/main/scala/rocket/ALU.scala
-index 537ffa511..aa1ddd0ab 100644
+index 537ffa511..486764d25 100644
 --- a/src/main/scala/rocket/ALU.scala
 +++ b/src/main/scala/rocket/ALU.scala
 @@ -5,12 +5,12 @@ package freechips.rocketchip.rocket
@@ -46,7 +46,7 @@ index 537ffa511..aa1ddd0ab 100644
    def FN_ADD  = UInt(0)
    def FN_SL   = UInt(1)
    def FN_SEQ  = UInt(2)
-@@ -36,6 +36,30 @@ object ALU
+@@ -36,6 +36,33 @@ object ALU
    def FN_MULHSU = FN_SEQ
    def FN_MULHU  = FN_SNE
  
@@ -74,10 +74,13 @@ index 537ffa511..aa1ddd0ab 100644
 +  def FN_XPERM8= UInt(48)
 +  def FN_XPERM4= UInt(49)
 +
++  def FN_MADDL= UInt(50)
++  def FN_MADDH= UInt(51)
++
    def isMulFN(fn: UInt, cmp: UInt) = fn(1,0) === cmp(1,0)
    def isSub(cmd: UInt) = cmd(3)
    def isCmp(cmd: UInt) = cmd >= FN_SLT
-@@ -97,3 +121,29 @@ class ALU(implicit p: Parameters) extends CoreModule()(p) {
+@@ -97,3 +124,29 @@ class ALU(implicit p: Parameters) extends CoreModule()(p) {
      when (io.dw === DW_32) { io.out := Cat(Fill(32, out(31)), out(31,0)) }
    }
  }
@@ -109,7 +112,7 @@ index 537ffa511..aa1ddd0ab 100644
 +}
 \ No newline at end of file
 diff --git a/src/main/scala/rocket/IDecode.scala b/src/main/scala/rocket/IDecode.scala
-index 94594aec2..b25a2cb74 100644
+index 94594aec2..43babd069 100644
 --- a/src/main/scala/rocket/IDecode.scala
 +++ b/src/main/scala/rocket/IDecode.scala
 @@ -365,3 +365,64 @@ class RoCCDecode(implicit val p: Parameters) extends DecodeConstants
@@ -143,8 +146,7 @@ index 94594aec2..b25a2cb74 100644
 +    CUSTOM3_RS1->       List(Y,N,N,N,N,N,N,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR,FN_XALU3,   N,M_X,        N,N,N,N,N,N,N,CSR.N,N,N,N,N),
 +    CUSTOM3_RS1_RS2->   List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR,FN_XALU3,   N,M_X,        N,N,N,N,N,N,N,CSR.N,N,N,N,N),
 +    CUSTOM3_RD->        List(Y,N,N,N,N,N,N,N,N,A2_RS2,A1_RS1, IMM_X, DW_XPR,FN_XALU3,   N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N),
-+    CUSTOM3_RD_RS1->    List(Y,N,N,N,N,N,N,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR,FN_XALU3,   N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N),
-+    CUSTOM3_RD_RS1_RS2->List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR,FN_XALU3,   N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N))
++    CUSTOM3_RD_RS1->    List(Y,N,N,N,N,N,N,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR,FN_XALU3,   N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N))
 +}
 +//ZbKb Decode for a subset of BitManip and Scalar Crypto
 +class ZBKBDecode(implicit val p: Parameters) extends DecodeConstants {
@@ -160,8 +162,9 @@ index 94594aec2..b25a2cb74 100644
 +    BREV8 ->            List(Y,N,N,N,N,N,N,Y,N,A2_X  ,A1_RS1, IMM_X, DW_XPR, FN_BREV8,  N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N),
 +    REV8 ->             List(Y,N,N,N,N,N,N,Y,N,A2_X  ,A1_RS1, IMM_X, DW_XPR, FN_REV8,   N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N),
 +    ZIP ->              List(Y,N,N,N,N,N,N,Y,N,A2_X  ,A1_RS1, IMM_X, DW_XPR, FN_ZIP,    N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N),
-+    UNZIP ->            List(Y,N,N,N,N,N,N,Y,N,A2_X  ,A1_RS1, IMM_X, DW_XPR, FN_UNZIP,  N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N))
-+
++    UNZIP ->            List(Y,N,N,N,N,N,N,Y,N,A2_X  ,A1_RS1, IMM_X, DW_XPR, FN_UNZIP,  N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N),
++    MADDLU ->           List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR, FN_MADDL,  N,M_X,        N,N,N,N,Y,N,Y,CSR.N,N,N,N,N),
++    MADDHU ->           List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR, FN_MADDH,  N,M_X,        N,N,N,N,Y,N,Y,CSR.N,N,N,N,N))
 +}
 +class ZBKB64Decode(implicit val p: Parameters) extends DecodeConstants {
 +  val table: Array[(BitPat, List[BitPat])] = Array(
@@ -179,10 +182,10 @@ index 94594aec2..b25a2cb74 100644
 +}
 \ No newline at end of file
 diff --git a/src/main/scala/rocket/Instructions.scala b/src/main/scala/rocket/Instructions.scala
-index f433fc067..622473935 100644
+index f433fc067..6c73e3af4 100644
 --- a/src/main/scala/rocket/Instructions.scala
 +++ b/src/main/scala/rocket/Instructions.scala
-@@ -691,6 +691,25 @@ object Instructions {
+@@ -691,6 +691,27 @@ object Instructions {
    def FMV_S_X            = BitPat("b111100000000?????000?????1010011")
    def FENCE_TSO          = BitPat("b100000110011?????000?????0001111")
    def PAUSE              = BitPat("b00000001000000000000000000001111")
@@ -205,11 +208,56 @@ index f433fc067..622473935 100644
 +  def XPERM8             = BitPat("b0010100??????????100?????0110011")
 +  def XPERM4             = BitPat("b0010100??????????010?????0110011")
 +
++  def MADDLU             = BitPat("b?????00??????????111?????1111011")
++  def MADDHU             = BitPat("b?????01??????????111?????1111011")
  }
  object Causes {
    val misaligned_fetch = 0x0
+diff --git a/src/main/scala/rocket/Multiplier.scala b/src/main/scala/rocket/Multiplier.scala
+index b5192bdc2..4c9f69977 100644
+--- a/src/main/scala/rocket/Multiplier.scala
++++ b/src/main/scala/rocket/Multiplier.scala
+@@ -187,17 +187,21 @@ class PipelinedMultiplier(width: Int, latency: Int, nXpr: Int = 32) extends Modu
+   val io = IO(new Bundle {
+     val req = Flipped(Valid(new MultiplierReq(width, log2Ceil(nXpr))))
+     val resp = Valid(new MultiplierResp(width, log2Ceil(nXpr)))
++    val op3 = Input(Bits(width.W))
+   })
+ 
+   val in = Pipe(io.req)
++  val op3p = Pipe(io.req.valid, io.op3).bits
+ 
+   val decode = List(
+-    FN_MUL    -> List(N, X, X),
+-    FN_MULH   -> List(Y, Y, Y),
+-    FN_MULHU  -> List(Y, N, N),
+-    FN_MULHSU -> List(Y, Y, N))
+-  val cmdHi :: lhsSigned :: rhsSigned :: Nil =
+-    DecodeLogic(in.bits.fn, List(X, X, X), decode).map(_.asBool)
++    FN_MUL    -> List(N, X, X, N),
++    FN_MULH   -> List(Y, Y, Y, N),
++    FN_MULHU  -> List(Y, N, N, N),
++    FN_MULHSU -> List(Y, Y, N, N),
++    FN_MADDL  -> List(N, N, N, Y),
++    FN_MADDH  -> List(Y, N, N, Y))
++  val cmdHi :: lhsSigned :: rhsSigned :: acc :: Nil =
++    DecodeLogic(in.bits.fn, List(X, X, X, X), decode).map(_.asBool)
+   val cmdHalf = (width > 32).B && in.bits.dw === DW_32
+ 
+   val lhs = Cat(lhsSigned && in.bits.in1(width-1), in.bits.in1).asSInt
+@@ -206,7 +210,9 @@ class PipelinedMultiplier(width: Int, latency: Int, nXpr: Int = 32) extends Modu
+   val muxed = Mux(cmdHi, prod(2*width-1, width), Mux(cmdHalf, prod(width/2-1, 0).sextTo(width), prod(width-1, 0)))
+ 
+   val resp = Pipe(in, latency-1)
++  val mulres = Pipe(in.valid, muxed, latency - 1).bits
++  val op3pp = Pipe(in.valid, op3p, latency - 1).bits
+   io.resp.valid := resp.valid
+   io.resp.bits.tag := resp.bits.tag
+-  io.resp.bits.data := Pipe(in.valid, muxed, latency-1).bits
++  io.resp.bits.data := Mux(acc, mulres + op3pp, mulres)
+ }
 diff --git a/src/main/scala/rocket/RocketCore.scala b/src/main/scala/rocket/RocketCore.scala
-index abdbdf93e..3de57709c 100644
+index abdbdf93e..29284e97b 100644
 --- a/src/main/scala/rocket/RocketCore.scala
 +++ b/src/main/scala/rocket/RocketCore.scala
 @@ -42,7 +42,11 @@ case class RocketCoreParams(
@@ -315,8 +363,11 @@ index abdbdf93e..3de57709c 100644
    val ex_scie_unpipelined_wdata = if (!rocketParams.useSCIE) 0.U else {
      val u = Module(new SCIEUnpipelined(xLen))
      u.io.insn := ex_reg_inst
-@@ -408,7 +458,7 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
+@@ -406,9 +456,10 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
+     val m = Module(new PipelinedMultiplier(xLen, 2))
+     m.io.req.valid := ex_reg_valid && ex_ctrl.mul
      m.io.req.bits := div.io.req.bits
++    m.io.op3 := ex_rs(2)
      m
    }
 -
@@ -324,7 +375,7 @@ index abdbdf93e..3de57709c 100644
    ex_reg_valid := !ctrl_killd
    ex_reg_replay := !take_pc && ibuf.io.inst(0).valid && ibuf.io.inst(0).bits.replay
    ex_reg_xcpt := !ctrl_killd && id_xcpt
-@@ -459,6 +509,8 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
+@@ -459,6 +510,8 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
          ex_reg_rs_msb(i) := id_rs(i) >> log2Ceil(bypass_sources.size)
        }
      }
@@ -333,7 +384,7 @@ index abdbdf93e..3de57709c 100644
      when (id_illegal_insn) {
        val inst = Mux(ibuf.io.inst(0).bits.rvc, id_raw_inst(0)(15, 0), id_raw_inst(0))
        ex_reg_rs_bypass(0) := false
-@@ -538,7 +590,7 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
+@@ -538,7 +591,7 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
      mem_reg_raw_inst := ex_reg_raw_inst
      mem_reg_mem_size := ex_reg_mem_size
      mem_reg_pc := ex_reg_pc
@@ -342,7 +393,7 @@ index abdbdf93e..3de57709c 100644
      mem_br_taken := alu.io.cmp_out
  
      when (ex_ctrl.rxs2 && (ex_ctrl.mem || ex_ctrl.rocc || ex_sfence)) {
-@@ -700,6 +752,7 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
+@@ -700,6 +753,7 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
  
    val hazard_targets = Seq((id_ctrl.rxs1 && id_raddr1 =/= UInt(0), id_raddr1),
                             (id_ctrl.rxs2 && id_raddr2 =/= UInt(0), id_raddr2),
@@ -352,10 +403,10 @@ index abdbdf93e..3de57709c 100644
                                (io.fpu.dec.ren2, id_raddr2),
 diff --git a/src/main/scala/system/SCARVRocketCoPConfig.scala b/src/main/scala/system/SCARVRocketCoPConfig.scala
 new file mode 100644
-index 000000000..f4a1d031e
+index 000000000..c949cfaa7
 --- /dev/null
 +++ b/src/main/scala/system/SCARVRocketCoPConfig.scala
-@@ -0,0 +1,97 @@
+@@ -0,0 +1,100 @@
 +// See LICENSE.SiFive for license details.
 +// See LICENSE.Berkeley for license details.
 +
@@ -366,6 +417,7 @@ index 000000000..f4a1d031e
 +import freechips.rocketchip.subsystem._
 +import freechips.rocketchip.tile._
 +import freechips.rocketchip.diplomacy._
++import freechips.rocketchip.rocket._
 +import freechips.rocketchip.groundtest.WithTraceGen
 +
 +class WithISERoCC extends Config((site, here, up) => {
@@ -378,7 +430,9 @@ index 000000000..f4a1d031e
 +
 +class WithXALU extends Config((site, here, up) => {
 +	case RocketTilesKey => up(RocketTilesKey, site) map { r =>
-+		r.copy(core = r.core.copy(useXALU = true))
++		r.copy(core = r.core.copy(
++			useXALU = true,
++			mulDiv = Some(MulDivParams(mulUnroll = site(XLen)))))
 +	}
 +})
 +

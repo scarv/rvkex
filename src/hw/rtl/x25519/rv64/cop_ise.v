@@ -10,6 +10,7 @@ module cop_ise (
     cop_insn,   
     cop_rs1,   
     cop_rs2,           
+    cop_rs3,           
     cop_rd    );
 input           cop_clk, cop_rst;
 input           cop_valid;
@@ -20,6 +21,7 @@ output          cop_wr;
 input  [31:0]   cop_insn;
 input  [63:0]   cop_rs1;
 input  [63:0]   cop_rs2;
+input  [63:0]   cop_rs3;
 output [63:0]   cop_rd;  
 
 parameter [1:0] ISE_V  = 2'b11;
@@ -37,15 +39,18 @@ wire        x25519_ise_sel;
 wire [63:0] x25519_ise_rd;  
 generate 
     if (ISE_V[1] == 1'b1) begin : X25519_ISE_IMP
-wire   op_sigma       = (funct[6:5] == 2'b10) && (cop_insn[6:0] == CUSTOM_1);
+wire   op_maddlu       = (funct[1:0] == 2'b00) && (cop_insn[6:0] == CUSTOM_1);
+wire   op_maddhu       = (funct[1:0] == 2'b01) && (cop_insn[6:0] == CUSTOM_1);
 assign x25519_ise_sel  = op_sigma;
 
 x25519_ise x25519_ise_ins2(
     .rs1(      cop_rs1      ),
     .rs2(      cop_rs2      ),
+    .rs3(      cop_rs3      ),
     .rd (      x25519_ise_rd ),
     .imm(      funct[4:0]   ),
-    .op_sigma( op_sigma     )
+    .op_maddlu( op_maddlu   ),
+    .op_maddhu( op_maddhu   )
 );
 end else begin            : No_X25519_ISE
 assign  x25519_ise_sel =  1'b0;

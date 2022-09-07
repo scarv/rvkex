@@ -1,5 +1,5 @@
 
-SRCS  = gfparith/sw/*.S main.c share.c rdtsc.c gfparith.c moncurve.c
+SRCS  = gfparith/sw/*.S main.c share.c rdtsc.c gfparith.c moncurve.c test_ise.c
 
 ifeq ($(TYPE), RV64_TYPE2)
 	SRCS += gfparith/ise/*.S
@@ -9,4 +9,6 @@ ifeq ($(MODE), debug)
 	CCFLAGS += -DDEBUG
 endif
 
-
+ifeq ($(MODE), ise_test)
+	CCFLAGS += -DISE_TEST
+endif

@@ -6,14 +6,16 @@ module xalu_ise (
     ise_imm,   
     ise_in1,   
     ise_in2,  
+    ise_in3,
     ise_val,
     ise_oval,         
     ise_out    );
 input           ise_clk, ise_rst;
-input  [ 4:0]   ise_fn;
+input  [ 5:0]   ise_fn;
 input  [ 6:0]   ise_imm;
 input  [63:0]   ise_in1;
 input  [63:0]   ise_in2;
+input  [63:0]   ise_in3;
 input           ise_val;
 output          ise_oval;
 output [63:0]   ise_out; 
@@ -32,15 +34,20 @@ wire        x25519_ise_sel;
 wire [63:0] x25519_ise_rd;  
 generate 
     if (ISE_V[1] == 1'b1) begin : X25519_ISE_IMP
-wire   op_sigma       = (funct[6:5] == 2'b10) && (ise_fn[1:0] == CUSTOM_1);
-assign x25519_ise_sel  = op_sigma;
+wire   op_maddlu       = (funct[1:0] == 2'b00) && (ise_fn[1:0] == CUSTOM_3);
+wire   op_maddhu       = (funct[1:0] == 2'b01) && (ise_fn[1:0] == CUSTOM_3);
+
+assign x25519_ise_sel  = op_maddlu || op_maddhu;
+
 
 x25519_ise x25519_ise_ins2(
     .rs1(      ise_in1      ),
     .rs2(      ise_in2      ),
+    .rs3(      ise_in3      ),
     .rd (      x25519_ise_rd ),
-    .imm(      funct[4:0]   ),
-    .op_sigma( op_sigma     )
+
+    .op_maddlu( op_maddlu   ),
+    .op_maddhu( op_maddhu   )
 );
 end else begin            : No_X25519_ISE
 assign  x25519_ise_sel =  1'b0;

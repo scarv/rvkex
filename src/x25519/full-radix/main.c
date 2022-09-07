@@ -67,6 +67,7 @@ void test_gfp_arith()
   printf("       #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
+  //r  = 0x3cdf012345658ebabcdf012345658ebabcdf012345658ebabcdf01234565dcd9
   mpi64_print("  r  = 0x", r, NLMB64);
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif
@@ -80,6 +81,7 @@ void test_gfp_arith()
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
+  //r  = 0x0acf13568acf13568acf13568acf13568acf13568acf13568acf13568acf1356
   mpi64_print("  r  = 0x", r, NLMB64);
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif
@@ -93,6 +95,7 @@ void test_gfp_arith()
   printf("         #cycle = %lld\n", diff_cycles);
 
 #if DEBUG
+  //r  = 0x7777777888888887777777788888888777777778888888877777777888888875
   mpi64_print("  r  = 0x", r, NLMB64);
   memset(r, 0, sizeof(uint64_t)*NLMB64);
 #endif
@@ -256,11 +259,16 @@ void test_ecdh()
   printf("**************************************************************************\n");
 }
 
+extern void test_ise();
+
 int main()
 {
+#if ISE_TEST
+  test_ise();
+#else
   test_gfp_arith();
   test_curve_arith();
   test_ecdh();
-
+#endif
   return 0;
 }

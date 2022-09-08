@@ -347,7 +347,7 @@ index 00000000..9ad10f48
 +}
 diff --git a/riscv/insns/maddhu.h b/riscv/insns/maddhu.h
 new file mode 100644
-index 00000000..ff2a70bb
+index 00000000..a2fe31a9
 --- /dev/null
 +++ b/riscv/insns/maddhu.h
 @@ -0,0 +1,9 @@
@@ -356,13 +356,13 @@ index 00000000..ff2a70bb
 +  uint64_t b = READ_REG(insn.rs2());
 +  uint64_t c = READ_REG(insn.rs3());
 +
-+  uint64_t r = (((uint128_t)a * b) >> 64) + c;
++  uint64_t r = ((uint128_t)a * b + c) >> 64;
 +
 +  WRITE_REG(insn.rd(), r);
 +}
 diff --git a/riscv/insns/maddlu.h b/riscv/insns/maddlu.h
 new file mode 100644
-index 00000000..126985b8
+index 00000000..260f90fb
 --- /dev/null
 +++ b/riscv/insns/maddlu.h
 @@ -0,0 +1,9 @@
@@ -371,7 +371,7 @@ index 00000000..126985b8
 +  uint64_t b = READ_REG(insn.rs2());
 +  uint64_t c = READ_REG(insn.rs3());
 +
-+  uint64_t r = (a * b) + c;
++  uint64_t r = (uint128_t)a * b + c;
 +
 +  WRITE_REG(insn.rd(), r);
 +}

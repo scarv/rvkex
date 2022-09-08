@@ -104,15 +104,6 @@
   sltu   \H, \M, T0
 .endm
 
-.macro _ACCU_PRODUCT L, M, H
-  add    \L, \L, T0
-  sltu   T0, \L, T0
-  add    T1, T1, T0
-  add    \M, \M, T1
-  sltu   T1, \M, T1
-  add    \H, \H, T1
-.endm
-
 // L != 0, M = 0, H = 0
 // L M H -> T M H
 .macro _ACCU_PRDCT_0 L, M, H, T, A, B 

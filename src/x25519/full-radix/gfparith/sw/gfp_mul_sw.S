@@ -5,52 +5,46 @@
 // registers 
 
 // result `r`
-#define R0 a6
-#define R1 a7
-#define R2 a1 
-#define R3 a2
-#define R4 s0
-#define R5 s1
-#define R6 s2
-#define R7 s3
+#define R0 a1
+#define R1 a2
+#define R2 a3 
+#define R3 a4
+#define R4 a5
+#define R5 a6
+#define R6 t1
+#define R7 t2
 
 // operand `b` 
-#define B0 t0 
-#define B1 t1
-#define B2 t2 
-#define B3 t3
+#define B0 t1 
+#define B1 t2
+#define B2 t3
+#define B3 t4
 
 // operand `a`
-#define A0 t4 
-#define A1 t5 
-#define A2 t6 
-#define A3 a3
+#define A0 a6 
+#define A1 a7 
+#define A2 t5 
+#define A3 t6
 
 // temporary value `t`
-#define T0 a4
-#define T1 a5
+#define T0 t0
+#define T1 s0
 #define T2 t4
 
 // constant `m`
-#define M0 t1
+#define M0 t3
 
 
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi  sp, sp, -32
+  addi  sp, sp, -8
   sd    s0,  0(sp)
-  sd    s1,  8(sp)
-  sd    s2, 16(sp)
-  sd    s3, 24(sp) 
 .endm
 
 .macro EPILOGUE
   ld    s0,  0(sp)
-  ld    s1,  8(sp)
-  ld    s2, 16(sp)
-  ld    s3, 24(sp)
-  addi  sp, sp, 32 
+  addi  sp, sp, 8 
   ret 
 .endm
 

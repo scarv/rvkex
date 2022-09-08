@@ -7,30 +7,30 @@
 
 // registers 
 
-// result "r"
+// result `r`
 #define R0 a3
 #define R1 a4
 #define R2 a5 
 #define R3 a6
 #define R4 t0
 
-// operand "b" 
+// operand `b`
 #define B0 t0 
 #define B1 t1
 #define B2 t2
 #define B3 t3
 
-// operand "a"
+// operand `a`
 #define A0 t4 
 #define A1 t5 
 #define A2 t6 
 #define A3 a7
 
-// temp "t"
+// temporary value `t`
 #define T0 a1
 #define T1 a2
 
-// constants 
+// constant `m` 
 #define M0 t3
 
 

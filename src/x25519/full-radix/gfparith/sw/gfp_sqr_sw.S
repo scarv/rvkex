@@ -5,49 +5,41 @@
 // registers 
 
 // result `r`
-#define R0 s0
-#define R1 a1
-#define R2 a2
-#define R3 a3
-#define R4 a4
-#define R5 a5
-#define R6 a6
-#define R7 a7
+#define R0 a1
+#define R1 a2
+#define R2 a3
+#define R3 a4
+#define R4 a5
+#define R5 a6
+#define R6 a7
+#define R7 t5
 
 // partial product `y`
-#define Y0 s1
-#define Y1 s2
-#define Y2 t6
+#define Y0 t1
+#define Y1 t2
+#define Y2 t3
 
 // operand `a`
-#define A0 t0 
-#define A1 t1
-#define A2 t2 
-#define A3 t3 
+#define A0 a6 
+#define A1 a7
+#define A2 t5 
+#define A3 t6 
 
 // temporary value `t`
-#define T0 t4
-#define T1 t5
-#define T2 t0
+#define T0 t0
+#define T1 t4
+#define T2 t6
 
 // constant `m` 
-#define M0 s1
+#define M0 t3
 
 
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi  sp, sp, -24
-  sd    s0,  0(sp)
-  sd    s1,  8(sp)
-  sd    s2, 16(sp)
 .endm
 
 .macro EPILOGUE
-  ld    s0,  0(sp)
-  ld    s1,  8(sp)
-  ld    s2, 16(sp)
-  addi  sp, sp, 24 
   ret 
 .endm
 

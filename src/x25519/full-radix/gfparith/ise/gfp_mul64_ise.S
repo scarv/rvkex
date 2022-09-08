@@ -7,23 +7,23 @@
 
 // registers 
 
-// result "r"
+// result `r`
 #define R0 a3
 #define R1 a4
 #define R2 a5
 #define R3 a6
 #define R4 a7
 
-// operand "b"
+// operand `b`
 #define B0 a2 
 
-// operand "a"
+// operand `a`
 #define A0 t0 
 #define A1 t1
 #define A2 t2 
 #define A3 t3
 
-// temp "t"
+// temporary value `t`
 #define T0 t4
 #define T1 t5
 
@@ -62,17 +62,14 @@
   mul    T1, A0, B0
   mulhu  T0, A0, B0
 
-  maddlu R1, A1, B0, T0 
-  sltu   T0, R1, T0 
-  maddhu T0, A1, B0, T0 
+  maddlu R1, A1, B0, T0
+  maddhu T0, A1, B0, T0
 
-  maddlu R2, A2, B0, T0 
-  sltu   T0, R2, T0 
-  maddhu T0, A2, B0, T0  
+  maddlu R2, A2, B0, T0
+  maddhu T0, A2, B0, T0
 
-  maddlu R3, A3, B0, T0 
-  sltu   T0, R3, T0 
-  maddhu R4, A3, B0, T0  
+  maddlu R3, A3, B0, T0
+  maddhu R4, A3, B0, T0
 .endm
 
 // final reduction 

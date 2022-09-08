@@ -162,68 +162,89 @@ void test_curve()
   printf("**************************************************************************\n");
 }
 
+void test_action()
+{
+  uint64_t start_cycles, end_cycles, diff_cycles;
+  int i;
+
+  bool ret; (void) ret;
+
+  private_key priv_alice[5];
+  public_key_u64 pub_alice[5];
+
+  printf("\n**************************************************************************\n");
+  printf("CSIDH GROUP ACTION:\n");
+
+  for (i = 0; i < 5; i++) csidh_private(&priv_alice[i]);
+
+  printf("- csidh:");
+  MEASURE_CYCLES(ret = csidh(&pub_alice[i], (public_key_u64 *)&base, &priv_alice[i]), 5);
+  printf("             #cycle = %lld\n", diff_cycles);
+
+  printf("**************************************************************************\n");
+}
+
 void test_csidh()
 {
-    uint64_t start_cycles, end_cycles, diff_cycles;
-    int i;
+  uint64_t start_cycles, end_cycles, diff_cycles;
+  int i;
 
-    bool ret; (void) ret;
-    clock_t t0, t1;
+  bool ret; (void) ret;
 
-    private_key priv_alice, priv_bob;
-    public_key_u64 pub_alice, pub_bob;
-    public_key_u64 shared_alice, shared_bob;
+  private_key priv_alice, priv_bob;
+  public_key_u64 pub_alice, pub_bob;
+  public_key_u64 shared_alice, shared_bob;
 
-    printf("\n");
+  printf("\n");
 
-    MEASURE_CYCLES(csidh_private(&priv_alice), 1);
-    printf("Alice's private key   (%lld cc):\n  ", diff_cycles);
-    priv_print(&priv_alice);
-    printf("\n\n");
+  MEASURE_CYCLES(csidh_private(&priv_alice), 1);
+  printf("Alice's private key   (%lld cc):\n  ", diff_cycles);
+  priv_print(&priv_alice);
+  printf("\n\n");
 
-    MEASURE_CYCLES(csidh_private(&priv_bob), 1);
-    printf("Bob's private key     (%lld cc):\n  ", diff_cycles);
-    priv_print(&priv_bob);
-    printf("\n\n");
-
-
-    MEASURE_CYCLES(ret = csidh(&pub_alice, (public_key_u64 *)&base, &priv_alice), 1);
-    assert(ret);
-    printf("Alice's public key    (%lld cc):\n  ", diff_cycles);
-    uint_print(&pub_alice.A);
-    printf("\n\n");
+  MEASURE_CYCLES(csidh_private(&priv_bob), 1);
+  printf("Bob's private key     (%lld cc):\n  ", diff_cycles);
+  priv_print(&priv_bob);
+  printf("\n\n");
 
 
-    MEASURE_CYCLES(ret = csidh(&pub_bob, (public_key_u64 *)&base, &priv_bob), 1);
-    assert(ret);
-    printf("Bob's public key      (%lld cc):\n  ", diff_cycles);
-    uint_print(&pub_bob.A);
-    printf("\n\n");
+  MEASURE_CYCLES(ret = csidh(&pub_alice, (public_key_u64 *)&base, &priv_alice), 1);
+  assert(ret);
+  printf("Alice's public key    (%lld cc):\n  ", diff_cycles);
+  uint_print(&pub_alice.A);
+  printf("\n\n");
 
 
-    MEASURE_CYCLES(ret = csidh(&shared_alice, &pub_bob, &priv_alice), 1);
-    assert(ret);
-    printf("Alice's shared secret (%lld cc):\n  ", diff_cycles);
-    uint_print(&shared_alice.A);
-    printf("\n\n");
+  MEASURE_CYCLES(ret = csidh(&pub_bob, (public_key_u64 *)&base, &priv_bob), 1);
+  assert(ret);
+  printf("Bob's public key      (%lld cc):\n  ", diff_cycles);
+  uint_print(&pub_bob.A);
+  printf("\n\n");
 
 
-    MEASURE_CYCLES(ret = csidh(&shared_bob, &pub_alice, &priv_bob), 1);
-    assert(ret);
-    printf("Bob's shared secret   (%lld cc):\n  ", diff_cycles);
-    uint_print(&shared_bob.A);
-    printf("\n\n");
+  MEASURE_CYCLES(ret = csidh(&shared_alice, &pub_bob, &priv_alice), 1);
+  assert(ret);
+  printf("Alice's shared secret (%lld cc):\n  ", diff_cycles);
+  uint_print(&shared_alice.A);
+  printf("\n\n");
 
 
-    printf("    ");
-    if (memcmp(&shared_alice, &shared_bob, sizeof(public_key_u64)))
-        printf("\x1b[31mNOT EQUAL!\x1b[0m\n");
-    else
-        printf("\x1b[32mequal.\x1b[0m\n");
-    printf("\n");
+  MEASURE_CYCLES(ret = csidh(&shared_bob, &pub_alice, &priv_bob), 1);
+  assert(ret);
+  printf("Bob's shared secret   (%lld cc):\n  ", diff_cycles);
+  uint_print(&shared_bob.A);
+  printf("\n\n");
 
 
-    printf("\n");
+  printf("    ");
+  if (memcmp(&shared_alice, &shared_bob, sizeof(public_key_u64)))
+      printf("\x1b[31mNOT EQUAL!\x1b[0m\n");
+  else
+      printf("\x1b[32mequal.\x1b[0m\n");
+  printf("\n");
+
+
+  printf("\n");
 }
 
 int main()
@@ -231,4 +252,5 @@ int main()
   test_fp();
   test_curve();
   test_csidh();
+  test_action();
 }

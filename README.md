@@ -60,6 +60,7 @@
   git submodule update --init --recursive
   source bin/conf.sh
   ```
+### Evaluation on Software Simulation
 
 - Build the software toolchain
   ```sh
@@ -79,6 +80,68 @@
 - Enable the debug mode (add `MODE=debug`), e.g.,
   ```sh
   make sw-run ALG=x25519 RADIX=reduced TYPE=RV64_TYPE2 MODE=debug 
+  ```
+### Evaluation with Rocket Chip on FPGA hardware
+
+- Fix paths for the Rocket Chip toolchain, e.g., 
+  
+  ```sh
+  export RISCV_ROCKET="/opt/riscv-rocket"
+  ```
+
+- Build a
+  [toolchain](https://github.com/riscv/riscv-gnu-toolchain)
+  for use with
+  [Rocket-Chip](https://github.com/chipsalliance/rocket-chip.git)
+  into `${RISCV_ROCKET}`:
+
+  ```sh
+  make hw-toolchain-build
+  ```
+
+- The build system in
+
+  ```sh
+  ${REPO_HOME}/src/hw/Makefile
+  ```
+  
+  includes 
+  - ISE-enabled Rocket Chip implementation, 
+  - Implementing the Rocket Chip SoC on FPGA using Vivado,
+
+- Get an ISE-enabled
+  [Rocket-Chip](https://github.com/chipsalliance/rocket-chip.git)
+  implementation
+
+  ```sh
+  make hw-get-rocketchip
+  ```
+
+- Build the Xilinx FPGA bitstream for the Rocket Chip system and run a software on it using Vivado:
+
+  - Fix path for the installed Vivado Design Suite, e.g., 
+  
+  ```sh
+  export VIVADO_TOOL_DIR="/opt/Xilinx/Vivado/2019.1"
+  source ./bin/vivado-conf.sh
+  ```
+
+  - Generate the verilog files, and then bit-stream for the FPGA implementation, e.g.,
+
+  ```sh
+  ALG="x25519" RADIX=[full/reduced] make fpga-hw
+  ```
+ 
+  - Download FPGA bit-stream, and then build and execute software on the FPGA implementation, e.g.,
+
+  ```sh
+  ALG="x25519" RADIX=[full/reduced] make fpga-prog
+  ```
+
+  - Build and execute software on the FPGA implementation, e.g.,
+
+  ```sh
+  ALG="x25519" RADIX=[full/reduced] TYPE=RV64_TYPE[1/2] make fpga-run
   ```
 
 ## References and links

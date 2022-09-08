@@ -47,6 +47,8 @@ fpga-hw :
 	@make --directory="${REPO_HOME}/src/hw" fpga-verilog
 	@make --directory="${REPO_HOME}/src/hw" bitstream
 
+fpga-prog:
+	@make --directory="${REPO_HOME}/src/hw" program-fpga
+
 fpga-run :
-#	@make --directory="${REPO_HOME}/src/hw" program-fpga
 	@make --directory="${REPO_HOME}/src/hw" fpga-swclean fpga-run	

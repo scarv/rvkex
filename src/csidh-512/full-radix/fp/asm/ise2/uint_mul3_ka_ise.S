@@ -66,30 +66,27 @@
 // L != 0, M = 0, H = 0
 // L M H -> T M H
 .macro _ACCU_AIBJ_0 L, M, H, T, A, B 
-  maddlu \T, \A, \B, \L
-  sltu   \L, \T, \L
-  maddhu \M, \A, \B, \L                 // no carry-out
+  maddhu \M, \A, \B, \L
+  maddlu \L, \A, \B, \L
 .endm
 
 // L != 0, M != 0, H = 0
 // L M H -> T M H
 .macro _ACCU_AIBJ_1 L, M, H, T, A, B 
-  maddlu \T, \A, \B, \L
-  sltu   \L, \T, \L
-  maddhu \L, \A, \B, \L                 // no carry-out
-  add    \M, \M, \L
-  sltu   \H, \M, \L
+  maddhu \T, \A, \B, \L
+  maddlu \L, \A, \B, \L
+  add    \M, \M, \T
+  sltu   \H, \M, \T
 .endm
 
 // L != 0, M != 0, H != 0
 // L M H -> T M H 
 .macro _ACCU_AIBJ_2 L, M, H, T, A, B 
-  maddlu \T, \A, \B, \L
-  sltu   \L, \T, \L
-  maddhu \L, \A, \B, \L                 // no carry-out
-  add    \M, \M, \L
-  sltu   \L, \M, \L
-  add    \H, \H, \L
+  maddhu \T, \A, \B, \L
+  maddlu \L, \A, \B, \L
+  add    \M, \M, \T
+  sltu   \T, \M, \T
+  add    \H, \H, \T
 .endm
 
 .macro MUL_4X4_PS R0, R1, R2, R3, R4, R5, R6, R7, A0, A1, A2, A3, B0, B1, B2, B3
@@ -98,28 +95,26 @@
   maddhu \R1, \A0, \B0, x0
   // compute R1
   _ACCU_AIBJ_0  \R1, \R2, \R3,  T0, \A0, \B1
-  _ACCU_AIBJ_1   T0, \R2, \R3, \R1, \A1, \B0
+  _ACCU_AIBJ_1  \R1, \R2, \R3,  T0, \A1, \B0
   // compute R2 
   _ACCU_AIBJ_1  \R2, \R3, \R4,  T0, \A0, \B2
-  _ACCU_AIBJ_2   T0, \R3, \R4,  T1, \A1, \B1 
-  _ACCU_AIBJ_2   T1, \R3, \R4, \R2, \A2, \B0
+  _ACCU_AIBJ_2  \R2, \R3, \R4,  T0, \A1, \B1 
+  _ACCU_AIBJ_2  \R2, \R3, \R4,  T0, \A2, \B0
   // compute R3 
   _ACCU_AIBJ_1  \R3, \R4, \R5,  T0, \A0, \B3 
-  _ACCU_AIBJ_2   T0, \R4, \R5, \R3, \A1, \B2 
+  _ACCU_AIBJ_2  \R3, \R4, \R5,  T0, \A1, \B2 
   _ACCU_AIBJ_2  \R3, \R4, \R5,  T0, \A2, \B1 
-  _ACCU_AIBJ_2   T0, \R4, \R5, \R3, \A3, \B0 
+  _ACCU_AIBJ_2  \R3, \R4, \R5,  T0, \A3, \B0 
   // compute R4
   _ACCU_AIBJ_1  \R4, \R5, \R6,  T0, \A1, \B3
-  _ACCU_AIBJ_2   T0, \R5, \R6,  T1, \A2, \B2
-  _ACCU_AIBJ_2   T1, \R5, \R6, \R4, \A3, \B1
+  _ACCU_AIBJ_2  \R4, \R5, \R6,  T0, \A2, \B2
+  _ACCU_AIBJ_2  \R4, \R5, \R6,  T0, \A3, \B1
   // compute R5
   _ACCU_AIBJ_1  \R5, \R6, \R7,  T0, \A2, \B3
-  _ACCU_AIBJ_2   T0, \R6, \R7, \R5, \A3, \B2
+  _ACCU_AIBJ_2  \R5, \R6, \R7,  T0, \A3, \B2
   // compute R6
-  mv      T0, \R6
-  maddlu \R6, \A3, \B3,  T0
-  sltu    T0, \R6,  T0
-  maddhu  T0, \A3, \B3,  T0
+  maddhu  T0, \A3, \B3, \R6
+  maddlu \R6, \A3, \B3, \R6
   // compute R7 
   add    \R7, \R7,  T0
 .endm

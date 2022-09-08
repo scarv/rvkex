@@ -65,22 +65,20 @@
 // L != 0, M != 0, H = 0
 // L M H -> T M H
 .macro _ACCU_AIBJ_1 L, M, H, T, A, B 
-  maddlu \T, \A, \B, \L
-  sltu   \L, \T, \L
-  maddhu \L, \A, \B, \L                 // no carry-out
-  add    \M, \M, \L
-  sltu   \H, \M, \L
+  maddhu \T, \A, \B, \L
+  maddlu \L, \A, \B, \L
+  add    \M, \M, \T
+  sltu   \H, \M, \T
 .endm
 
 // L != 0, M != 0, H != 0
 // L M H -> T M H 
 .macro _ACCU_AIBJ_2 L, M, H, T, A, B 
-  maddlu \T, \A, \B, \L
-  sltu   \L, \T, \L
-  maddhu \L, \A, \B, \L                 // no carry-out
-  add    \M, \M, \L
-  sltu   \L, \M, \L
-  add    \H, \H, \L
+  maddhu \T, \A, \B, \L
+  maddlu \L, \A, \B, \L
+  add    \M, \M, \T
+  sltu   \T, \M, \T
+  add    \H, \H, \T
 .endm
 
 // `z` = `z` + `y` + `y` (Y2 = 0)
@@ -154,31 +152,31 @@
   mulhu  Y1, A0, A2
   _ACCU_PRDT_1   Z2, Z0, Z1
   _ACCU_AIBJ_2   Z2, Z0, Z1, T0, A1, A1
-  sd     T0, 16(a0) 
+  sd     Z2, 16(a0) 
 .endm
 
 .macro COMPUTE_R3
-  mul    T0, A0, A3
+  mul    Y0, A0, A3
   mulhu  Y1, A0, A3
-  _ACCU_AIBJ_1   T0, Y1, Y2, Y0, A1, A2
+  _ACCU_AIBJ_1   Y0, Y1, Y2, T0, A1, A2
   _ACCU_PRDT_2   Z0, Z1, Z2
   sd     Z0, 24(a0) 
 .endm
 
 .macro COMPUTE_R4
-  mul    T0, A0, A4
+  mul    Y0, A0, A4
   mulhu  Y1, A0, A4
-  _ACCU_AIBJ_1   T0, Y1, Y2, Y0, A1, A3
+  _ACCU_AIBJ_1   Y0, Y1, Y2, T0, A1, A3
   _ACCU_PRDT_2   Z1, Z2, Z0
   _ACCU_AIBJ_2   Z1, Z2, Z0, T0, A2, A2
-  sd     T0, 32(a0)   
+  sd     Z1, 32(a0)   
 .endm
 
 .macro COMPUTE_R5
   mul    Y0, A0, A5
   mulhu  Y1, A0, A5
   _ACCU_AIBJ_1   Y0, Y1, Y2, T0, A1, A4
-  _ACCU_AIBJ_2   T0, Y1, Y2, Y0, A2, A3
+  _ACCU_AIBJ_2   Y0, Y1, Y2, T0, A2, A3
   _ACCU_PRDT_2   Z2, Z0, Z1
   sd     Z2, 40(a0)   
 .endm
@@ -187,18 +185,18 @@
   mul    Y0, A0, A6
   mulhu  Y1, A0, A6
   _ACCU_AIBJ_1   Y0, Y1, Y2, T0, A1, A5
-  _ACCU_AIBJ_2   T0, Y1, Y2, Y0, A2, A4
+  _ACCU_AIBJ_2   Y0, Y1, Y2, T0, A2, A4
   _ACCU_PRDT_2   Z0, Z1, Z2
   _ACCU_AIBJ_2   Z0, Z1, Z2, T0, A3, A3
-  sd     T0, 48(a0)   
+  sd     Z0, 48(a0)   
 .endm
 
 .macro COMPUTE_R7
-  mul    T0, A0, A7
+  mul    Y0, A0, A7
   mulhu  Y1, A0, A7
-  _ACCU_AIBJ_1   T0, Y1, Y2, Y0, A1, A6
+  _ACCU_AIBJ_1   Y0, Y1, Y2, T0, A1, A6
   _ACCU_AIBJ_2   Y0, Y1, Y2, T0, A2, A5
-  _ACCU_AIBJ_2   T0, Y1, Y2, Y0, A3, A4
+  _ACCU_AIBJ_2   Y0, Y1, Y2, T0, A3, A4
   _ACCU_PRDT_2   Z1, Z2, Z0
   sd     Z1, 56(a0)   
 .endm
@@ -207,34 +205,34 @@
   mul    Y0, A1, A7
   mulhu  Y1, A1, A7
   _ACCU_AIBJ_1   Y0, Y1, Y2, T0, A2, A6
-  _ACCU_AIBJ_2   T0, Y1, Y2, Y0, A3, A5
+  _ACCU_AIBJ_2   Y0, Y1, Y2, T0, A3, A5
   _ACCU_PRDT_2   Z2, Z0, Z1
   _ACCU_AIBJ_2   Z2, Z0, Z1, T0, A4, A4
-  sd     T0, 64(a0)
+  sd     Z2, 64(a0)
 .endm
 
 .macro COMPUTE_R9
   mul    Y0, A2, A7
   mulhu  Y1, A2, A7
   _ACCU_AIBJ_1   Y0, Y1, Y2, T0, A3, A6
-  _ACCU_AIBJ_2   T0, Y1, Y2, Y0, A4, A5
+  _ACCU_AIBJ_2   Y0, Y1, Y2, T0, A4, A5
   _ACCU_PRDT_2   Z0, Z1, Z2
   sd     Z0, 72(a0)
 .endm
 
 .macro COMPUTE_R10
-  mul    T0, A3, A7
+  mul    Y0, A3, A7
   mulhu  Y1, A3, A7
-  _ACCU_AIBJ_1   T0, Y1, Y2, Y0, A4, A6
+  _ACCU_AIBJ_1   Y0, Y1, Y2, T0, A4, A6
   _ACCU_PRDT_2   Z1, Z2, Z0
   _ACCU_AIBJ_2   Z1, Z2, Z0, T0, A5, A5
-  sd     T0, 80(a0)
+  sd     Z1, 80(a0)
 .endm
 
 .macro COMPUTE_R11
-  mul    T0, A4, A7
+  mul    Y0, A4, A7
   mulhu  Y1, A4, A7
-  _ACCU_AIBJ_1   T0, Y1, Y2, Y0, A5, A6
+  _ACCU_AIBJ_1   Y0, Y1, Y2, T0, A5, A6
   _ACCU_PRDT_2   Z2, Z0, Z1
   sd     Z2, 88(a0)
 .endm
@@ -244,7 +242,7 @@
   mulhu  Y1, A5, A7
   _ACCU_PRDT_1   Z0, Z1, Z2
   _ACCU_AIBJ_2   Z0, Z1, Z2, T0, A6, A6
-  sd    T0, 96(a0)
+  sd    Z0, 96(a0)
 .endm
 
 .macro COMPUTE_R13
@@ -255,14 +253,13 @@
 .endm
 
 .macro COMPUTE_R14
-  maddlu T0, A7, A7, Z2
-  sltu   Z2, T0, Z2
-  maddhu Z2, A7, A7, Z2
-  sd     T0,112(a0)
+  maddhu T0, A7, A7, Z2 
+  maddlu Z2, A7, A7, Z2
+  sd     Z2,112(a0)
 .endm
 
 .macro COMPUTE_R15
-  add    Z0, Z0, Z2
+  add    Z0, Z0, T0
   sd     Z0,120(a0)
 .endm
 

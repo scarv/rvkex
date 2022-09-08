@@ -94,7 +94,12 @@ void test_fp()
   MEASURE_CYCLES(uint_mul3_ka_sw(t, &a, &b), 10000);
   printf("       #cycle = %lld\n", diff_cycles);
 
-#elif (RV64_TYPE2)
+  printf("- fp rdc mont:");
+  LOAD_CACHE(fp_rdc_mont_sw(&r, t), 1000);
+  MEASURE_CYCLES(fp_rdc_mont_sw(&r, t), 10000);
+  printf("       #cycle = %lld\n", diff_cycles);
+
+#elif (RV64_TYPE2) || (RV64_TYPE3)
   printf("- uint mul ps:");
   LOAD_CACHE(uint_mul3_ps_ise(t, &a, &b), 1000);
   MEASURE_CYCLES(uint_mul3_ps_ise(t, &a, &b), 10000);
@@ -105,22 +110,11 @@ void test_fp()
   MEASURE_CYCLES(uint_mul3_ka_ise(t, &a, &b), 10000);
   printf("       #cycle = %lld\n", diff_cycles);
 
-#elif (RV64_TYPE3)
-  printf("- uint mul:");
-  LOAD_CACHE(uint_mul3_asm(t, &a, &b), 1000);
-  MEASURE_CYCLES(uint_mul3_asm(t, &a, &b), 10000);
-  printf("          #cycle = %lld\n", diff_cycles);
-
-  printf("- uint sqr:");
-  LOAD_CACHE(uint_sqr2_asm(t, &a), 1000);
-  MEASURE_CYCLES(uint_sqr2_asm(t, &a), 10000);
-  printf("          #cycle = %lld\n", diff_cycles);
-
   printf("- fp rdc mont:");
-  LOAD_CACHE(fp_rdc_mont_asm(&r, t), 1000);
-  MEASURE_CYCLES(fp_rdc_mont_asm(&r, t), 10000);
+  LOAD_CACHE(fp_rdc_mont_ise(&r, t), 1000);
+  MEASURE_CYCLES(fp_rdc_mont_ise(&r, t), 10000);
   printf("       #cycle = %lld\n", diff_cycles);
-  
+
 #endif
 
   printf("- reduce once:");
@@ -248,5 +242,5 @@ int main()
   test_fp();
   test_curve();
   test_csidh();
-  test_action();
+  // test_action();
 }

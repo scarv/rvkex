@@ -23,9 +23,6 @@ void gfp_sub_ise(uint64_t *r, const uint64_t *a, const uint64_t *b);
 #define gfp_mul64       gfp_mul64_ise
 #define gfp_sub         gfp_sub_ise
 #define gfp_add         gfp_add_ise
-// #define gfp_mul64       gfp_mul64_sw
-// #define gfp_sub         gfp_sub_sw
-// #define gfp_add         gfp_add_sw
 #elif RV64_TYPE1
 #define gfp_mul         gfp_mul_sw
 #define gfp_sqr         gfp_sqr_sw

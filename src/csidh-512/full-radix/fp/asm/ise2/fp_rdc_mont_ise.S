@@ -31,19 +31,18 @@
 #define A5 s6
 #define A6 s7
 #define A7 t3
-#define A_ a5
+#define A_ a4
 
 // temporary value `t`
 #define T0 a4
-#define T1 a5
 
 // Montgomery reduction constant `w = -p^-1 mod 2^64`
-#define W_ s8
+#define W_ a5
 
 // prologue + epilogue 
 
 .macro PROLOGUE
-  addi   sp, sp, -72
+  addi   sp, sp, -64
   sd     s0,  0(sp)
   sd     s1,  8(sp)
   sd     s2, 16(sp)
@@ -52,7 +51,6 @@
   sd     s5, 40(sp)
   sd     s6, 48(sp)
   sd     s7, 56(sp)
-  sd     s8, 64(sp)
   li     W_, 0x66c1301f632e294d
 .endm
 
@@ -65,8 +63,7 @@
   ld     s5, 40(sp)
   ld     s6, 48(sp)
   ld     s7, 56(sp)
-  ld     s8, 64(sp)
-  addi   sp, sp, 72 
+  addi   sp, sp, 64
   ret 
 .endm
 
@@ -107,107 +104,104 @@
 // L != 0, M = 0, H = 0
 // L M H -> T M H
 .macro _ACCU_PRDCT_0 L, M, H, T, A, B 
-  maddlu \T, \A, \B, \L
-  sltu   \L, \T, \L
-  maddhu \M, \A, \B, \L                 // no carry-out
+  maddhu \M, \A, \B, \L
+  maddlu \L, \A, \B, \L
 .endm
 
 // L != 0, M != 0, H = 0
 // L M H -> T M H
 .macro _ACCU_PRDCT_1 L, M, H, T, A, B 
-  maddlu \T, \A, \B, \L
-  sltu   \L, \T, \L
-  maddhu \L, \A, \B, \L                 // no carry-out
-  add    \M, \M, \L
-  sltu   \H, \M, \L
+  maddhu \T, \A, \B, \L
+  maddlu \L, \A, \B, \L
+  add    \M, \M, \T
+  sltu   \H, \M, \T
 .endm
 
 // L != 0, M != 0, H != 0
 // L M H -> T M H 
 .macro _ACCU_PRDCT_2 L, M, H, T, A, B 
-  maddlu \T, \A, \B, \L
-  sltu   \L, \T, \L
-  maddhu \L, \A, \B, \L                 // no carry-out
-  add    \M, \M, \L
-  sltu   \L, \M, \L
-  add    \H, \H, \L
+  maddhu \T, \A, \B, \L
+  maddlu \L, \A, \B, \L
+  add    \M, \M, \T
+  sltu   \T, \M, \T
+  add    \H, \H, \T
 .endm
 
 .macro COMPUTE_A0
-  mv     T0, A0
-  mul    A0, T0, W_ 
-  _ACCU_PRDCT_0  T0, Z1, Z2, Z0, A0, P0
+  mv     Z0, A0
+  mul    A0, Z0, W_ 
+  _ACCU_PRDCT_0  Z0, Z1, Z2, T0, A0, P0
 .endm
 
 .macro COMPUTE_A1
   add    Z1, Z1, A1
   sltu   Z2, Z1, A1
   _ACCU_PRDCT_1  Z1, Z2, Z0, T0, A0, P1
-  mul    A1, T0, W_
-  _ACCU_PRDCT_2  T0, Z2, Z0, Z1, A1, P0
+  mul    A1, Z1, W_
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A1, P0
 .endm
 
 .macro COMPUTE_A2
   _ACCU_OPERAND  Z2, Z0, Z1, A2
-  _ACCU_PRDCT_2  Z2, Z0, Z1, T1, A0, P2
-  _ACCU_PRDCT_2  T1, Z0, Z1, T0, A1, P1
-  mul    A2, T0, W_
-  _ACCU_PRDCT_2  T0, Z0, Z1, Z2, A2, P0
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A0, P2
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A1, P1
+  mul    A2, Z2, W_
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A2, P0
 .endm
 
 .macro COMPUTE_A3
   _ACCU_OPERAND  Z0, Z1, Z2, A3
   _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A0, P3
-  _ACCU_PRDCT_2  T0, Z1, Z2, Z0, A1, P2
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A1, P2
   _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A2, P1
-  mul    A3, T0, W_
-  _ACCU_PRDCT_2  T0, Z1, Z2, Z0, A3, P0  
+  mul    A3, Z0, W_
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A3, P0  
 .endm
 
 .macro COMPUTE_A4
   _ACCU_OPERAND  Z1, Z2, Z0, A4
-  _ACCU_PRDCT_2  Z1, Z2, Z0, T1, A0, P4
-  _ACCU_PRDCT_2  T1, Z2, Z0, T0, A1, P3
-  _ACCU_PRDCT_2  T0, Z2, Z0, Z1, A2, P2
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A0, P4
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A1, P3
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A2, P2
   _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A3, P1
-  mul    A4, T0, W_
-  _ACCU_PRDCT_2  T0, Z2, Z0, Z1, A4, P0
+  mul    A4, Z1, W_
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A4, P0
 .endm
 
 .macro COMPUTE_A5
   _ACCU_OPERAND  Z2, Z0, Z1, A5
   _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A0, P5
-  _ACCU_PRDCT_2  T0, Z0, Z1, Z2, A1, P4
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A1, P4
   _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A2, P3
-  _ACCU_PRDCT_2  T0, Z0, Z1, Z2, A3, P2
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A3, P2
   _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A4, P1
-  mul    A5, T0, W_
-  _ACCU_PRDCT_2  T0, Z0, Z1, Z2, A5, P0
+  mul    A5, Z2, W_
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A5, P0
 .endm
 
 .macro COMPUTE_A6
   _ACCU_OPERAND  Z0, Z1, Z2, A6
-  _ACCU_PRDCT_2  Z0, Z1, Z2, T1, A0, P6
-  _ACCU_PRDCT_2  T1, Z1, Z2, T0, A1, P5
-  _ACCU_PRDCT_2  T0, Z1, Z2, Z0, A2, P4
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A0, P6
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A1, P5
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A2, P4
   _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A3, P3
-  _ACCU_PRDCT_2  T0, Z1, Z2, Z0, A4, P2
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A4, P2
   _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A5, P1
-  mul    A6, T0, W_
-  _ACCU_PRDCT_2  T0, Z1, Z2, Z0, A6, P0
+  mul    A6, Z0, W_
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A6, P0
 .endm
 
 .macro COMPUTE_A7
   _ACCU_OPERAND  Z1, Z2, Z0, A7
   _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A0, P7
-  _ACCU_PRDCT_2  T0, Z2, Z0, Z1, A1, P6
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A1, P6
   _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A2, P5
-  _ACCU_PRDCT_2  T0, Z2, Z0, Z1, A3, P4
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A3, P4
   _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A4, P3
-  _ACCU_PRDCT_2  T0, Z2, Z0, Z1, A5, P2
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A5, P2
   _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A6, P1
-  mul    A7, T0, W_
-  _ACCU_PRDCT_2  T0, Z2, Z0, Z1, A7, P0
+  mul    A7, Z1, W_
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A7, P0
 .endm
 
 // second loop of Montgomery reduction (based on product-scanning) 
@@ -215,13 +209,13 @@
 .macro COMPUTE_R0 
   ld     A_, 64(a1)
   _ACCU_OPERAND  Z2, Z0, Z1, A_
-  _ACCU_PRDCT_2  Z2, Z0, Z1, T1, A1, P7
-  _ACCU_PRDCT_2  T1, Z0, Z1, T0, A2, P6
-  _ACCU_PRDCT_2  T0, Z0, Z1, Z2, A3, P5
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A1, P7
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A2, P6
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A3, P5
   _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A4, P4
-  _ACCU_PRDCT_2  T0, Z0, Z1, Z2, A5, P3
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A5, P3
   _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A6, P2
-  _ACCU_PRDCT_2  T0, Z0, Z1, Z2, A7, P1
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A7, P1
   sd     Z2,  0(a0)
 .endm
 
@@ -229,22 +223,22 @@
   ld     A_, 72(a1)
   _ACCU_OPERAND  Z0, Z1, Z2, A_
   _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A2, P7
-  _ACCU_PRDCT_2  T0, Z1, Z2, Z0, A3, P6
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A3, P6
   _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A4, P5
-  _ACCU_PRDCT_2  T0, Z1, Z2, Z0, A5, P4
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A5, P4
   _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A6, P3
-  _ACCU_PRDCT_2  T0, Z1, Z2, Z0, A7, P2
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A7, P2
   sd     Z0,  8(a0) 
 .endm
 
 .macro COMPUTE_R2
   ld     A_, 80(a1)
   _ACCU_OPERAND  Z1, Z2, Z0, A_
-  _ACCU_PRDCT_2  Z1, Z2, Z0, T1, A3, P7
-  _ACCU_PRDCT_2  T1, Z2, Z0, T0, A4, P6
-  _ACCU_PRDCT_2  T0, Z2, Z0, Z1, A5, P5
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A3, P7
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A4, P6
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A5, P5
   _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A6, P4
-  _ACCU_PRDCT_2  T0, Z2, Z0, Z1, A7, P3
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A7, P3
   sd     Z1, 16(a0) 
 .endm
 
@@ -252,18 +246,18 @@
   ld     A_, 88(a1)
   _ACCU_OPERAND  Z2, Z0, Z1, A_
   _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A4, P7
-  _ACCU_PRDCT_2  T0, Z0, Z1, Z2, A5, P6
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A5, P6
   _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A6, P5
-  _ACCU_PRDCT_2  T0, Z0, Z1, Z2, A7, P4
+  _ACCU_PRDCT_2  Z2, Z0, Z1, T0, A7, P4
   sd     Z2, 24(a0) 
 .endm
 
 .macro COMPUTE_R4
   ld     A_, 96(a1)
   _ACCU_OPERAND  Z0, Z1, Z2, A_
-  _ACCU_PRDCT_2  Z0, Z1, Z2, T1, A5, P7
-  _ACCU_PRDCT_2  T1, Z1, Z2, T0, A6, P6
-  _ACCU_PRDCT_2  T0, Z1, Z2, Z0, A7, P5
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A5, P7
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A6, P6
+  _ACCU_PRDCT_2  Z0, Z1, Z2, T0, A7, P5
   sd     Z0, 32(a0) 
 .endm
 
@@ -271,7 +265,7 @@
   ld     A_,104(a1)
   _ACCU_OPERAND  Z1, Z2, Z0, A_
   _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A6, P7
-  _ACCU_PRDCT_2  T0, Z2, Z0, Z1, A7, P6
+  _ACCU_PRDCT_2  Z1, Z2, Z0, T0, A7, P6
   sd     Z1, 40(a0) 
 .endm
 
@@ -280,11 +274,10 @@
   add    Z2, Z2, A_
   sltu   T0, Z2, A_
   add    Z0, Z0, T0
-  maddlu T0, A7, P7, Z2
-  sltu   Z2, T0, Z2
-  maddhu Z2, A7, P7, Z2
-  add    Z0, Z0, Z2
-  sd     T0, 48(a0)
+  maddhu T0, A7, P7, Z2
+  maddlu Z2, A7, P7, Z2
+  add    Z0, Z0, T0
+  sd     Z2, 48(a0)
 .endm
 
 .macro COMPUTE_R7 

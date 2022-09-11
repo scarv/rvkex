@@ -49,9 +49,9 @@
 | class               | instruction           | format   | f7                  | f3      | custom      |
 +=====================+=======================+==========+=====================+=========+=============+
 |                     |                       |          |                     |         |             |
-| RV64_RDCD_TYPE2     | csidh.sub.P512.57     | 1R+I->1R | 000 : imm4          | 7 = 111 | 0 = 0001011 |
-| RV64_RDCD_TYPE2     | csidh.and.p512.add57  | 2R+I->1R | 001 : imm4          | 7 = 111 | 0 = 0001011 |
-| RV64_RDCD_TYPE2     | csidh.sub.P512.add57  | 2R+I->1R | 010 : imm4          | 7 = 111 | 0 = 0001011 |
+| RV64_RDCD_TYPE3     | csidh.sub.P512.57     | 1R+I->1R | 000 : imm4          | 7 = 111 | 0 = 0001011 |
+| RV64_RDCD_TYPE3     | csidh.and.p512.add57  | 2R+I->1R | 001 : imm4          | 7 = 111 | 0 = 0001011 |
+| RV64_RDCD_TYPE3     | csidh.sub.P512.add57  | 2R+I->1R | 010 : imm4          | 7 = 111 | 0 = 0001011 |
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
@@ -72,6 +72,7 @@
 |                     |                       |          |                     |         |             |
 | RV64_FULL_TYPE2     | maddlu                | 3R  ->1R | rs3 : 00            | 7 = 111 | 3 = 1111011 |
 | RV64_FULL_TYPE2     | maddhu                | 3R  ->1R | rs3 : 01            | 7 = 111 | 3 = 1111011 |
+| RV64_FULL_TYPE2     | cadd                  | 3R  ->1R | rs3 : 10            | 7 = 111 | 3 = 1111011 |
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
@@ -82,21 +83,25 @@
 .macro maddhu                rd, rs1, rs2, rs3            //                  => rrrr r01r rrrr rrrr r111 rrrr r111 1011
 .insn r4 CUSTOM_3, 7,      ( 1* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_MADDHU 0x0200707B
 .endm                                                     //                  => #define  MASK_MADDHU 0x0600707F
+.macro cadd                  rd, rs1, rs2, rs3            //                  => rrrr r10r rrrr rrrr r111 rrrr r111 1011
+.insn r4 CUSTOM_3, 7,      ( 2* 1), \rd, \rs1, \rs2, \rs3 //                  => #define MATCH_CADD 0x0400707B
+.endm                                                     //                  => #define  MASK_CADD 0x0600707F
+
 
 +=====================+=======================+==========+=====================+=========+=============+
 | class               | instruction           | format   | f7                  | f3      | custom      |
 +=====================+=======================+==========+=====================+=========+=============+
 |                     |                       |          |                     |         |             |
-| RV64_FULL_TYPE2     | csidh.sub.p512        | 1R+I->1R | imm3 : 00 : 10      | 7 = 111 | 3 = 1111011 |
-| RV64_FULL_TYPE2     | csidh.and.p512.add    | 2R+I->1R | imm3 : 01 : 10      | 7 = 111 | 3 = 1111011 |
+| RV64_FULL_TYPE3     | csidh.sub.p512        | 1R+I->1R | imm3 : 00 : 11      | 7 = 111 | 3 = 1111011 |
+| RV64_FULL_TYPE3     | csidh.and.p512.add    | 2R+I->1R | imm3 : 01 : 11      | 7 = 111 | 3 = 1111011 |
 |                     |                       |          |                     |         |             |
 +=====================+=======================+==========+=====================+=========+=============+
 
 // modulus-related addition/subtraction for radix-2^64 CSIDH-512
 
-.macro csidh.sub.p512        rd, rs1,      imm            //                  => iii0 010r rrrr rrrr r111 rrrr r111 1011
-.insn r  CUSTOM_3, 7, 16*\imm+( 2* 1), \rd, \rs1, x0      //                  => #define MATCH_CSIDH_SUB_P512 0x0400707B
+.macro csidh.sub.p512        rd, rs1,      imm            //                  => iii0 011r rrrr rrrr r111 rrrr r111 1011
+.insn r  CUSTOM_3, 7, 16*\imm+( 3* 1), \rd, \rs1, x0      //                  => #define MATCH_CSIDH_SUB_P512 0x0600707B
 .endm                                                     //                  => #define  MASK_CSIDH_SUB_P512 0x1E00707F
-.macro csidh.and.p512.add    rd, rs1, rs2, imm            //                  => iii0 110r rrrr rrrr r111 rrrr r111 1011
-.insn r  CUSTOM_3, 7, 16*\imm+( 6* 1), \rd, \rs1, \rs2    //                  => #define MATCH_CSIDH_AND_P512_ADD 0x0C00707B
+.macro csidh.and.p512.add    rd, rs1, rs2, imm            //                  => iii0 111r rrrr rrrr r111 rrrr r111 1011
+.insn r  CUSTOM_3, 7, 16*\imm+( 7* 1), \rd, \rs1, \rs2    //                  => #define MATCH_CSIDH_AND_P512_ADD 0x0E00707B
 .endm                                                     //                  => #define  MASK_CSIDH_AND_P512_ADD 0x1E00707F

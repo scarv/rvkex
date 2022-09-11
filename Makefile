@@ -16,6 +16,7 @@ export RADIX    ?= reduced
 
 export TYPE     ?= RV64_TYPE1
 export MODE     ?= 
+export CADD     ?=
 # ------------------------------------------------------------------------------
 
 sw-toolchain-build :

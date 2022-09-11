@@ -72,14 +72,12 @@
 // integer multiplication (based on product-scanning)
 
 // L != 0, M = 0, H = 0
-// L M H -> T M H
 .macro _ACCU_AIBJ_0 L, M, H, T, A, B 
   maddhu \M, \A, \B, \L
   maddlu \L, \A, \B, \L
 .endm
 
 // L != 0, M != 0, H = 0
-// L M H -> T M H
 .macro _ACCU_AIBJ_1 L, M, H, T, A, B 
   maddhu \T, \A, \B, \L
   maddlu \L, \A, \B, \L
@@ -88,13 +86,17 @@
 .endm
 
 // L != 0, M != 0, H != 0
-// L M H -> T M H 
 .macro _ACCU_AIBJ_2 L, M, H, T, A, B 
   maddhu \T, \A, \B, \L
   maddlu \L, \A, \B, \L
+#if (DISABLE_CADD)
   add    \M, \M, \T
   sltu   \T, \M, \T
   add    \H, \H, \T
+#else 
+  cadd   \H, \M, \T, \H
+  add    \M, \M, \T
+#endif
 .endm
 
 .macro COMPUTE_R0
@@ -144,7 +146,7 @@
 
 .macro REDUCTION
   li     M0, 38 
-
+#if (DISABLE_CADD)
   maddhu T0, R4, M0, R0
   maddlu R0, R4, M0, R0
   add    R1, R1, T0 
@@ -165,6 +167,26 @@
   maddhu T0, R7, M0, R3
   maddlu R3, R7, M0, R3
   add    R4, T0, T1
+#else
+
+  maddhu T0, R4, M0, R0
+  maddlu R0, R4, M0, R0
+
+  maddhu T1, R5, M0, T0
+  maddlu T0, R5, M0, T0
+  cadd   T1, R1, T0, T1
+  add    R1, R1, T0
+
+  maddhu T0, R6, M0, T1
+  maddlu T1, R6, M0, T1
+  cadd   T0, R2, T1, T0
+  add    R2, R2, T1
+
+  maddhu T1, R7, M0, T0
+  maddlu T0, R7, M0, T0
+  cadd   R4, R3, T0, T1
+  add    R3, R3, T0
+#endif
 .endm
 
 // final reduction 

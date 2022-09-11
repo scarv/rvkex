@@ -13,7 +13,7 @@
 
 ## Implementations 
 
-- We plan to develop 4 types of implementation for each of pre-quantum X25519 [1] and post-quantum CSIDH-512 [2]:
+- We plan to develop 4 types of implementation for each of pre-quantum [X25519](https://cr.yp.to/ecdh.html)  and post-quantum [CSIDH-512](https://csidh.isogeny.org):
   - [x] full-radix    pure-software  x25519
   - [x] full-radix    ISE-assisted   x25519
   - [x] reduced-radix pure-software  x25519
@@ -77,10 +77,17 @@
   - `RV64_TYPE2`: ISE-assisted  ASM implementation using general-use ISE; 
   - `RV64_TYPE3`: ISE-assisted  ASM implementation using general-use ISE *plus* specific-use ISE.
 
+- The optional `cadd` instruction is enabled by default. But you may would like to disable it in the ISE-assisted full-radix implementation, then add `CADD=disable`, e.g.,
+  ```sh
+  make sw-run ALG=x25519    RADIX=full TYPE=RV64_TYPE2 CADD=disable
+  make sw-run ALG=csidh-512 RADIX=full TYPE=RV64_TYPE[2/3] CADD=disable
+  ```
+
 - Enable the debug mode (add `MODE=debug`), e.g.,
   ```sh
   make sw-run ALG=x25519 RADIX=reduced TYPE=RV64_TYPE2 MODE=debug 
   ```
+  
 ### Evaluation with Rocket Chip on FPGA hardware
 
 - Fix paths for the Rocket Chip toolchain, e.g., 
@@ -143,10 +150,3 @@
   ```sh
   ALG="x25519" RADIX=[full/reduced] TYPE=RV64_TYPE[1/2] make fpga-run
   ```
-
-## References and links
-
-[1] https://cr.yp.to/ecdh.html
-
-[2] https://csidh.isogeny.org
-

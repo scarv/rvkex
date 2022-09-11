@@ -22,6 +22,10 @@ ifeq ($(MODE), debug)
 	CCFLAGS += -DDEBUG
 endif
 
+ifeq ($(CADD), disable)
+	CCFLAGS += -DDISABLE_CADD
+endif
+
 all: clean ${OUTPUT} ${DISASM}
 	@${SIM} --isa=${ISA} ${PK} ${OUTPUT}
 

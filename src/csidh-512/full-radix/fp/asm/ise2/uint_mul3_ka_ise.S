@@ -64,14 +64,12 @@
 // R0-R7 = A0-A3 * B0-B3
 
 // L != 0, M = 0, H = 0
-// L M H -> T M H
 .macro _ACCU_AIBJ_0 L, M, H, T, A, B 
   maddhu \M, \A, \B, \L
   maddlu \L, \A, \B, \L
 .endm
 
 // L != 0, M != 0, H = 0
-// L M H -> T M H
 .macro _ACCU_AIBJ_1 L, M, H, T, A, B 
   maddhu \T, \A, \B, \L
   maddlu \L, \A, \B, \L
@@ -80,13 +78,17 @@
 .endm
 
 // L != 0, M != 0, H != 0
-// L M H -> T M H 
 .macro _ACCU_AIBJ_2 L, M, H, T, A, B 
   maddhu \T, \A, \B, \L
   maddlu \L, \A, \B, \L
+#if (DISABLE_CADD)
   add    \M, \M, \T
   sltu   \T, \M, \T
   add    \H, \H, \T
+#else 
+  cadd   \H, \M, \T, \H
+  add    \M, \M, \T
+#endif
 .endm
 
 .macro MUL_4X4_PS R0, R1, R2, R3, R4, R5, R6, R7, A0, A1, A2, A3, B0, B1, B2, B3

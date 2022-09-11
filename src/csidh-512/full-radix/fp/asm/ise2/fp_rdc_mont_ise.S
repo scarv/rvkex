@@ -102,14 +102,12 @@
 .endm
 
 // L != 0, M = 0, H = 0
-// L M H -> T M H
 .macro _ACCU_PRDCT_0 L, M, H, T, A, B 
   maddhu \M, \A, \B, \L
   maddlu \L, \A, \B, \L
 .endm
 
 // L != 0, M != 0, H = 0
-// L M H -> T M H
 .macro _ACCU_PRDCT_1 L, M, H, T, A, B 
   maddhu \T, \A, \B, \L
   maddlu \L, \A, \B, \L
@@ -118,13 +116,17 @@
 .endm
 
 // L != 0, M != 0, H != 0
-// L M H -> T M H 
 .macro _ACCU_PRDCT_2 L, M, H, T, A, B 
   maddhu \T, \A, \B, \L
   maddlu \L, \A, \B, \L
+#if (DISABLE_CADD)
   add    \M, \M, \T
   sltu   \T, \M, \T
   add    \H, \H, \T
+#else 
+  cadd   \H, \M, \T, \H
+  add    \M, \M, \T
+#endif
 .endm
 
 .macro COMPUTE_A0
@@ -271,9 +273,14 @@
 
 .macro COMPUTE_R6
   ld     A_,112(a1)
+#if (DISABLE_CADD)
   add    Z2, Z2, A_
   sltu   T0, Z2, A_
   add    Z0, Z0, T0
+#else 
+  cadd   Z0, Z2, A_, Z0
+  add    Z2, Z2, A_
+#endif 
   maddhu T0, A7, P7, Z2
   maddlu Z2, A7, P7, Z2
   add    Z0, Z0, T0

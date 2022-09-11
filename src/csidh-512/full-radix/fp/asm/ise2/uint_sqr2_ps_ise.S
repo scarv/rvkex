@@ -63,7 +63,6 @@
 // integer squaring (based on product-scanning)
 
 // L != 0, M != 0, H = 0
-// L M H -> T M H
 .macro _ACCU_AIBJ_1 L, M, H, T, A, B 
   maddhu \T, \A, \B, \L
   maddlu \L, \A, \B, \L
@@ -72,13 +71,17 @@
 .endm
 
 // L != 0, M != 0, H != 0
-// L M H -> T M H 
 .macro _ACCU_AIBJ_2 L, M, H, T, A, B 
   maddhu \T, \A, \B, \L
   maddlu \L, \A, \B, \L
+#if (DISABLE_CADD)
   add    \M, \M, \T
   sltu   \T, \M, \T
   add    \H, \H, \T
+#else 
+  cadd   \H, \M, \T, \H
+  add    \M, \M, \T
+#endif
 .endm
 
 // `z` = `z` + `y` + `y` (Y2 = 0)

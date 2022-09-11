@@ -26,6 +26,10 @@ ifeq ($(TYPE), RV64_TYPE3)
 	SRCS += fp/asm/sw/*.S fp/fp_asm.c fp/asm/ise2/*.S fp/asm/ise3/*.S
 endif
 
+ifeq ($(CADD), disable)
+	CCFLAGS += -DDISABLE_CADD
+endif
+
 all: clean ${OUTPUT} ${DISASM}
 	@${SIM} --isa=${ISA} ${PK} ${OUTPUT}
 

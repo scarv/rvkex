@@ -192,6 +192,15 @@
     r       <- (((x * y  + z) >> 64) & m) 
     GPR[rd] <- r
   }
+
+  cadd     rd, rs1, rs2, rs3 {
+    x       <- GPR[rs1]
+    y       <- GPR[rs2]
+    z       <- GPR[rs3]
+    r       <- ((x + y) >> 64) + z
+    GPR[rd] <- r
+  }  
+
 ```
 
 - `RV64_FULL_TYPE3`: base ISA + general-use ISE shown above + specific-use ISE shown below. 

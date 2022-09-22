@@ -282,9 +282,13 @@ void test_ecdh()
 int main()
 {
 
+#if ISE_TEST
+  test_ise();
+#else
   test_gfp_arith();
   test_curve_arith();
   test_ecdh();
+#endif
 
   return 0;
 }

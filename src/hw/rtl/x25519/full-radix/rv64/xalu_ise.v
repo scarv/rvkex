@@ -6,7 +6,7 @@ module xalu_ise (
     ise_imm,   
     ise_in1,   
     ise_in2,  
-    ise_in3,
+//    ise_in3,
     ise_val,
     ise_oval,         
     ise_out    );
@@ -15,12 +15,12 @@ input  [ 5:0]   ise_fn;
 input  [ 6:0]   ise_imm;
 input  [63:0]   ise_in1;
 input  [63:0]   ise_in2;
-input  [63:0]   ise_in3;
+//input  [63:0]   ise_in3;
 input           ise_val;
 output          ise_oval;
 output [63:0]   ise_out; 
 
-parameter [1:0] ISE_V  = 2'b11;
+parameter [1:0] ISE_V  = 2'b01;
 
 localparam [1:0] CUSTOM_0 = 2'b00;
 localparam [1:0] CUSTOM_1 = 2'b01;
@@ -43,7 +43,7 @@ assign x25519_ise_sel  = op_maddlu || op_maddhu;
 x25519_ise x25519_ise_ins2(
     .rs1(      ise_in1      ),
     .rs2(      ise_in2      ),
-    .rs3(      ise_in3      ),
+//    .rs3(      ise_in3      ),
     .rd (      x25519_ise_rd ),
 
     .op_maddlu( op_maddlu   ),

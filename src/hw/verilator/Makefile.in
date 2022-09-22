@@ -7,7 +7,7 @@
 #--------------------------------------------------------------------
 # Sources
 #--------------------------------------------------------------------
-include ${REPO_HOME}/src/hw/rtl/$(ALG)/$(ARCH)/Makefile.in
+include ${REPO_HOME}/src/hw/rtl/$(ALG)/$(RADIX)-radix/$(ARCH)/Makefile.in
 include ${REPO_HOME}/src/hw/rtl/rvzbk/$(ARCH)/Makefile.in
 
 #--------------------------------------------------------------------
@@ -75,7 +75,7 @@ EMU_GCC_FLAGS  = -march=$(ARCH)imac -mabi=$(MABI)  -DPREALLOCATE=1 -mcmodel=meda
 EMU_GCC_FLAGS += -fno-builtin-printf -static -nostartfiles -T$(EMU_HAL)/test.ld
 GCC_PREFIX = ${RISCV_ROCKET}/bin/riscv64-unknown-elf
 
-export EMU_TARGET = ${REPO_HOME}/work/emulate/${ALG}/${ARCH}_${ISE}
+export EMU_TARGET = ${REPO_HOME}/work/emulate/${ALG}-$(RADIX)/${ARCH}_${ISE}
 # -----------------------------------------------------------------------------
 
 ${EMU_TARGET}.elf : ${EMU_SOURCES} ${EMU_HEADERS}

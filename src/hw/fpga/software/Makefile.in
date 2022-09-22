@@ -37,7 +37,7 @@ FPGA_GCC_FLAGS += -fno-builtin-printf -static -nostartfiles -T$(SOC_HAL)/lscript
 
 # pass-through environment variable as macros for use in source code
 
-FPGA_GCC_FLAGS += -DALG="\"${ALG}\"" ${FPGA_SWCONF} -DARCH="\"${ARCH}\"" -DIMP="\"${IMP}\"" -D${ALG}_alg -D${TYPE} ${CCFLAGS}
+FPGA_GCC_FLAGS += -DALG="\"${ALG}\"" ${FPGA_SWCONF} -DARCH="\"${ARCH}\"" -DIMP="\"${IMP}\"" -D${TYPE} ${CCFLAGS}
 
 
 FPGA_TARGET   = ${REPO_HOME}/work/fpga/${ALG}-${RADIX}/fpga_${ARCH}_${ISE}.elf

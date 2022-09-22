@@ -12,3 +12,7 @@ endif
 ifeq ($(MODE), ise_test)
 	CCFLAGS += -DISE_TEST
 endif
+
+ifeq ($(CADD), disable)
+	CCFLAGS += -DDISABLE_CADD
+endif

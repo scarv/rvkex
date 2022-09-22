@@ -41,7 +41,6 @@ xalu_verilog: $(fpga-rocketchip-xalu-verilog) $(FPGA)/soc/$(SOC)/system_top_wrap
 	cp -f $(rocketchip_xalu_ram_src)                $(FPGA_BUILD)/$(VIVADO_PROJECT)/rtl_sources/memcore.v
 	cp -f $(rocketchip_support_src)                 $(FPGA_BUILD)/$(VIVADO_PROJECT)/rtl_sources/
 	cp -f $(zbk_rtl)                                $(FPGA_BUILD)/$(VIVADO_PROJECT)/rtl_sources/
-	cp -f $(rtl64_xalu_src)                         $(FPGA_BUILD)/$(VIVADO_PROJECT)/rtl_sources/
 	cp -f $(rtl64_ise_src)                          $(FPGA_BUILD)/$(VIVADO_PROJECT)/rtl_sources/
 
 

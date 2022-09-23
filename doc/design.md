@@ -7,17 +7,17 @@
 | Mnemonic            | Type                         | Meaning                                                          |
 | :------------------ | :--------------------------- | :----------------------------------------------------------------|
 | `RV64_RDCD_TYPE1`   | pure-software, reduced-radix | RISC-V base ISA                                                  |
-| `RV64_RDCD_TYPE2`   | ISE-assisted,  reduced-radix | RISC-V base ISA + general-use ISE                                |
-| `RV64_RDCD_TYPE3`   | ISE-assisted,  reduced-radix | RISC-V base ISA + general-use ISE + specific-use ISE             |
+| `RV64_RDCD_TYPE2`   | ISE-assisted,  reduced-radix | RISC-V base ISA + general-purpose ISE                                |
+| `RV64_RDCD_TYPE3`   | ISE-assisted,  reduced-radix | RISC-V base ISA + general-purpose ISE + specific-purpose ISE             |
 | `RV64_FULL_TYPE1`   | pure-software, full-radix    | RISC-V base ISA                                                  |
-| `RV64_FULL_TYPE2`   | ISE-assisted,  full-radix    | RISC-V base ISA + general-use ISE                                |
-| `RV64_FULL_TYPE3`   | ISE-assisted,  full-radix    | RISC-V base ISA + general-use ISE + specific-use ISE             |
+| `RV64_FULL_TYPE2`   | ISE-assisted,  full-radix    | RISC-V base ISA + general-purpose ISE                                |
+| `RV64_FULL_TYPE3`   | ISE-assisted,  full-radix    | RISC-V base ISA + general-purpose ISE + specific-purpose ISE             |
 
 ## Details 
 
 - `RV64_RDCD_TYPE1` and `RV64_FULL_TYPE1`: base ISA. 
 
-- `RV64_RDCD_TYPE2`: RISC-V base ISA + general-use ISE shown below. 
+- `RV64_RDCD_TYPE2`: RISC-V base ISA + general-purpose ISE shown below. 
 
 ```
   sraiadd  rd, rs1, rs2, imm {
@@ -64,7 +64,7 @@
   }
 ```
 
-- `RV64_RDCD_TYPE3`: base ISA + general-use ISE shown above + specific-use ISE shown below. 
+- `RV64_RDCD_TYPE3`: base ISA + general-purpose ISE shown above + specific-purpose ISE shown below. 
 
 ```
   csidh.sub.p512.57    rd, rs1,      imm {
@@ -172,7 +172,7 @@
   }
 ```
 
-- `RV64_FULL_TYPE2`: base ISA + general-use ISE shown below. 
+- `RV64_FULL_TYPE2`: base ISA + general-purpose ISE shown below. 
 
 ```
   maddlu   rd, rs1, rs2, rs3 {
@@ -203,7 +203,7 @@
 
 ```
 
-- `RV64_FULL_TYPE3`: base ISA + general-use ISE shown above + specific-use ISE shown below. 
+- `RV64_FULL_TYPE3`: base ISA + general-purpose ISE shown above + specific-purpose ISE shown below. 
 
 ```
   csidh.sub.p512       rd, rs1,      imm {

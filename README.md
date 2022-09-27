@@ -23,7 +23,7 @@
   - [x] reduced-radix pure-software  csidh-512
   - [x] reduced-radix ISE-assisted   csidh-512
 
-  Furthermore, we plan to design general-use ISE (for large integer arithmetic) and specific-use ISE (for CSIDH-512) then discuss different trade-offs. 
+  Furthermore, we plan to design general-purpose ISE (for large integer arithmetic) and specific-purpose ISE (for CSIDH-512) then discuss different trade-offs. 
 
 - Since CSIDH is costly, it makes more sense to target more computing-powerful `rv64` instead of `rv32` in this project. 
 
@@ -74,8 +74,8 @@
   ```
   - `RV64_TYPE0`: reference       C implementation; 
   - `RV64_TYPE1`: pure-software ASM implementation; 
-  - `RV64_TYPE2`: ISE-assisted  ASM implementation using general-use ISE; 
-  - `RV64_TYPE3`: ISE-assisted  ASM implementation using general-use ISE *plus* specific-use ISE.
+  - `RV64_TYPE2`: ISE-assisted  ASM implementation using general-purpose ISE; 
+  - `RV64_TYPE3`: ISE-assisted  ASM implementation using general-purpose ISE *plus* specific-purpose ISE.
 
 - The optional `cadd` instruction is enabled by default. But you may would like to disable it in the ISE-assisted full-radix implementation, then add `CADD=disable`, e.g.,
   ```sh

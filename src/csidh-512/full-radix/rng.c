@@ -15,7 +15,7 @@
 //         if (0 >= (n = read(fd, (char *) x + i, l - i)))
 //             exit(2);
 // }
-
+/*
 #if defined( DRIVER_RANDOM )
 FILE* rand_bytes_prg = NULL;
 
@@ -49,13 +49,14 @@ void rand_bytes(           uint8_t* x, int n ) {
   }
 }
 #endif
+*/
 
 #if defined( DRIVER_RANDOM )
 void randombytes(void *x, size_t l)
 {
   rand_bytes(x, l);
 }
-<<<<<<< HEAD
+
 #else
 void rand_bytes_init() {
   srand( 0 );
@@ -70,5 +71,4 @@ void randombytes(void * x, size_t l ) {
 }
 
 #endif
-=======
->>>>>>> 003070752b495ed49c0345f9bb8860ffbdc96529
+

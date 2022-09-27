@@ -1,0 +1,30 @@
+
+SRCS  = fp/fp_c.c fp/uint_c.c mont.c constants.c rng.c csidh.c main.c rdtsc.c 
+
+CCFLAGS += -lm -lgcc -ffast-math -fno-common 
+
+ifeq ($(TYPE), RV64_TYPE1)
+	SRCS += fp/asm/sw/*.S fp/fp_asm.c fp/asm/ise2/*.S fp/asm/ise3/*.S
+endif
+
+ifeq ($(TYPE), RV64_TYPE2)
+	SRCS += fp/asm/sw/*.S fp/fp_asm.c fp/asm/ise2/*.S fp/asm/ise3/*.S
+endif
+
+ifeq ($(TYPE), RV64_TYPE3)
+	SRCS += fp/asm/sw/*.S fp/fp_asm.c fp/asm/ise2/*.S fp/asm/ise3/*.S
+endif
+
+ifeq ($(MODE), debug)
+	CCFLAGS += -DDEBUG
+endif
+
+ifeq ($(MODE), ise_test)
+	CCFLAGS += -DISE_TEST
+endif
+
+ifeq ($(CADD), disable)
+	CCFLAGS += -DDISABLE_CADD
+endif
+
+

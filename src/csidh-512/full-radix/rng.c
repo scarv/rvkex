@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#if defined( DRIVER_RANDOM )
 void randombytes(void *x, size_t l)
 {
     static int fd = -1;
@@ -15,4 +16,17 @@ void randombytes(void *x, size_t l)
         if (0 >= (n = read(fd, (char *) x + i, l - i)))
             exit(2);
 }
+#else
+void rand_bytes_init() {
+  srand( 0 );
+}
 
+void randombytes(void * x, size_t l ) {
+  char * t;
+  t = (char *) x;
+  for( int i = 0; i < l; i++ ) {
+    t[i] = rand() & 0xFF;
+  }
+}
+
+#endif

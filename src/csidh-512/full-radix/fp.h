@@ -109,6 +109,7 @@ extern void fp_sub3_ise(fp *r, const fp *a, const fp *b);
 #define uint_sqr2_asm     uint_sqr2_ps_sw
 // reduce_once: `cswap-based`
 #define reduce_once_asm   reduce_once_cs_sw
+
 #elif (RV64_TYPE2)
 #define fp_add3_asm       fp_add3_sw
 #define fp_sub3_asm       fp_sub3_sw
@@ -119,6 +120,7 @@ extern void fp_sub3_ise(fp *r, const fp *a, const fp *b);
 #define uint_sqr2_asm     uint_sqr2_ps_ise
 // reduce_once: `cswap-based`
 #define reduce_once_asm   reduce_once_cs_sw
+
 #elif (RV64_TYPE3)
 #define fp_add3_asm       fp_add3_ise
 #define fp_sub3_asm       fp_sub3_ise

@@ -4,7 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
-#include <assert.h>
+//#include <assert.h>
 
 #include "fp.h"
 #include "mont.h"
@@ -24,7 +24,7 @@
 void uint_print(fp const *x)
 {
     for (size_t i = 8*LIMBS-1; i < 8*LIMBS; --i)
-        printf("%02hhx", i[(unsigned char *) x->c]);
+        printf("%02x", i[(unsigned char *) x->c]);
 }
 
 void priv_print(private_key const *k)
@@ -179,6 +179,8 @@ void test_csidh()
     uint64_t start_cycles, end_cycles, diff_cycles;
     int i;
 
+    rand_bytes_init();
+
     bool ret; (void) ret;
 
     private_key priv_alice, priv_bob;
@@ -199,28 +201,28 @@ void test_csidh()
 
 
     MEASURE_CYCLES(ret = csidh(&pub_alice, &base, &priv_alice), 1);
-    assert(ret);
+    //assert(ret);
     printf("Alice's public key    (%lld cc):\n  ", diff_cycles);
     uint_print(&pub_alice.A);
     printf("\n\n");
 
 
     MEASURE_CYCLES(ret = csidh(&pub_bob, &base, &priv_bob), 1);
-    assert(ret);
+    //assert(ret);
     printf("Bob's public key      (%lld cc):\n  ", diff_cycles);
     uint_print(&pub_bob.A);
     printf("\n\n");
 
 
     MEASURE_CYCLES(ret = csidh(&shared_alice, &pub_bob, &priv_alice), 1);
-    assert(ret);
+   // assert(ret);
     printf("Alice's shared secret (%lld cc):\n  ", diff_cycles);
     uint_print(&shared_alice.A);
     printf("\n\n");
 
 
     MEASURE_CYCLES(ret = csidh(&shared_bob, &pub_alice, &priv_bob), 1);
-    assert(ret);
+    //assert(ret);
     printf("Bob's shared secret   (%lld cc):\n  ", diff_cycles);
     uint_print(&shared_bob.A);
     printf("\n\n");

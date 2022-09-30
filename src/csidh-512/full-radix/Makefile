@@ -1,5 +1,6 @@
 
-source ${REPO_HOME}/src/sw-toolchain/share.sh
+export SPIKE_FULL_INSTALL=${REPO_HOME}/work/sw-toolchain/spike_full
+export PK_INSTALL=${REPO_HOME}/work/sw-toolchain/pk
 
 CC     =${RISCV}/bin/riscv64-unknown-elf-gcc
 OBJDUMP=${RISCV}/bin/riscv64-unknown-elf-objdump

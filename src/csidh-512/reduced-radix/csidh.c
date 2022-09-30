@@ -32,7 +32,7 @@ void csidh_private(private_key *priv)
 
 static bool validate_rec(bool *is_supersingular, fp *order, uint8_t *seen, proj *P, proj const *A, size_t lower, size_t upper)
 {
-  assert(lower < upper);
+  //assert(lower < upper);
 
   if (upper - lower == 1) {
 
@@ -115,7 +115,6 @@ __attribute__((visibility("default")))
 bool csidh_core(public_key *out, public_key const *in, private_key const *priv)
 {
   if (!validate_basic(in)){
-    printf("csidh_core !validate_basic\n"); 
     goto invalid;
   }
 
@@ -158,7 +157,7 @@ bool csidh_core(public_key *out, public_key const *in, private_key const *priv)
         if (~batch[i/8] & 1<<i%8)
           uint_mul3_64(&k, &k, primes[i]);
 
-    assert(is_affine(&A));
+    //assert(is_affine(&A));
 
     proj P = {elligator_rand, fp_1};
     if (is_twist(&P.x, &A.x) != twist) {
@@ -192,8 +191,7 @@ bool csidh_core(public_key *out, public_key const *in, private_key const *priv)
       xISOG(&A, &P, &K, primes[i], want);
 
       if (want) {
-        if (!is_infinity(&K)) {printf("csidh_core !is_infinity\n"); goto invalid; 
-        }
+        if (!is_infinity(&K)) goto invalid;
         uint_mul3_64(&order, &order, primes[i]);
         seen[i/8] |= 1 << i%8;
       }
@@ -202,7 +200,7 @@ bool csidh_core(public_key *out, public_key const *in, private_key const *priv)
 
     }
 
-    assert(!is_infinity(&A));
+    //assert(!is_infinity(&A));
 
     fp_random(&elligator_rand);
     if (!fp_eq(&A.x, &fp_0)) {
@@ -236,15 +234,13 @@ bool csidh_core(public_key *out, public_key const *in, private_key const *priv)
     } while (!validate_rec(&is_supersingular, &order, seen, &P, &A, 0, NUM_PRIMES));
 
     if (!is_supersingular) {
-      printf("csidh_core !is_supersingular\n");
 invalid:
-      printf("csidh_core invalid\n");
       randombytes(&out->A, sizeof(out->A));
       return false;
     }
   }
 
-  assert(is_affine(&A));
+  //assert(is_affine(&A));
   fp_dec(&out->A, &A.x);
 
   return true;
@@ -257,7 +253,6 @@ bool csidh(public_key_u64 *out, public_key_u64 const *in, private_key const *pri
   public_key in57, out57;
   mpi_conv_64to57(in57.A.c, in->A.c, LIMBS, 8);
   ret = csidh_core(&out57, &in57, priv);
-  printf("csidh_core ret %d:\n",ret);
   mpi_conv_57to64(out->A.c, out57.A.c, 8, LIMBS);
 
   return ret; 

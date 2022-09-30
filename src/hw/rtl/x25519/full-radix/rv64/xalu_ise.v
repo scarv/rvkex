@@ -43,7 +43,6 @@ assign x25519_ise_sel  = op_maddlu || op_maddhu;
 x25519_ise x25519_ise_ins2(
     .rs1(      ise_in1      ),
     .rs2(      ise_in2      ),
-//    .rs3(      ise_in3      ),
     .rd (      x25519_ise_rd ),
 
     .op_maddlu( op_maddlu   ),

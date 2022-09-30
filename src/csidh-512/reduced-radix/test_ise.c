@@ -22,8 +22,8 @@ uint64_t gold_maddlu(uint64_t a, uint64_t b, uint64_t c){
     return r;
 }
 
-uint64_t gold_sraiadd(uint64_t a, uint64_t b){
-    uint64_t r = a + (b>>57);
+int64_t gold_sraiadd(int64_t a, int64_t b){
+    int64_t r = a + (b>>57);
     return r;
 }
 
@@ -52,7 +52,7 @@ uint64_t gold_sub(   uint64_t a,          uint8_t imm){
 
 uint64_t gold_subadd(uint64_t a, uint64_t b, uint8_t imm){
     imm &= 0xF;
-    uint64_t r;
+    uint64_t r=a+b;
 
     if      ( imm == 0 ) { r = a - 0x181B90533C6C87B + b; }
     else if ( imm == 1 ) { r = a - 0x10DFA2BD6541A8D + b; }
@@ -68,7 +68,7 @@ uint64_t gold_subadd(uint64_t a, uint64_t b, uint8_t imm){
 
 uint64_t gold_andadd(uint64_t a, uint64_t b, uint8_t imm){
     imm &= 0xF;
-    uint64_t r;
+    uint64_t r=b;
 
     if      ( imm == 0 ) { r = (a & 0x181B90533C6C87B) + b; }
     else if ( imm == 1 ) { r = (a & 0x10DFA2BD6541A8D) + b; }
@@ -120,12 +120,12 @@ void test_ise()
     }
 
     // sraiadd
-    result = test_sraiadd(lhs, rhs);    
-    expect = gold_sraiadd(lhs, rhs);
+    int64_t result2 = test_sraiadd(lhs, rhs);    
+    int64_t expect2 = gold_sraiadd(lhs, rhs);
 
-    if(result != expect) {
+    if(result2 != expect2) {
         printf("test_sraiadd [FAIL]\n");
-        printf("Expected: %llx, got: %llx\n", expect, result);
+        printf("Expected: %llx, got: %llx\n", expect2, result2);
         fail = 1;
     }
 

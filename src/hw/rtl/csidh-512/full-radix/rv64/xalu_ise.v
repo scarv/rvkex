@@ -1,4 +1,4 @@
-//Ascon Instruction Set Extension
+//csidh Instruction Set Extension
 module xalu_ise (
     ise_clk,
     ise_rst,
@@ -6,7 +6,6 @@ module xalu_ise (
     ise_imm,   
     ise_in1,   
     ise_in2,  
-//    ise_in3,
     ise_val,
     ise_oval,         
     ise_out    );
@@ -15,7 +14,6 @@ input  [ 5:0]   ise_fn;
 input  [ 6:0]   ise_imm;
 input  [63:0]   ise_in1;
 input  [63:0]   ise_in2;
-//input  [63:0]   ise_in3;
 input           ise_val;
 output          ise_oval;
 output [63:0]   ise_out; 

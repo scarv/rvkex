@@ -17,9 +17,8 @@ module xmul (
     localparam [5:0] FN_MULH   = 6'd1;
     localparam [5:0] FN_MULHSU = 6'd2; 
     localparam [5:0] FN_MULHU  = 6'd3;
-    localparam [5:0] FN_MADDL  = 6'd50;
-    localparam [5:0] FN_MADDH  = 6'd51;
-    localparam [5:0] FN_CADD   = 6'd52;
+    localparam [5:0] FN_MADDL  = 6'd52; //madd57lu = XMUL2
+    localparam [5:0] FN_MADDH  = 6'd53; //madd57hu = XMUL3
 
     reg         val;
     reg         dw;
@@ -73,7 +72,7 @@ module xmul (
 
     reg          acc_pp;
     reg  [  4:0] tag_pp;
-    reg  [128:0] pro_pp;
+    reg  [ 63:0] pro_pp;
     reg  [ 63:0] in3_pp;   
     always @(posedge clock) begin
         if (reset) begin

@@ -17,9 +17,9 @@ module xmul (
     localparam [5:0] FN_MULH   = 6'd1;
     localparam [5:0] FN_MULHSU = 6'd2; 
     localparam [5:0] FN_MULHU  = 6'd3;
-    localparam [5:0] FN_MADDL  = 6'd50;
-    localparam [5:0] FN_MADDH  = 6'd51;
-    localparam [5:0] FN_CADD   = 6'd52;
+    localparam [5:0] FN_MADDL  = 6'd50;   //XMUL0
+    localparam [5:0] FN_MADDH  = 6'd51;   //XMUL1
+    localparam [5:0] FN_CADD   = 6'd52;   //XMUL2
 
     reg         val;
     reg         dw;
@@ -89,8 +89,6 @@ module xmul (
         in3_pp <=   in3;
         end 
     end
-
-//    wire [63:0] muxed = cmdHi? pro_pp[127:64] : ((~dw)? {{32{pro_pp[31]}}, pro_pp[31:0]} : pro_pp[63:0]);
 
     assign resp_data = pro_pp;
     assign resp_tag  = tag_pp;

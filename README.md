@@ -79,7 +79,7 @@
 
 - The optional `cadd` instruction is enabled by default. But you may would like to disable it in the ISE-assisted full-radix implementation, then add `CADD=disable`, e.g.,
   ```sh
-  make sw-run ALG=x25519    RADIX=full TYPE=RV64_TYPE2 CADD=disable
+  make sw-run ALG=x25519    RADIX=full TYPE=RV64_TYPE2     CADD=disable
   make sw-run ALG=csidh-512 RADIX=full TYPE=RV64_TYPE[2/3] CADD=disable
   ```
 

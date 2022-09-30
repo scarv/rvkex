@@ -57,7 +57,7 @@
 
 // modulus-related addition/subtraction for radix-2^57 CSIDH-512
 .macro csidh.sub.p512.57     rd, rs1,      imm            //                  => 000i iiir rrrr rrrr r110 rrrr r000 1011
-.insn r  CUSTOM_0, 7, \imm+( 0*16), \rd, \rs1, x0         //                  => #define MATCH_CSIDH_SUB_P512_57 0x0000600B
+.insn r  CUSTOM_0, 6, \imm+( 0*16), \rd, \rs1, x0         //                  => #define MATCH_CSIDH_SUB_P512_57 0x0000600B
 .endm                                                     //                  => #define  MASK_CSIDH_SUB_P512_57 0xE000707F
 .macro csidh.and.p512.add57   rd, rs1, rs2  imm           //                  => 001i iiir rrrr rrrr r111 rrrr r000 1011
 .insn r  CUSTOM_0, 7, \imm+( 1*16), \rd, \rs1, \rs2       //                  => #define MATCH_CSIDH_AND_P512_ADD57 0x2000700B

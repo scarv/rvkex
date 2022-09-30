@@ -1,9 +1,11 @@
 
+source ${REPO_HOME}/src/sw-toolchain/share.sh
+
 CC     =${RISCV}/bin/riscv64-unknown-elf-gcc
 OBJDUMP=${RISCV}/bin/riscv64-unknown-elf-objdump
-SIM    =${RISCV}/bin/spike
+SIM    =${SPIKE_REDUCED_INSTALL}/bin/spike
 ISA    =rv64gc
-PK     =${RISCV}/riscv64-unknown-elf/bin/pk
+PK     =${PK_INSTALL}/riscv64-unknown-elf/bin/pk
 
 SRCS  = main.c share.c rdtsc.c gfparith.c moncurve.c gfparith/sw/*.S
 

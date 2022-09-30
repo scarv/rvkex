@@ -5,7 +5,7 @@ endif
 
 # ------------------------------------------------------------------------------
 
-COMPONENTS = gcc pk spike
+COMPONENTS = gcc pk spike-full spike-reduced 
 
 all: clone apply build 
 

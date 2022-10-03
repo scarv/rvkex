@@ -4,9 +4,9 @@ source ${REPO_HOME}/sw-toolchain/share.sh
 
 # ------------------------------------------------------------------------------
 
-cd ${SPIKE_REPO}
-if [ -s ${SPIKE_PATCH} ] ; then
-  git apply ${SPIKE_PATCH}
+cd ${SPIKE_REDUCED_REPO}
+if [ -s ${SPIKE_REDUCED_PATCH} ] ; then
+  git apply ${SPIKE_REDUCED_PATCH}
   git add --all
 fi
 cd ${REPO_HOME}

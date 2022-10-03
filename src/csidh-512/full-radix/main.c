@@ -21,6 +21,8 @@
   end_cycles = rdtsc();                            \
   diff_cycles = (end_cycles-start_cycles)/(ITER)
 
+extern void rand_bytes_init();
+
 void uint_print(fp const *x)
 {
     for (size_t i = 8*LIMBS-1; i < 8*LIMBS; --i)

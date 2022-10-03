@@ -37,7 +37,7 @@ foreach item $vfiles {
 }
 add_files -norecurse -fileset [get_filesets sources_1] $files
 
-set_property verilog_define [list FPGA Differential_clock_capable_pin] [get_filesets sources_1] 
+set_property verilog_define [list FPGA Single_ended_clock_capable_pin] [get_filesets sources_1] 
 
 # Set 'sources_1' fileset properties
 set_property "top" "system_top_wrapper" [get_filesets sources_1]
@@ -46,8 +46,8 @@ set_property "top" "system_top_wrapper" [get_filesets sources_1]
 create_ip -name clk_wiz -vendor xilinx.com -library ip -version 6.0 -module_name clk_wiz_0
 set_property -dict [list \
                         CONFIG.PRIMITIVE {MMCM} \
-						CONFIG.PRIM_SOURCE {Differential_clock_capable_pin} \
-						CONFIG.PRIM_IN_FREQ {200.000} \
+						CONFIG.PRIM_SOURCE {Single_ended_clock_capable_pin} \
+						CONFIG.PRIM_IN_FREQ {100.000} \
 						CONFIG.MMCM_COMPENSATION {ZHOLD} \
 						CONFIG.MMCM_DIVCLK_DIVIDE {1} \
 						CONFIG.RESET_TYPE {ACTIVE_HIGH} \

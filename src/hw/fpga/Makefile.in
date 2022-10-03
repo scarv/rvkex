@@ -7,12 +7,12 @@
 export LD_LIBRARY_PATH = $(RISCV_ROCKET)/lib
 export FPGA_BUILD      = $(REPO_HOME)/work/fpga
 export FPGA            = $(REPO_HOME)/src/hw/fpga
-export BOARD          ?= sakura-x
+export BOARD          ?= arty100T
 export SOC	           = $(ARCH)-rocket
 
 ALGs = x25519
 
-VIVADO_PROJECT = $(ALG)-${RADIX}-$(SOC)-$(ISE)-imp
+VIVADO_PROJECT = $(ALG)-${RADIX}-$(SOC)-$(ISE)_$(BOARD)-imp
 prog_mem       = $(FPGA_BUILD)/$(VIVADO_PROJECT)/prog-bin/prog.mem
 
 VIVADO = cd $(FPGA_BUILD)/$(VIVADO_PROJECT) && vivado

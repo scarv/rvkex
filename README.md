@@ -34,12 +34,25 @@
 ├── doc                       - documentation (e.g., encoding and design)
 ├── src                       - source code
 │   ├── hw                    - hardware part
+│   │   ├── fpga                - source code for the FPGA implementation using Vivado
+│   │   │   ├── board             - source for supporting targeted boards (i.e., sakura-x and arty100T)
+│   │   │   ├── script            - scripts for handling the FPGA bitstream on Vivado
+│   │   │   ├── soc               - the Vivado projects based on the Rocket Chip SoC.
+│   │   │   └── software          - build algorithm-specific sofware running on the FPGA.
+│   │   ├── rocketchip          - source code for ISE-enabled Rocket Chip
+│   │   ├── rtl                 - rtl implementation
+│   │   │   ├── rvzbk             - Implementation of RV64Zbk ISE
+│   │   │   ├── csidh-512         - Implementation of RV64 csidh  ISE
+│   │   │   └── x25519            - Implementation of RV64 x25519 ISE
+│   │   └── verilator         - source code for emulator for use with Rocket Chip 
+│   │
 │   ├── csidh-512             - csidh-512 implementations
 │   │   ├── full-radix            - radix-2^64 (pure-sw + ise-assisted)
 │   │   └── reduced-radix         - radix-2^57 (pure-sw + ise-assisted)
 │   └── x25519                - x25519 implementations
 │       ├── full-radix            - radix-2^64 (pure-sw + ise-assisted)
 │       └── reduced-radix         - radix-2^51 (pure-sw + ise-assisted)
+├── bitstream                 - pre-built bitstreams for the arty100T board 
 ├── hw-toolchain              - scripts to install RISC-V hardware toolchains 
 ├── sw-toolchain              - scripts to install RISC-V software toolchains 
 └── work                      - working directory for build
@@ -64,7 +77,7 @@
 
 - Build the software toolchain
   ```sh
-  make sw-toolchain-build  
+  make sw-toolchain-build
   ```
 
 - Build and evaluate the (different) software 
@@ -124,29 +137,47 @@
   make hw-get-rocketchip
   ```
 
-- Build the Xilinx FPGA bitstream for the Rocket Chip system and run a software on it using Vivado:
-
-  - Fix path for the installed Vivado Design Suite, e.g., 
+- Fix path for the installed Vivado Design Suite, e.g., 
   
   ```sh
   export VIVADO_TOOL_DIR="/opt/Xilinx/Vivado/2019.1"
   source ./bin/vivado-conf.sh
   ```
 
-  - Generate the verilog files, and then bit-stream for the FPGA implementation, e.g.,
+- Run a software on FPGA implemetation with a pre-built bitstream:
+
+  - Connect the arty100T board to a Computer via a USB port. Assumingly, the port `/dev/ttyUSB0` is used. 
+  - Build and execute implementation on the Arty100T, e.g.,
 
   ```sh
-  ALG="x25519" RADIX=[full/reduced] make fpga-hw
-  ```
- 
-  - Download FPGA bit-stream, and then build and execute software on the FPGA implementation, e.g.,
-
-  ```sh
-  ALG="x25519" RADIX=[full/reduced] make fpga-prog
+  PORT="/dev/ttyUSB0" BOARD="arty100T" ALG=[x25519/csidh-512] RADIX=[full/reduced] make fpga-run
   ```
 
-  - Build and execute software on the FPGA implementation, e.g.,
+  - Use the script provided to scan all implementations of an algorithm with different configurations, e.g.,
+  ```sh
+  PORT="/dev/ttyUSB0" BOARD="arty100T" ALG=[x25519/csidh-512] RADIX=[full/reduced] make fpga-scan
+  ```
+
+  Or scan all implementations using the full-radix representation.
+  ```sh
+  PORT="/dev/ttyUSB0" BOARD="arty100T" make fpga-scan-full
+  ```
+
+  Or scan all implementations using the reduced-radix representation.
+  ```sh
+  PORT="/dev/ttyUSB0" BOARD="arty100T" make fpga-scan-reduced
+  ```
+
+- Rebuild the Xilinx Vivado project and the bitstream for the Rocket Chip system (for developments/modifications):
+
+  - Generate the verilog files, and then the bit-stream for the FPGA implementation, e.g.,
 
   ```sh
-  ALG="x25519" RADIX=[full/reduced] TYPE=RV64_TYPE[1/2] make fpga-run
+  BOARD=[arty100T/sakura-x] ALG=[x25519/csidh-512] RADIX=[full/reduced] make fpga-hw
+  ```
+
+  - Update a pre-built bitstream with a new bitstream, e.g.,
+
+  ```sh
+  BOARD=[arty100T/sakura-x] ALG=[x25519/csidh-512] RADIX=[full/reduced] make fpga-update
   ```

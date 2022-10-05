@@ -91,11 +91,17 @@ extern void fp_sub3_ise(fp *r, const fp *a, const fp *b);
 #define fp_mul3           fp_mul3_c
 #define fp_sq2            fp_sq2_c
 #define reduce_once       reduce_once_c
-#else 
+#elif (RV64_TYPE1)
 #define fp_add3           fp_add3_asm
 #define fp_sub3           fp_sub3_asm
 #define fp_mul3           fp_mul3_asm
 #define fp_sq2            fp_sqr2_asm
+#define reduce_once       reduce_once_asm
+#else
+#define fp_add3           fp_add3_asm
+#define fp_sub3           fp_sub3_asm
+#define fp_mul3           fp_mul3_asm
+#define fp_sq2(r, a)      fp_mul3_asm(r, a, a)
 #define reduce_once       reduce_once_asm
 #endif
 

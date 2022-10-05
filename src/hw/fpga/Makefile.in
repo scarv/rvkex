@@ -35,15 +35,6 @@ include $(FPGA)/soc/$(SOC)/Makefile.in
 #--------------------------------------------------------------------
 # Sources
 #--------------------------------------------------------------------
-rocketchip_support_src = \
-    $(ROCKETCHIP_REPO)/src/main/resources/vsrc/plusarg_reader.v \
-    $(ROCKETCHIP_REPO)/src/main/resources/vsrc/EICG_wrapper.v
-
-rocketchip_cop_ram_src =\
-    $(ROCKETCHIP_REPO)/vsim/generated-src/$(ROCKET).$(COP_FPGACONFIG).behav_srams.v
-
-rocketchip_xalu_ram_src =\
-    $(ROCKETCHIP_REPO)/vsim/generated-src/$(ROCKET).$(XALU_FPGACONFIG).behav_srams.v
 
 rtl_sources = $(wildcard $(FPGA_BUILD)/$(VIVADO_PROJECT)/rtl_sources/*.v)
 

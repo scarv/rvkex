@@ -27,7 +27,7 @@ index d6423ada0..a0189775e 100644
  .SECONDARY: $(firrtl) $(verilog)
  
 diff --git a/src/main/scala/rocket/ALU.scala b/src/main/scala/rocket/ALU.scala
-index 537ffa511..8b999b638 100644
+index 537ffa511..93418f0cc 100644
 --- a/src/main/scala/rocket/ALU.scala
 +++ b/src/main/scala/rocket/ALU.scala
 @@ -5,12 +5,12 @@ package freechips.rocketchip.rocket
@@ -46,7 +46,7 @@ index 537ffa511..8b999b638 100644
    def FN_ADD  = UInt(0)
    def FN_SL   = UInt(1)
    def FN_SEQ  = UInt(2)
-@@ -36,6 +36,34 @@ object ALU
+@@ -36,6 +36,35 @@ object ALU
    def FN_MULHSU = FN_SEQ
    def FN_MULHU  = FN_SNE
  
@@ -74,14 +74,15 @@ index 537ffa511..8b999b638 100644
 +  def FN_XPERM8= UInt(48)
 +  def FN_XPERM4= UInt(49)
 +
-+  def FN_MADDL= UInt(50)
-+  def FN_MADDH= UInt(51)
-+  def FN_CADD = UInt(52)
++  def FN_XMUL0= UInt(50)
++  def FN_XMUL1= UInt(51)
++  def FN_XMUL2 = UInt(52)
++  def FN_XMUL3 = UInt(53)
 +
    def isMulFN(fn: UInt, cmp: UInt) = fn(1,0) === cmp(1,0)
    def isSub(cmd: UInt) = cmd(3)
    def isCmp(cmd: UInt) = cmd >= FN_SLT
-@@ -97,3 +125,29 @@ class ALU(implicit p: Parameters) extends CoreModule()(p) {
+@@ -97,3 +126,29 @@ class ALU(implicit p: Parameters) extends CoreModule()(p) {
      when (io.dw === DW_32) { io.out := Cat(Fill(32, out(31)), out(31,0)) }
    }
  }
@@ -113,10 +114,10 @@ index 537ffa511..8b999b638 100644
 +}
 \ No newline at end of file
 diff --git a/src/main/scala/rocket/IDecode.scala b/src/main/scala/rocket/IDecode.scala
-index 94594aec2..b437c78ea 100644
+index 94594aec2..64392944c 100644
 --- a/src/main/scala/rocket/IDecode.scala
 +++ b/src/main/scala/rocket/IDecode.scala
-@@ -365,3 +365,68 @@ class RoCCDecode(implicit val p: Parameters) extends DecodeConstants
+@@ -365,3 +365,69 @@ class RoCCDecode(implicit val p: Parameters) extends DecodeConstants
      CUSTOM3_RD_RS1->    List(Y,N,Y,N,N,N,N,Y,N,A2_ZERO,A1_RS1, IMM_X, DW_XPR,FN_ADD,   N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N),
      CUSTOM3_RD_RS1_RS2->List(Y,N,Y,N,N,N,Y,Y,N,A2_ZERO,A1_RS1, IMM_X, DW_XPR,FN_ADD,   N,M_X,        N,N,N,N,N,N,Y,CSR.N,N,N,N,N))
  }
@@ -151,9 +152,10 @@ index 94594aec2..b437c78ea 100644
 +}
 +class XMULDecode(implicit val p: Parameters) extends DecodeConstants {
 +  val table: Array[(BitPat, List[BitPat])] = Array(
-+    CADDU  ->           List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR, FN_CADD,   N,M_X,        N,N,N,N,Y,N,Y,CSR.N,N,N,N,N),
-+    MADDLU ->           List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR, FN_MADDL,  N,M_X,        N,N,N,N,Y,N,Y,CSR.N,N,N,N,N),
-+    MADDHU ->           List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR, FN_MADDH,  N,M_X,        N,N,N,N,Y,N,Y,CSR.N,N,N,N,N))
++    XMUL0 ->            List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR, FN_XMUL0,   N,M_X,        N,N,N,N,Y,N,Y,CSR.N,N,N,N,N),
++    XMUL1 ->            List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR, FN_XMUL1,   N,M_X,        N,N,N,N,Y,N,Y,CSR.N,N,N,N,N),
++    XMUL2 ->            List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR, FN_XMUL2,   N,M_X,        N,N,N,N,Y,N,Y,CSR.N,N,N,N,N),
++    XMUL3 ->            List(Y,N,N,N,N,N,Y,Y,N,A2_RS2,A1_RS1, IMM_X, DW_XPR, FN_XMUL3,   N,M_X,        N,N,N,N,Y,N,Y,CSR.N,N,N,N,N))
 +}
 +//ZbKb Decode for a subset of BitManip and Scalar Crypto
 +class ZBKBDecode(implicit val p: Parameters) extends DecodeConstants {
@@ -187,10 +189,10 @@ index 94594aec2..b437c78ea 100644
 +}
 \ No newline at end of file
 diff --git a/src/main/scala/rocket/Instructions.scala b/src/main/scala/rocket/Instructions.scala
-index f433fc067..4e95d61d3 100644
+index f433fc067..63ca1ea7a 100644
 --- a/src/main/scala/rocket/Instructions.scala
 +++ b/src/main/scala/rocket/Instructions.scala
-@@ -691,6 +691,28 @@ object Instructions {
+@@ -691,6 +691,30 @@ object Instructions {
    def FMV_S_X            = BitPat("b111100000000?????000?????1010011")
    def FENCE_TSO          = BitPat("b100000110011?????000?????0001111")
    def PAUSE              = BitPat("b00000001000000000000000000001111")
@@ -213,14 +215,16 @@ index f433fc067..4e95d61d3 100644
 +  def XPERM8             = BitPat("b0010100??????????100?????0110011")
 +  def XPERM4             = BitPat("b0010100??????????010?????0110011")
 +
-+  def MADDLU             = BitPat("b?????00??????????111?????1111011")
-+  def MADDHU             = BitPat("b?????01??????????111?????1111011")
-+  def CADDU              = BitPat("b?????10??????????111?????1111011")
++  def XMUL0              = BitPat("b?????00??????????111?????1111011")
++  def XMUL1              = BitPat("b?????01??????????111?????1111011")
++  def XMUL2              = BitPat("b?????10??????????111?????1111011")
++  def XMUL3              = BitPat("b?????11??????????111?????1111011")
++
  }
  object Causes {
    val misaligned_fetch = 0x0
 diff --git a/src/main/scala/rocket/Multiplier.scala b/src/main/scala/rocket/Multiplier.scala
-index b5192bdc2..2342825bb 100644
+index b5192bdc2..88a930d88 100644
 --- a/src/main/scala/rocket/Multiplier.scala
 +++ b/src/main/scala/rocket/Multiplier.scala
 @@ -4,10 +4,11 @@
@@ -236,44 +240,35 @@ index b5192bdc2..2342825bb 100644
  
  class MultiplierReq(dataBits: Int, tagBits: Int) extends Bundle {
    val fn = Bits(SZ_ALU_FN.W)
-@@ -187,17 +188,21 @@ class PipelinedMultiplier(width: Int, latency: Int, nXpr: Int = 32) extends Modu
-   val io = IO(new Bundle {
-     val req = Flipped(Valid(new MultiplierReq(width, log2Ceil(nXpr))))
-     val resp = Valid(new MultiplierResp(width, log2Ceil(nXpr)))
-+    val op3 = Input(Bits(width.W))
-   })
- 
+@@ -192,21 +193,31 @@ class PipelinedMultiplier(width: Int, latency: Int, nXpr: Int = 32) extends Modu
    val in = Pipe(io.req)
-+  val op3p = Pipe(io.req.valid, io.op3).bits
  
    val decode = List(
 -    FN_MUL    -> List(N, X, X),
 -    FN_MULH   -> List(Y, Y, Y),
 -    FN_MULHU  -> List(Y, N, N),
--    FN_MULHSU -> List(Y, Y, N))
--  val cmdHi :: lhsSigned :: rhsSigned :: Nil =
--    DecodeLogic(in.bits.fn, List(X, X, X), decode).map(_.asBool)
-+    FN_MUL    -> List(N, X, X, N),
-+    FN_MULH   -> List(Y, Y, Y, N),
-+    FN_MULHU  -> List(Y, N, N, N),
-+    FN_MULHSU -> List(Y, Y, N, N),
-+    FN_MADDL  -> List(N, N, N, Y),
-+    FN_MADDH  -> List(Y, N, N, Y))
-+  val cmdHi :: lhsSigned :: rhsSigned :: acc :: Nil =
-+    DecodeLogic(in.bits.fn, List(X, X, X, X), decode).map(_.asBool)
++    FN_MUL -> List(N, X, X),
++    FN_MULH -> List(Y, Y, Y),
++    FN_MULHU -> List(Y, N, N),
+     FN_MULHSU -> List(Y, Y, N))
+   val cmdHi :: lhsSigned :: rhsSigned :: Nil =
+     DecodeLogic(in.bits.fn, List(X, X, X), decode).map(_.asBool)
    val cmdHalf = (width > 32).B && in.bits.dw === DW_32
  
-   val lhs = Cat(lhsSigned && in.bits.in1(width-1), in.bits.in1).asSInt
-@@ -206,7 +211,19 @@ class PipelinedMultiplier(width: Int, latency: Int, nXpr: Int = 32) extends Modu
-   val muxed = Mux(cmdHi, prod(2*width-1, width), Mux(cmdHalf, prod(width/2-1, 0).sextTo(width), prod(width-1, 0)))
+-  val lhs = Cat(lhsSigned && in.bits.in1(width-1), in.bits.in1).asSInt
+-  val rhs = Cat(rhsSigned && in.bits.in2(width-1), in.bits.in2).asSInt
++  val lhs = Cat(lhsSigned && in.bits.in1(width - 1), in.bits.in1).asSInt
++  val rhs = Cat(rhsSigned && in.bits.in2(width - 1), in.bits.in2).asSInt
+   val prod = lhs * rhs
+-  val muxed = Mux(cmdHi, prod(2*width-1, width), Mux(cmdHalf, prod(width/2-1, 0).sextTo(width), prod(width-1, 0)))
++  val muxed = Mux(cmdHi, prod(2 * width - 1, width), Mux(cmdHalf, prod(width / 2 - 1, 0).sextTo(width), prod(width - 1, 0)))
  
-   val resp = Pipe(in, latency-1)
-+  val mulres = Pipe(in.valid, muxed, latency - 1).bits
-+  val op3pp = Pipe(in.valid, op3p, latency - 1).bits
+-  val resp = Pipe(in, latency-1)
++  val resp = Pipe(in, latency - 1)
    io.resp.valid := resp.valid
    io.resp.bits.tag := resp.bits.tag
 -  io.resp.bits.data := Pipe(in.valid, muxed, latency-1).bits
-+  io.resp.bits.data := Mux(acc, mulres + op3pp, mulres)
++  io.resp.bits.data := Pipe(in.valid, muxed, latency - 1).bits
 +}
 +
 +class xmul(width:Int, latency: Int, nXpr: Int = 32) extends BlackBox {
@@ -286,7 +281,7 @@ index b5192bdc2..2342825bb 100644
 +  })
  }
 diff --git a/src/main/scala/rocket/RocketCore.scala b/src/main/scala/rocket/RocketCore.scala
-index abdbdf93e..150497f94 100644
+index abdbdf93e..53a65816a 100644
 --- a/src/main/scala/rocket/RocketCore.scala
 +++ b/src/main/scala/rocket/RocketCore.scala
 @@ -42,7 +42,12 @@ case class RocketCoreParams(
@@ -308,7 +303,7 @@ index abdbdf93e..150497f94 100644
        ("L2 TLB miss", () => io.ptw.perf.l2miss)))))
  
 -  val pipelinedMul = usingMulDiv && mulDivParams.mulUnroll == xLen
-+  val pipelinedMul = (usingMulDiv && mulDivParams.mulUnroll == xLen) || usingXMUL
++  val pipelinedMul = (usingMulDiv && (mulDivParams.mulUnroll == xLen)) || usingXMUL
    val decode_table = {
      require(!usingRoCC || !rocketParams.useSCIE)
      (if (usingMulDiv) new MDecode(pipelinedMul) +: (xLen > 32).option(new M64Decode(pipelinedMul)).toSeq else Nil) ++:
@@ -328,7 +323,7 @@ index abdbdf93e..150497f94 100644
    val (id_raddr1_illegal, id_raddr1) = decodeReg(id_expanded_inst(0).rs1)
    val (id_waddr_illegal,  id_waddr)  = decodeReg(id_expanded_inst(0).rd)
 -
-+  val rxs3 = usingXMUL && (id_ctrl.alu_fn.isOneOf(ALU.FN_MADDH, ALU.FN_MADDL, ALU.FN_CADD))
++  val rxs3 = usingXMUL && (id_ctrl.alu_fn.isOneOf(ALU.FN_XMUL0, ALU.FN_XMUL1, ALU.FN_XMUL2, ALU.FN_XMUL3))
    val id_load_use = Wire(Bool())
    val id_reg_fence = Reg(init=Bool(false))
 -  val id_ren = IndexedSeq(id_ctrl.rxs1, id_ctrl.rxs2)
@@ -403,11 +398,10 @@ index abdbdf93e..150497f94 100644
    val ex_scie_unpipelined_wdata = if (!rocketParams.useSCIE) 0.U else {
      val u = Module(new SCIEUnpipelined(xLen))
      u.io.insn := ex_reg_inst
-@@ -402,13 +454,26 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
-   div.io.req.bits.in1 := ex_rs(0)
-   div.io.req.bits.in2 := ex_rs(1)
-   div.io.req.bits.tag := ex_waddr
-+
+@@ -409,6 +461,16 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
+     m
+   }
+ 
 +  val ixmul = (usingXMUL).option {
 +    val xm = Module(new xmul(xLen, 2))
 +    xm.io.clock := Module.clock
@@ -417,20 +411,11 @@ index abdbdf93e..150497f94 100644
 +    xm.io.req_in3 := ex_rs(2)
 +    xm
 +  }
-   val mul = pipelinedMul.option {
-     val m = Module(new PipelinedMultiplier(xLen, 2))
-     m.io.req.valid := ex_reg_valid && ex_ctrl.mul
-     m.io.req.bits := div.io.req.bits
-+    m.io.op3 := ex_rs(2)
-     m
-   }
- 
 +
-+  //div.io.resp.bits.data
    ex_reg_valid := !ctrl_killd
    ex_reg_replay := !take_pc && ibuf.io.inst(0).valid && ibuf.io.inst(0).bits.replay
    ex_reg_xcpt := !ctrl_killd && id_xcpt
-@@ -459,6 +524,8 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
+@@ -459,6 +521,8 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
          ex_reg_rs_msb(i) := id_rs(i) >> log2Ceil(bypass_sources.size)
        }
      }
@@ -439,7 +424,7 @@ index abdbdf93e..150497f94 100644
      when (id_illegal_insn) {
        val inst = Mux(ibuf.io.inst(0).bits.rvc, id_raw_inst(0)(15, 0), id_raw_inst(0))
        ex_reg_rs_bypass(0) := false
-@@ -538,7 +605,7 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
+@@ -538,7 +602,7 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
      mem_reg_raw_inst := ex_reg_raw_inst
      mem_reg_mem_size := ex_reg_mem_size
      mem_reg_pc := ex_reg_pc
@@ -448,7 +433,7 @@ index abdbdf93e..150497f94 100644
      mem_br_taken := alu.io.cmp_out
  
      when (ex_ctrl.rxs2 && (ex_ctrl.mem || ex_ctrl.rocc || ex_sfence)) {
-@@ -663,7 +730,8 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
+@@ -663,7 +727,8 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
    val rf_wdata = Mux(dmem_resp_valid && dmem_resp_xpu, io.dmem.resp.bits.data(xLen-1, 0),
                   Mux(ll_wen, ll_wdata,
                   Mux(wb_ctrl.csr =/= CSR.N, csr.io.rw.rdata,
@@ -458,7 +443,7 @@ index abdbdf93e..150497f94 100644
                   wb_reg_wdata))))
    when (rf_wen) { rf.write(rf_waddr, rf_wdata) }
  
-@@ -700,6 +768,7 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
+@@ -700,6 +765,7 @@ class Rocket(tile: RocketTile)(implicit p: Parameters) extends CoreModule()(p)
  
    val hazard_targets = Seq((id_ctrl.rxs1 && id_raddr1 =/= UInt(0), id_raddr1),
                             (id_ctrl.rxs2 && id_raddr2 =/= UInt(0), id_raddr2),
@@ -468,10 +453,10 @@ index abdbdf93e..150497f94 100644
                                (io.fpu.dec.ren2, id_raddr2),
 diff --git a/src/main/scala/system/SCARVRocketCoPConfig.scala b/src/main/scala/system/SCARVRocketCoPConfig.scala
 new file mode 100644
-index 000000000..723dbafa1
+index 000000000..db785dd4e
 --- /dev/null
 +++ b/src/main/scala/system/SCARVRocketCoPConfig.scala
-@@ -0,0 +1,117 @@
+@@ -0,0 +1,127 @@
 +// See LICENSE.SiFive for license details.
 +// See LICENSE.Berkeley for license details.
 +
@@ -544,6 +529,7 @@ index 000000000..723dbafa1
 +	new BaseConfig)
 +
 +class SCARVRocketXALUConf64 extends Config(
++	new WithPMUL ++
 +	new WithXALU ++
 +	new WithXMUL ++
 +	new WithZBKB ++
@@ -583,12 +569,22 @@ index 000000000..723dbafa1
 +	new WithXALU ++
 +	new WithXMUL ++
 +	new WithZBKB ++
-+  new WithNBreakpoints(2)	++
++  new WithPMUL ++
++	new WithNBreakpoints(2)	++
 +	new WithJtagDTM  ++
 +  new WithXLEN64 ++
 +	new WithNBigCores(1) ++
 +	new BaseConfig)
 +
++class SCARVRocketFPGAZbkbConf64 extends Config(
++	new WithZBKB ++
++	new	WithPMUL ++
++	new WithNBreakpoints(2) ++
++	new WithJtagDTM ++
++	new WithXLEN64 ++
++	new WithNBigCores(1) ++
++	new BaseConfig)
+\ No newline at end of file
 diff --git a/src/main/scala/system/SCARVRocketSystem.scala b/src/main/scala/system/SCARVRocketSystem.scala
 new file mode 100644
 index 000000000..e2cd39855

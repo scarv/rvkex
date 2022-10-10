@@ -171,16 +171,18 @@ void test_action()
 
   bool ret; (void) ret;
 
-  private_key priv_alice[5];
-  public_key pub_alice[5];
+  int bench_num = 100;
+
+  private_key priv_alice[bench_num];
+  public_key pub_alice[bench_num];
 
   printf("\n**************************************************************************\n");
   printf("CSIDH GROUP ACTION:\n");
 
-  for (i = 0; i < 5; i++) csidh_private(&priv_alice[i]);
+  for (i = 0; i < bench_num; i++) csidh_private(&priv_alice[i]);
 
   printf("- csidh:");
-  MEASURE_CYCLES(ret = csidh(&pub_alice[i], &base, &priv_alice[i]), 5);
+  MEASURE_CYCLES(ret = csidh(&pub_alice[i], &base, &priv_alice[i]), bench_num);
   printf("             #cycle = %lld\n", diff_cycles);
 
   printf("**************************************************************************\n");
@@ -256,5 +258,5 @@ int main()
   test_fp();
   test_curve();
   test_csidh();
-  // test_action();
+  test_action();
 }

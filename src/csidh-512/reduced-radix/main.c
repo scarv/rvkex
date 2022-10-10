@@ -265,6 +265,6 @@ int main()
   test_fp();
   test_curve();
   test_csidh();
-  // test_action();
+  test_action();
 #endif
 }

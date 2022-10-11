@@ -14,7 +14,7 @@ P511F = {
 | :------------------ | :--------------------------- | :----------------------------------------------------------------|
 | `RV64_FULL_TYPE1`   | pure-software, full-radix    | RISC-V base ISA                                                  |
 | `RV64_FULL_TYPE2`   | ISE-assisted,  full-radix    | RISC-V base ISA + general-purpose ISE                            |
-| `RV64_FULL_TYPE3`   | ISE-assisted,  full-radix    | RISC-V base ISA + general-purpose ISE + specific-purpose ISE     |
+| `RV64_FULL_TYPE3`   | ISE-assisted,  full-radix    | RISC-V base ISA + general-purpose ISE + special-purpose ISE     |
 
 ## Details 
 
@@ -51,7 +51,7 @@ P511F = {
 
 ```
 
-- `RV64_FULL_TYPE3`: base ISA + general-purpose ISE shown above + specific-purpose ISE shown below. 
+- `RV64_FULL_TYPE3`: base ISA + general-purpose ISE shown above + special-purpose ISE shown below. 
 
 ```
   csidh.sub.p512       rd, rs1,      imm {

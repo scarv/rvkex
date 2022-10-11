@@ -16,7 +16,7 @@ P511R = {
 | :------------------ | :--------------------------- | :----------------------------------------------------------------|
 | `RV64_RDCD_TYPE1`   | pure-software, reduced-radix | RISC-V base ISA                                                  |
 | `RV64_RDCD_TYPE2`   | ISE-assisted,  reduced-radix | RISC-V base ISA + general-purpose ISE                            |
-| `RV64_RDCD_TYPE3`   | ISE-assisted,  reduced-radix | RISC-V base ISA + general-purpose ISE + specific-purpose ISE     |
+| `RV64_RDCD_TYPE3`   | ISE-assisted,  reduced-radix | RISC-V base ISA + general-purpose ISE + special-purpose ISE     |
 
 ## Details 
 
@@ -69,7 +69,7 @@ P511R = {
   }
 ```
 
-- `RV64_RDCD_TYPE3`: base ISA + general-purpose ISE shown above + specific-purpose ISE shown below. 
+- `RV64_RDCD_TYPE3`: base ISA + general-purpose ISE shown above + special-purpose ISE shown below. 
 
 ```
   csidh.sub.p512.57    rd, rs1,      imm {

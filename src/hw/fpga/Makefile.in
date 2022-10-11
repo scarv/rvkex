@@ -17,7 +17,7 @@ export RADIX ?= full
 VIVADO_PROJECT = $(ALG)-${RADIX}-$(SOC)-$(ISE)_$(BOARD)-imp
 prog_mem       = $(FPGA_BUILD)/$(VIVADO_PROJECT)/prog-bin/prog.mem
 
-VIVADO = cd $(FPGA_BUILD)/$(VIVADO_PROJECT) && vivado
+VIVADO = vivado -nolog -nojournal
 UPDMEM = cd $(FPGA_BUILD)/$(VIVADO_PROJECT) && updatemem
 
 #--------------------------------------------------------------------

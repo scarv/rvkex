@@ -147,6 +147,12 @@
 - Run a software on FPGA implemetation with a pre-built bitstream:
 
   - Connect the arty100T board to a Computer via a USB port. Assumingly, the port `/dev/ttyUSB0` is used. 
+  - Program the pro-built FPGA bitstream to the Arty100T, e.g.,
+
+  ```sh
+  PORT="/dev/ttyUSB0" BOARD="arty100T" ALG=[x25519/csidh-512] RADIX=[full/reduced] make fpga-prog
+  ```
+
   - Build and execute implementation on the Arty100T, e.g.,
 
   ```sh

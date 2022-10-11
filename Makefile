@@ -51,5 +51,8 @@ fpga-hw :
 fpga-prog:
 	@make --directory="${REPO_HOME}/src/hw" program-fpga
 
+fpga-update:
+	@make --directory="${REPO_HOME}/src/hw" update-bistream
+
 fpga-run :
 	@make --directory="${REPO_HOME}/src/hw" fpga-swclean fpga-run	

@@ -44,15 +44,18 @@ hw-get-rocketchip :
 	@make --directory="${REPO_HOME}/src/hw" rocketchip-clone
 	@make --directory="${REPO_HOME}/src/hw" rocketchip-apply
 
-fpga-hw : 
+fpga-hw     :
 	@make --directory="${REPO_HOME}/src/hw" fpga-verilog
 	@make --directory="${REPO_HOME}/src/hw" bitstream
 
-fpga-prog:
+fpga-prog   :
 	@make --directory="${REPO_HOME}/src/hw" program-fpga
 
-fpga-update:
+fpga-update :
 	@make --directory="${REPO_HOME}/src/hw" update-bistream
 
-fpga-run :
-	@make --directory="${REPO_HOME}/src/hw" fpga-swclean fpga-run	
+fpga-run    :
+
+	@make --directory="${REPO_HOME}/src/hw" fpga-swclean fpga-run
+fpga-scan   :
+	@make --directory="${REPO_HOME}/src/hw" fpga-swclean fpga-scan

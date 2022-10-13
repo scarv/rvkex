@@ -109,8 +109,8 @@ extern void fp_sub3_ise3(fp *r, const fp *a, const fp *b);
 #define fp_sub3_asm       fp_sub3_sw
 #define fp_rdc_mont_asm   fp_rdc_mont_4ps_sw
 // mul: `product-scanning` or `Karatsuba`
-#define uint_mul3_asm     uint_mul3_ka_sw
-#define fp_rdc_4mul_asm   fp_rdc_mont_4ka_sw
+#define uint_mul3_asm     uint_mul3_ps_sw
+#define fp_rdc_4mul_asm   fp_rdc_mont_4ps_sw
 // sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_sw
 #define fp_rdc_4sqr_asm   fp_rdc_mont_4ps_sw

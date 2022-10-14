@@ -51,12 +51,12 @@ void reduce_once_c(fp *x);
 
 // -----------------------------------------------------------------------------
 
-#if (RV64_TYPE1) | (RV64_TYPE2) | (RV64_TYPE3)
+#if (RV64_TYPE1) || (RV64_TYPE2) || (RV64_TYPE3)
 void fp_mul3_asm(fp *r, const fp *a, const fp *b);
 void fp_sqr2_asm(fp *r, const fp *a);
 #endif 
 
-#if   (RV64_TYPE1) 
+#if   (RV64_TYPE1)
 extern void uint_mul3_ps_sw(uint64_t *r, const fp *a, const fp *b);
 extern void uint_mul3_ka_sw(uint64_t *r, const fp *a, const fp *b);
 extern void uint_sqr2_ps_sw(uint64_t *r, const fp *a);
@@ -136,7 +136,7 @@ extern void fp_sub3_ise(fp *r, const fp *a, const fp *b);
 // sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_ise
 // reduce_once: `addition-based`
-#define reduce_once_asm   reduce_once_cs_ise
+#define reduce_once_asm   reduce_once_ad_ise
 #endif
 
 // -----------------------------------------------------------------------------

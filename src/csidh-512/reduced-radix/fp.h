@@ -54,12 +54,12 @@ void fp_rdc_mont_c(fp *r, __uint128_t *z);
 
 // -----------------------------------------------------------------------------
 
-#if (RV64_TYPE1) | (RV64_TYPE2) | (RV64_TYPE3)
+#if (RV64_TYPE1) || (RV64_TYPE2) || (RV64_TYPE3)
 void fp_mul3_asm(fp *r, const fp *a, const fp *b);
 void fp_sqr2_asm(fp *r, const fp *a);
 #endif
 
-//#if   (RV64_TYPE1) 
+#if   (RV64_TYPE1) 
 extern void uint_mul3_ps_sw(uint64_t *z, const fp *a, const fp *b);
 extern void uint_mul3_ka_sw(uint64_t *z, const fp *a, const fp *b);
 extern void uint_sqr2_ps_sw(uint64_t *z, const fp *a);
@@ -70,7 +70,7 @@ extern void reduce_once_ad_sw(fp *a);
 extern void reduce_once_cs_sw(fp *a);
 extern void fp_add3_sw(fp *r, const fp *a, const fp *b);
 extern void fp_sub3_sw(fp *r, const fp *a, const fp *b); 
-//#elif (RV64_TYPE2)
+#elif (RV64_TYPE2)
 extern void uint_mul3_ps_ise(uint64_t *r, const fp *a, const fp *b);
 extern void uint_mul3_ka_ise(uint64_t *r, const fp *a, const fp *b);
 extern void uint_sqr2_ps_ise(uint64_t *r, const fp *a);
@@ -78,7 +78,7 @@ extern void fp_rdc_mont_ise(fp *r, const uint64_t *a);
 extern void reduce_once_cs_ise2(fp *a);
 extern void fp_add3_ise2(fp *r, const fp *a, const fp *b);
 extern void fp_sub3_ise2(fp *r, const fp *a, const fp *b); 
-//#elif (RV64_TYPE3)
+#elif (RV64_TYPE3)
 extern void uint_mul3_ps_ise(uint64_t *r, const fp *a, const fp *b);
 extern void uint_mul3_ka_ise(uint64_t *r, const fp *a, const fp *b);
 extern void uint_sqr2_ps_ise(uint64_t *r, const fp *a);
@@ -86,7 +86,7 @@ extern void fp_rdc_mont_ise(fp *r, const uint64_t *a);
 extern void reduce_once_ad_ise3(fp *a);
 extern void fp_add3_ise3(fp *r, const fp *a, const fp *b);
 extern void fp_sub3_ise3(fp *r, const fp *a, const fp *b); 
-//#endif 
+#endif 
 
 // -----------------------------------------------------------------------------
 
@@ -123,10 +123,8 @@ extern void fp_sub3_ise3(fp *r, const fp *a, const fp *b);
 #define fp_rdc_mont_asm   fp_rdc_mont_ise
 // mul: `product-scanning`
 #define uint_mul3_asm     uint_mul3_ps_ise
-#define fp_rdc_4mul_asm   fp_rdc_mont_4ka_sw
 // sqr: `product-scanning`
 #define uint_sqr2_asm     uint_sqr2_ps_ise
-#define fp_rdc_4sqr_asm   fp_rdc_mont_4ps_sw
 // reduce_once: `cswap-based`
 #define reduce_once_asm   reduce_once_cs_ise2
 

@@ -55,8 +55,10 @@ endgenerate
 
 wire [63:0] dout = {64{ csidh_ise_sel }} & csidh_ise_rd ;
 
-assign  ise_oval = ise_val && csidh_ise_sel;
-assign  ise_out  = dout;
+// assign  ise_oval = ise_val && csidh_ise_sel;
+// assign  ise_out  = dout;
+assign ise_oval = 0;
+assign ise_out  = 0;
 
 endmodule
 

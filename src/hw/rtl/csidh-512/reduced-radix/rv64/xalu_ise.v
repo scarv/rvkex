@@ -18,7 +18,8 @@ input           ise_val;
 output          ise_oval;
 output [63:0]   ise_out; 
 
-parameter [2:0] ISE_V  = 3'b111;
+// parameter [2:0] ISE_V  = 3'b111;
+parameter [2:0] ISE_V  = 3'b011;
 
 localparam [1:0] CUSTOM_0 = 2'b00;
 localparam [1:0] CUSTOM_1 = 2'b01;

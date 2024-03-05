@@ -85,8 +85,10 @@ wire [63:0] dout = {64{  ror_sel}} & wror  |
                    {64{packw_sel}} & wpackw|
                    {64{packh_sel}} & wpackh;
 
-assign ise_oval = ise_val;
-assign ise_out  = dout;
+// assign ise_oval = ise_val;
+// assign ise_out  = dout;
+assign ise_oval = 0;
+assign ise_out  = 0;
 
 endmodule
 

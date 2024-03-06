@@ -29,6 +29,7 @@ export ISE   ?= xalu
 include ${REPO_HOME}/src/hw/fpga/Makefile.in
 include ${REPO_HOME}/src/hw/verilator/Makefile.in
 include ${REPO_HOME}/src/hw/rocketchip/Makefile.in
+include ${REPO_HOME}/src/hw/yosys_synth/Makefile.in
 # =============================================================================
 
 

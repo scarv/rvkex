@@ -18,8 +18,11 @@ CONFIG = SCARVRocket$(ISE)Conf$(ARCH:rv%=%)
 COP_CONF64 = SCARVRocketCoPConf64
 COP_CONF32 = SCARVRocketCoPConf32
 
-XALU_CONF32 = SCARVRocketXALUConf32
-XALU_CONF64 = SCARVRocketXALUConf64
+XALU_CONF32 = SCARVRocketFPGAXALUConf32
+XALU_CONF64 = SCARVRocketFPGAXALUConf64
+
+ZBKB_CONF32 = SCARVRocketFPGAZbkbConf32
+ZBKB_CONF64 = SCARVRocketFPGAZbkbConf64
 
 MODULE?= $(ISE)_ise
 
@@ -56,6 +59,10 @@ $(GENERATED)/$(ROCKET).$(COP_CONF32).v :
 	$(MAKE) -C $(ROCKETCHIP_REPO)/vsim verilog CONFIG=$(COP_CONF32) MODEL=$(MODEL)
 $(GENERATED)/$(ROCKET).$(COP_CONF64).v :
 	$(MAKE) -C $(ROCKETCHIP_REPO)/vsim verilog CONFIG=$(COP_CONF64) MODEL=$(MODEL)
+$(GENERATED)/$(ROCKET).$(ZBKB_CONF32).v :
+	$(MAKE) -C $(ROCKETCHIP_REPO)/vsim verilog CONFIG=$(ZBKB_CONF32) MODEL=$(MODEL)
+$(GENERATED)/$(ROCKET).$(ZBKB_CONF64).v :
+	$(MAKE) -C $(ROCKETCHIP_REPO)/vsim verilog CONFIG=$(ZBKB_CONF64) MODEL=$(MODEL)
 
 $(SYNTH)/rocket_xalu_rv32.v : $(GENERATED)/$(ROCKET).$(XALU_CONF32).v 
 	cp -f $(GENERATED)/$(ROCKET).$(XALU_CONF32).v $(rocket_gen)
@@ -72,6 +79,14 @@ $(SYNTH)/rocket_cop_rv32.v :  $(GENERATED)/$(ROCKET).$(COP_CONF32).v
 $(SYNTH)/rocket_cop_rv64.v :  $(GENERATED)/$(ROCKET).$(COP_CONF64).v
 	cp -f $(GENERATED)/$(ROCKET).$(COP_CONF64).v $(rocket_gen)
 	cp -f $(GENERATED)/$(ROCKET).$(COP_CONF64).behav_srams.v $(srams_gen)
+
+$(SYNTH)/rocket_zbkb_rv32.v : $(GENERATED)/$(ROCKET).$(ZBKB_CONF32).v 
+	cp -f $(GENERATED)/$(ROCKET).$(ZBKB_CONF32).v $(rocket_gen)
+	cp -f $(GENERATED)/$(ROCKET).$(ZBKB_CONF32).behav_srams.v $(srams_gen)
+
+$(SYNTH)/rocket_zbkb_rv64.v : $(GENERATED)/$(ROCKET).$(ZBKB_CONF64).v
+	cp -f $(GENERATED)/$(ROCKET).$(ZBKB_CONF64).v $(rocket_gen)
+	cp -f $(GENERATED)/$(ROCKET).$(ZBKB_CONF64).behav_srams.v $(srams_gen)
 
 synth_verilog   = $(SYNTH)/synth-$(RV_ARCH)-$(SYN_MODULE).v
 $(synth_verilog): $(SYNTH_SCRIPT) $(rtl_src) 
